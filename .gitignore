@@ -1,0 +1,14 @@
+# 의존성·빌드 산출물
+node_modules/
+dist/
+tsconfig.tsbuildinfo
+aab_archive/
+*.log
+
+# 배경제거 모델 (scripts/fetch-model.mjs로 받음 — 약 286MB, 커밋 금지)
+public/imgly/
+
+# 서명 자격증명 — 절대 커밋 금지 (android/.gitignore에도 중복 방어)
+*.keystore
+*.jks
+android/keystore.properties

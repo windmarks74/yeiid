@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yei ID — CI / Brand Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+@import url('https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css');
+
+:root{
+  --y:#FFD12E; --y-bright:#FFDA4D; --y-deep:#F2BE00; --y-700:#97770A;
+  --ink:#17161C; --ink-2:#46454F; --ink-3:#807F8B; --ink-4:#A8A7B1;
+  --line:#ECE9E1; --line-2:#DEDACF; --bg:#F2EFE6; --surface:#FFFFFF;
+  --green:#15A66E; --coral:#E8533A; --pale:#FFF6D6;
+  --kr:'Spoqa Han Sans Neo',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --en:'Hanken Grotesk',var(--kr);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{ background:var(--bg); font-family:var(--kr); color:var(--ink);
+  -webkit-font-smoothing:antialiased; word-break:keep-all; letter-spacing:-0.01em; padding:48px 24px 80px; }
+.sheet{ max-width:1060px; margin:0 auto; display:flex; flex-direction:column; gap:26px; }
+
+.wm{ font-family:var(--en); font-weight:800; letter-spacing:-0.04em; }
+.mono-num{ font-family:var(--en); font-variant-numeric:tabular-nums; }
+
+/* card */
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:28px;
+  box-shadow:0 2px 6px rgba(23,22,28,.05), 0 16px 40px rgba(23,22,28,.06); padding:40px; }
+.eyebrow{ font-family:var(--en); font-weight:800; font-size:12px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-3); display:flex; align-items:center; gap:9px; }
+.eyebrow::before{ content:''; width:22px; height:3px; border-radius:2px; background:var(--y); }
+.sec-title{ font-size:26px; font-weight:700; letter-spacing:-0.025em; margin-top:14px; }
+.sec-sub{ color:var(--ink-2); font-size:15px; line-height:1.6; margin-top:8px; max-width:62ch; }
+
+/* ---------- HERO ---------- */
+.hero{ position:relative; overflow:hidden; background:var(--y); border:none;
+  border-radius:34px; padding:56px 48px 52px; box-shadow:0 24px 60px rgba(255,209,46,.45); }
+.hero .dots{ position:absolute; inset:0; opacity:.5;
+  background-image:radial-gradient(rgba(23,22,28,.12) 2px, transparent 2px);
+  background-size:26px 26px; }
+.hero-row{ position:relative; display:flex; align-items:center; gap:22px; }
+.hero h1{ font-family:var(--en); font-weight:900; font-size:64px; letter-spacing:-0.045em; line-height:1; }
+.hero .tag{ position:relative; margin-top:26px; font-size:19px; font-weight:700; color:var(--ink);
+  max-width:30ch; line-height:1.45; }
+.hero .kor-name{ position:relative; margin-top:6px; font-size:14px; font-weight:500; color:rgba(23,22,28,.62); }
+.hero-badge{ position:relative; display:inline-flex; align-items:center; gap:7px; margin-top:26px;
+  background:var(--ink); color:#fff; font-weight:700; font-size:13px; padding:9px 15px; border-radius:999px; }
+
+/* logo tile */
+.tile{ background:var(--y); border-radius:30%; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 24px rgba(23,22,28,.16); }
+.tile svg{ width:62%; height:62%; }
+
+/* grids */
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+
+/* logo lockups */
+.lock{ display:flex; align-items:center; gap:18px; }
+.lock .word{ font-size:40px; }
+.lock .word b{ color:var(--y-deep); }
+.swatchbox{ border:1px solid var(--line); border-radius:18px; overflow:hidden; }
+.swatchbox .lab{ padding:11px 14px; font-size:12.5px; color:var(--ink-3); font-weight:600; }
+.disp{ display:flex; align-items:center; justify-content:center; height:120px; }
+
+/* color swatches */
+.swatch{ border-radius:18px; overflow:hidden; border:1px solid var(--line); }
+.swatch .chip{ height:96px; display:flex; align-items:flex-end; padding:12px; }
+.swatch .meta{ padding:12px 14px; }
+.swatch .nm{ font-weight:700; font-size:14px; }
+.swatch .hx{ font-family:var(--en); font-weight:600; font-size:12.5px; color:var(--ink-3); margin-top:2px; text-transform:uppercase; }
+.swatch .use{ font-size:11.5px; color:var(--ink-3); margin-top:6px; line-height:1.4; }
+
+/* type specimen */
+.spec-row{ padding:18px 0; border-top:1px solid var(--line); }
+.spec-row:first-child{ border-top:none; }
+.spec-tag{ font-family:var(--en); font-size:11px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-4); margin-bottom:8px; }
+
+/* tone chips */
+.tone{ display:flex; flex-direction:column; gap:12px; }
+.bubble{ background:var(--pale); border:1px solid #F6E7A8; border-radius:16px 16px 16px 5px;
+  padding:14px 16px; font-size:15px; font-weight:600; max-width:80%; }
+.no{ background:#FBEEEB; border:1px solid #F6CFC6; border-radius:16px; padding:13px 15px;
+  font-size:14px; color:var(--coral); font-weight:600; display:flex; gap:9px; align-items:flex-start; }
+.ok-list,.no-list{ display:flex; flex-direction:column; gap:11px; }
+.ok{ background:#E9F7F0; border:1px solid #BFE8D4; border-radius:16px; padding:13px 15px;
+  font-size:14px; color:var(--green); font-weight:600; display:flex; gap:9px; align-items:flex-start; }
+
+/* app icon mock */
+.iconmock{ display:flex; gap:26px; align-items:flex-end; flex-wrap:wrap; }
+.appicon{ width:124px; height:124px; border-radius:28px; }
+.foot{ text-align:center; color:var(--ink-3); font-size:13px; padding-top:10px; }
+.kbd{ font-family:var(--en); }
+@media(max-width:720px){ .grid-2,.grid-3{ grid-template-columns:1fr; } .hero h1{ font-size:46px; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ===== HERO ===== -->
+  <div class="hero">
+    <div class="dots"></div>
+    <div class="hero-row">
+      <div class="tile" style="width:108px;height:108px;transform:rotate(-5deg);">
+        <svg viewBox="0 0 100 100"><circle cx="37" cy="43" r="7.5" fill="#17161C"/><circle cx="63" cy="43" r="7.5" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <h1>Yei<span style="color:#17161C;">ID</span></h1>
+      </div>
+    </div>
+    <div class="tag">집에서 1분, 규격 딱 맞는 증명사진.</div>
+    <div class="kor-name">Yei ID · 증명사진 메이커</div>
+    <span class="hero-badge">CI / Brand Identity · v1.0</span>
+  </div>
+
+  <!-- ===== STORY ===== -->
+  <div class="card">
+    <div class="eyebrow">The Idea</div>
+    <div class="sec-title">‘옐로카드’에서, Yei ID.</div>
+    <div class="sec-sub">
+      노래 가사 속 <b>yellow card</b>에서 출발한 이름 — 카드 = 신분증의 위트 있는 변주.
+      거기서 가장 눈에 띄고 기분 좋은 <b>노란색</b>을 브랜드의 얼굴로 남기고, 이름은 짧고 부르기 쉬운
+      <b>Yei ID</b>로. 서류 앞에서 긴장하는 순간을 <b>가볍고 산뜻하게</b> 바꾸는 것 — 그게 Yei ID의
+      태도입니다. 젊고, 친근하고, 그러나 <b>규격 앞에서는 정확한</b> 도구.
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
+      <span style="background:var(--pale);border:1px solid #F6E7A8;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;">😀 Friendly</span>
+      <span style="background:var(--pale);border:1px solid #F6E7A8;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;">⚡ Energetic</span>
+      <span style="background:var(--pale);border:1px solid #F6E7A8;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;">🎯 Precise</span>
+      <span style="background:var(--pale);border:1px solid #F6E7A8;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;">🔒 Private</span>
+    </div>
+  </div>
+
+  <!-- ===== LOGO ===== -->
+  <div class="card">
+    <div class="eyebrow">Logo</div>
+    <div class="sec-title">심볼 · 로고타입 · 락업</div>
+    <div class="sec-sub">웃는 얼굴을 품은 노란 카드. 정면을 보는 ‘증명사진 속 표정’이자, 통과를 응원하는 미소입니다.</div>
+
+    <div class="grid-3" style="margin-top:26px;">
+      <div class="swatchbox">
+        <div class="disp" style="background:var(--surface);">
+          <div class="tile appicon" style="transform:rotate(-5deg);">
+            <svg viewBox="0 0 100 100"><circle cx="37" cy="43" r="7.5" fill="#17161C"/><circle cx="63" cy="43" r="7.5" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="lab">심볼 — 옐로카드 페이스</div>
+      </div>
+      <div class="swatchbox">
+        <div class="disp" style="background:var(--surface);">
+          <span class="wm" style="font-size:46px;">Yei<span style="color:var(--y-deep);">ID</span></span>
+        </div>
+        <div class="lab">로고타입 — Hanken Grotesk 900</div>
+      </div>
+      <div class="swatchbox">
+        <div class="disp" style="background:var(--ink);">
+          <div class="lock">
+            <div class="tile" style="width:48px;height:48px;transform:rotate(-5deg);">
+              <svg viewBox="0 0 100 100"><circle cx="37" cy="43" r="7.5" fill="#17161C"/><circle cx="63" cy="43" r="7.5" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <span class="wm" style="font-size:30px;color:#fff;">Yei<span style="color:var(--y);">ID</span></span>
+          </div>
+        </div>
+        <div class="lab">다크 배경 락업</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="swatchbox">
+        <div class="disp" style="background:var(--pale);justify-content:flex-start;padding:0 36px;">
+          <div class="lock">
+            <div class="tile" style="width:56px;height:56px;transform:rotate(-5deg);">
+              <svg viewBox="0 0 100 100"><circle cx="37" cy="43" r="7.5" fill="#17161C"/><circle cx="63" cy="43" r="7.5" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <span class="wm word">Yei<b>ID</b></span>
+          </div>
+        </div>
+        <div class="lab">기본 가로 락업 (라이트)</div>
+      </div>
+      <div class="swatchbox">
+        <div class="disp" style="background:var(--surface);">
+          <div class="tile" style="width:80px;height:80px;background:var(--ink);transform:rotate(-5deg);">
+            <svg viewBox="0 0 100 100"><circle cx="37" cy="43" r="7.5" fill="#FFD12E"/><circle cx="63" cy="43" r="7.5" fill="#FFD12E"/><path d="M29 59c6 12 36 12 42 0" stroke="#FFD12E" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="lab">모노 / 반전 (잉크 위 옐로)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== APP ICON ===== -->
+  <div class="card">
+    <div class="eyebrow">App Icon</div>
+    <div class="sec-title">홈 화면에서도 한눈에</div>
+    <div class="sec-sub">노란 바탕의 미소 — 작은 사이즈에서도 표정이 또렷하게 살아남도록 단순하게.</div>
+    <div class="iconmock" style="margin-top:26px;">
+      <div>
+        <div class="appicon tile" style="border-radius:28px;box-shadow:0 14px 30px rgba(23,22,28,.18);">
+          <svg viewBox="0 0 100 100" style="width:60%;height:60%;"><circle cx="37" cy="43" r="7.5" fill="#17161C"/><circle cx="63" cy="43" r="7.5" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="foot" style="padding-top:12px;">iOS / Android</div>
+      </div>
+      <div>
+        <div class="appicon tile" style="width:84px;height:84px;border-radius:20px;">
+          <svg viewBox="0 0 100 100" style="width:60%;height:60%;"><circle cx="37" cy="43" r="7.5" fill="#17161C"/><circle cx="63" cy="43" r="7.5" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div>
+        <div class="appicon tile" style="width:56px;height:56px;border-radius:14px;">
+          <svg viewBox="0 0 100 100" style="width:62%;height:62%;"><circle cx="37" cy="43" r="8" fill="#17161C"/><circle cx="63" cy="43" r="8" fill="#17161C"/><path d="M29 59c6 12 36 12 42 0" stroke="#17161C" stroke-width="10" fill="none" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div>
+        <div class="appicon tile" style="width:40px;height:40px;border-radius:10px;">
+          <svg viewBox="0 0 100 100" style="width:64%;height:64%;"><circle cx="37" cy="44" r="9" fill="#17161C"/><circle cx="63" cy="44" r="9" fill="#17161C"/><path d="M30 60c6 11 34 11 40 0" stroke="#17161C" stroke-width="11" fill="none" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLOR ===== -->
+  <div class="card">
+    <div class="eyebrow">Color</div>
+    <div class="sec-title">옐로 + 잉크, 그리고 신호색</div>
+    <div class="sec-sub">노랑은 ‘브랜드의 에너지’, 잉크는 ‘정확함과 가독성’. 안심(초록)과 주의(코랄)는 상태를 분명히 구분합니다.</div>
+
+    <div class="grid-3" style="margin-top:26px;">
+      <div class="swatch"><div class="chip" style="background:#FFD12E;"></div><div class="meta"><div class="nm">Signature Yellow</div><div class="hx">#FFD12E</div><div class="use">브랜드 · 주요 버튼 · 하이라이트</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F2BE00;"></div><div class="meta"><div class="nm">Yellow Deep</div><div class="hx">#F2BE00</div><div class="use">눌림 상태 · 강조 텍스트</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFF6D6;"></div><div class="meta"><div class="nm">Yellow Pale</div><div class="hx">#FFF6D6</div><div class="use">선택 칩 · 아이콘 배경</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#17161C;"></div><div class="meta"><div class="nm">Ink</div><div class="hx">#17161C</div><div class="use">본문 · 다크 버튼 · 아이콘</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F8F6EF;"></div><div class="meta"><div class="nm">Cream Canvas</div><div class="hx">#F8F6EF</div><div class="use">앱 배경</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFFFFF;"></div><div class="meta"><div class="nm">Surface</div><div class="hx">#FFFFFF</div><div class="use">카드 · 시트</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#15A66E;"></div><div class="meta"><div class="nm">Secure Green</div><div class="hx">#15A66E</div><div class="use">‘기기 내 처리’ · 완료</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#E8533A;"></div><div class="meta"><div class="nm">Caution Coral</div><div class="hx">#E8533A</div><div class="use">여권 규정 · 경고</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#807F8B;"></div><div class="meta"><div class="nm">Neutral</div><div class="hx">#807F8B</div><div class="use">보조 텍스트 · 라인</div></div></div>
+    </div>
+  </div>
+
+  <!-- ===== TYPE ===== -->
+  <div class="card">
+    <div class="eyebrow">Typography</div>
+    <div class="sec-title">Hanken Grotesk × Spoqa Han Sans Neo</div>
+    <div class="sec-sub">영문·숫자는 단단한 그로테스크로 또렷하게, 한글은 깔끔하고 기하학적인 Spoqa로. 둘 다 굵기 대비를 크게 써 ‘젊은 자신감’을 냅니다.</div>
+
+    <div style="margin-top:22px;">
+      <div class="spec-row">
+        <div class="spec-tag">Display · Hanken Grotesk 900</div>
+        <div class="wm" style="font-size:54px;line-height:1;">Yei ID 1·2·3</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-tag">Heading · Spoqa 700</div>
+        <div style="font-size:30px;font-weight:700;letter-spacing:-0.025em;">집에서 1분, 규격 딱 맞는 증명사진</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-tag">Body · Spoqa 400</div>
+        <div style="font-size:16px;line-height:1.6;color:var(--ink-2);max-width:60ch;">여권·운전면허·일반 증명사진을 사진관 없이 직접. 업로드한 사진은 서버로 전송되지 않고 기기 안에서만 처리됩니다.</div>
+      </div>
+      <div class="spec-row" style="display:flex;gap:48px;flex-wrap:wrap;">
+        <div><div class="spec-tag">Caption · Spoqa 500</div><div style="font-size:13px;font-weight:500;color:var(--ink-3);">413 × 531 px @ 300 DPI</div></div>
+        <div><div class="spec-tag">Numerals · Hanken 700</div><div class="mono-num" style="font-size:28px;font-weight:700;">₩4,900</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TONE & USAGE ===== -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="eyebrow">Voice</div>
+      <div class="sec-title">톤 & 보이스</div>
+      <div class="sec-sub" style="margin-bottom:20px;">친구처럼 가볍게, 그러나 규격 앞에서는 분명하게. 짧고, 다정하고, 부담 없이.</div>
+      <div class="tone">
+        <div class="bubble">“집에서 1분, 규격은 우리가 챙길게요.”</div>
+        <div class="bubble" style="align-self:flex-end;border-radius:16px 16px 5px 16px;background:#fff;border-color:var(--line);">“무료 5장 먼저 써보고 결정해요.”</div>
+        <div class="bubble">“여권 사진은 보정 없이, 원본 그대로 ✔”</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Do &amp; Don’t</div>
+      <div class="sec-title">사용 원칙</div>
+      <div class="grid-2" style="margin-top:20px;gap:14px;grid-template-columns:1fr;">
+        <div class="ok-list">
+          <div class="ok">✓ 노랑은 ‘다음 행동’ 한 곳에 크게.</div>
+          <div class="ok">✓ 본문·아이콘은 잉크로 또렷하게.</div>
+          <div class="ok">✓ 심볼은 항상 살짝 기울여 활기 있게.</div>
+        </div>
+        <div class="no-list">
+          <div class="no">✕ 노랑 위 흰색 텍스트 (가독성 ↓).</div>
+          <div class="no">✕ 정부·공공기관처럼 보이는 표현.</div>
+          <div class="no">✕ 노랑을 ‘경고’ 색으로 쓰지 않기 (코랄 사용).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Yei ID — Corporate Identity · 본 앱은 공인 서비스가 아니며 심사 합격을 보장하지 않습니다.</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YeiID</string>
+    <string name="title_activity_main">YeiID</string>
+    <string name="package_name">com.yei.idphoto</string>
+    <string name="custom_url_scheme">com.yei.idphoto</string>
+</resources>
