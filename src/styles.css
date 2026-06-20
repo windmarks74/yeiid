@@ -604,7 +604,7 @@ input[type='range']::-moz-range-thumb {
   font-size: 11px;
 }
 .display {
-  font-size: 30px;
+  font-size: 27px;
   font-weight: 800;
   line-height: 1.22;
   letter-spacing: -0.03em;
@@ -621,6 +621,22 @@ input[type='range']::-moz-range-thumb {
   font-size: 15px;
   line-height: 1.55;
   color: var(--ink-2);
+}
+.landing-privacy {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--green-600);
+  text-align: center;
+}
+.landing-privacy svg {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
 }
 .landing-cap {
   align-self: center;
@@ -715,15 +731,26 @@ input[type='range']::-moz-range-thumb {
   display: block;
 }
 
-/* 용도 칩 (여권/운전면허/일반증명) */
+/* 용도 칩 (여권/운전면허/일반/큐넷/해외) — 칩이 늘면 가로 슬라이드 */
 .doc-chips {
   display: flex;
   gap: 8px;
   align-self: stretch;
   margin-top: 14px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox: 스크롤바 숨김 */
+  padding-bottom: 2px;
+}
+.doc-chips::-webkit-scrollbar {
+  display: none; /* Chrome/Safari: 스크롤바 숨김 */
 }
 .doc-chip {
-  flex: 1;
+  flex: 0 0 auto;
+  width: 72px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   align-items: center;

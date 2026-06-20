@@ -589,7 +589,7 @@ export default function App() {
               완료 · 미리보기
             </button>
           </div>
-          <TipsCard />
+          <TipsCard usage={usage} />
         </>
       )}
         </>
@@ -1283,10 +1283,11 @@ function Portrait() {
 }
 
 /** 랜딩의 샘플 미리보기 카드 (35:45, 인물 + 크롭 마크) */
-function SampleCard() {
+function SampleCard({ usage }: { usage: Usage }) {
+  const spec = USAGE_SPECS[usage]
   return (
     <div className="sample-card">
-      <div className="sample-photo">
+      <div className="sample-photo" style={{ aspectRatio: `${spec.widthMm} / ${spec.heightMm}` }}>
         <Portrait />
         <span className="cm tl" />
         <span className="cm tr" />
@@ -1294,8 +1295,10 @@ function SampleCard() {
         <span className="cm br" />
       </div>
       <div className="sample-foot">
-        <span className="green-badge sm">여권 규격</span>
-        <span className="sample-dim">35 × 45mm</span>
+        <span className="green-badge sm">{spec.label} 규격</span>
+        <span className="sample-dim">
+          {spec.widthMm} × {spec.heightMm}mm
+        </span>
       </div>
     </div>
   )
@@ -1327,20 +1330,19 @@ function Landing({
           ⚙
         </button>
       </div>
-      <span className="green-badge">100% 기기 내 처리</span>
       <h1 className="display">
-        집에서 1분,
+        집에서 가볍고 산뜻하게,
         <br />
-        규격 딱 맞는
+        규격에 딱 맞는
         <br />
         <mark>증명사진</mark>.
       </h1>
       <p className="landing-sub">
-        여권 · 운전면허 · 일반 증명사진을 사진관 없이. 업로드한 사진은 서버로 전송되지 않습니다.
+        여권 · 운전면허 · 자격증 · 일반 증명사진을 사진관 없이. 업로드한 사진은 서버로 전송되지 않습니다.
       </p>
-      <SampleCard />
+      <SampleCard usage={usage} />
       <div className="doc-chips">
-        {USAGES.filter((u) => !isExam(u.id)).map((u) => (
+        {USAGES.filter((u) => isSelectable(u.id)).map((u) => (
           <button
             key={u.id}
             className={`doc-chip ${usage === u.id ? 'active' : ''}`}
@@ -1361,18 +1363,25 @@ function Landing({
       <button className="cta-secondary" onClick={onCamera}>
         <IconCamera /> 카메라로 촬영
       </button>
+      <p className="landing-privacy">
+        <IconLock /> 프라이버시 보장 — 사진은 기기 밖으로 나가지 않아요
+      </p>
       <p className="landing-cap">무료로 5장 다운로드 · 가입 없이 바로 시작</p>
     </div>
   )
 }
 
 /** 잘 나오는 팁 카드 (편집 화면 하단) */
-function TipsCard() {
+function TipsCard({ usage }: { usage: Usage }) {
   const tips: { icon: React.ReactNode; text: string }[] = [
     { icon: <IconSun />, text: '밝고 균일한 조명에서 촬영' },
     { icon: <IconWall />, text: '벽 등 단색 배경 앞에 서기' },
     { icon: <IconUser size={17} />, text: '정면을 보고 어깨가 보이게' },
   ]
+  // 면허·일반·시험 등 비제한 규격만: 잡티 완화로 인상 산뜻 (여권·해외=원본 보존이라 제외)
+  if (!isRegulated(usage)) {
+    tips.push({ icon: <IconSpark />, text: '잡티 살짝 완화하면 인상이 산뜻·젊어 보여요' })
+  }
   return (
     <div className="panel tips-card">
       <div className="tips-title">잘 나오는 팁</div>

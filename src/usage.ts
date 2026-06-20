@@ -283,9 +283,15 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
   },
 }
 
-export const USAGES: { id: Usage; label: string }[] = (
-  Object.keys(USAGE_SPECS) as Usage[]
-).map((id) => ({ id, label: USAGE_SPECS[id].label }))
+// 화면 표시 순서: 국내(여권·면허·일반) → 큐넷(시험·무료) → 해외(잠금) → 미검증 시험(숨김).
+// 랜딩 칩·에디터 탭 공통 — 순서는 여기 한 곳만 바꾸면 됨.
+const DISPLAY_ORDER: Usage[] = [
+  'passport', 'license', 'general', 'qnet', 'us', 'schengen', 'kpc', 'gosi', 'toeic',
+]
+export const USAGES: { id: Usage; label: string }[] = DISPLAY_ORDER.map((id) => ({
+  id,
+  label: USAGE_SPECS[id].label,
+}))
 
 /** 제한 규격(여권·해외 등)은 AI 배경교체·잡티·강한 보정을 막는다. spec 데이터로 판정. */
 export function isRegulated(usage: Usage): boolean {
