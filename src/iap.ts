@@ -4,6 +4,7 @@
 //   - 웹: 스텁(구매=성공, 복원=없음) — 플로우만 검증
 // 플러그인은 네이티브에서만 동적 로드한다 (웹 번들 영향 없음).
 import { Capacitor } from '@capacitor/core'
+import { t } from './strings'
 
 /** 플레이 콘솔에 만들 일회성(managed) 상품 ID — RevenueCat 상품과 동일하게 맞출 것 */
 export const PRODUCT_ID = 'yei_lifetime'
@@ -19,7 +20,7 @@ const RC_API_KEY = 'goog_INvlbGQYnqoAIsJTLKEDlyNCFHh'
 let configured = false
 async function ensureConfigured() {
   if (!RC_API_KEY) {
-    throw new Error('RevenueCat API 키가 설정되지 않았습니다. (src/iap.ts의 RC_API_KEY)')
+    throw new Error(t('iap.noKey'))
   }
   if (configured) return
   const { Purchases } = await import('@revenuecat/purchases-capacitor')
@@ -40,7 +41,7 @@ export async function purchaseLifetime(): Promise<boolean> {
   const offerings = await Purchases.getOfferings()
   const packages = offerings.current?.availablePackages ?? []
   const pkg = packages.find((p) => p.product.identifier === PRODUCT_ID) ?? packages[0]
-  if (!pkg) throw new Error('판매 상품을 불러오지 못했습니다. (RevenueCat 오퍼링/상품 설정 확인)')
+  if (!pkg) throw new Error(t('iap.noProduct'))
   const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg })
   return isActive(customerInfo)
 }

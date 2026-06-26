@@ -11,6 +11,7 @@ import { saveJpeg } from './save'
 import { checkEntitlement, restorePurchases } from './iap'
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
+import { t } from './strings'
 import {
   canDownload,
   freeLeft,
@@ -85,7 +86,7 @@ export default function App() {
     const file = e.target.files?.[0]
     e.target.value = '' // 같은 파일 재선택도 동작하도록
     if (!file) return
-    setToast('사진 불러오는 중…')
+    setToast(t('app.loadingPhoto'))
     try {
       // HEIC 변환 + EXIF 방향 정규화 + 다운스케일 → 캔버스 (재인코딩 없음 = 빠름)
       const canvas = await loadSourcePhoto(file)
@@ -100,7 +101,7 @@ export default function App() {
       setScreen('editor')
     } catch (err) {
       console.error('[사진 불러오기 실패]', err)
-      setToast(`사진을 불러오지 못했습니다: ${(err as Error)?.message ?? ''}`)
+      setToast(t('app.loadPhotoFailed', { msg: (err as Error)?.message ?? '' }))
     }
   }
 
@@ -126,7 +127,7 @@ export default function App() {
       .catch((err) => {
         if (cancelled) return
         console.error('[배경 제거 실패]', err)
-        setBgError(`배경 제거 실패: ${err?.message ?? err}`)
+        setBgError(t('app.bgRemovalFailed', { msg: err?.message ?? err }))
         setEffects((e) => ({ ...e, bgColor: null }))
       })
       .finally(() => {
@@ -354,7 +355,7 @@ export default function App() {
         // 저사양 기기에서 대형 캔버스 인코딩 실패 가능 — '렌더링 중…' 무한 표시 방지
         if (cancelled) return
         console.error('[미리보기 렌더 실패]', err)
-        setToast(`미리보기 생성 실패: ${(err as Error)?.message ?? err}`)
+        setToast(t('app.previewFailed', { msg: (err as Error)?.message ?? err }))
         setScreen('editor')
       })
     return () => {
@@ -387,12 +388,12 @@ export default function App() {
     try {
       if ((await restorePurchases()) && billing) {
         setBilling(await grantPremium(billing))
-        setToast('구매가 복원되었습니다')
+        setToast(t('app.restoreSuccess'))
       } else {
-        setToast('복원할 구매 내역이 없습니다')
+        setToast(t('app.restoreNone'))
       }
     } catch (e) {
-      setToast(`복원 실패: ${(e as Error)?.message ?? e}`)
+      setToast(t('app.restoreFailed', { msg: (e as Error)?.message ?? e }))
     }
   }
 
@@ -428,7 +429,7 @@ export default function App() {
     try {
       res = await encodeCurrent()
     } catch (e) {
-      setToast(`내보내기 실패: ${(e as Error)?.message ?? e}`)
+      setToast(t('app.exportFailed', { msg: (e as Error)?.message ?? e }))
       return
     }
     if (!res) return
@@ -440,10 +441,10 @@ export default function App() {
     try {
       await saveJpeg(res.blob, filename)
     } catch (e) {
-      setToast(`저장 실패: ${(e as Error)?.message ?? e}`)
+      setToast(t('app.saveFailed', { msg: (e as Error)?.message ?? e }))
       return
     }
-    setToast('저장되었습니다')
+    setToast(t('app.saved'))
     setSaved(true) // 결과 화면에 저장 확인 + 신청 CTA 노출
     // 저장 성공 후에만 카운트
     if (billing) setBilling(await recordDownload(billing))
@@ -465,11 +466,11 @@ export default function App() {
       {screen === 'editor' && (
         <>
           <header className="editor-head">
-            <button className="ghost-btn" onClick={() => setScreen('landing')} aria-label="뒤로">
+            <button className="ghost-btn" onClick={() => setScreen('landing')} aria-label={t('app.back')}>
               <IconChevL />
             </button>
-            <span className="head-title">편집</span>
-            <button className="ghost-btn" onClick={openSettings} aria-label="설정">
+            <span className="head-title">{t('app.editTitle')}</span>
+            <button className="ghost-btn" onClick={openSettings} aria-label={t('app.settings')}>
               ⚙
             </button>
           </header>
@@ -497,8 +498,19 @@ export default function App() {
         </div>
         <div className="spec-sub">
           {isExam(usage)
-            ? `디지털 ${spec.targetW}×${spec.targetH}px · ≤${spec.maxKB}KB · ${(spec.format ?? 'jpg').toUpperCase()} 자동 맞춤`
-            : `${spec.targetW} × ${spec.targetH}px · ${spec.dpi}DPI · 얼굴 ${spec.faceMin}~${spec.faceMax}%`}
+            ? t('app.digitalSpec', {
+                w: spec.targetW,
+                h: spec.targetH,
+                kb: spec.maxKB,
+                fmt: (spec.format ?? 'jpg').toUpperCase(),
+              })
+            : t('app.printSpec', {
+                w: spec.targetW,
+                h: spec.targetH,
+                dpi: spec.dpi,
+                faceMin: spec.faceMin,
+                faceMax: spec.faceMax,
+              })}
         </div>
       </div>
 
@@ -506,7 +518,7 @@ export default function App() {
 
       {!image ? (
         <button className="upload-cta" onClick={() => fileRef.current?.click()}>
-          사진 가져오기
+          {t('app.importPhoto')}
         </button>
       ) : (
         <>
@@ -519,7 +531,7 @@ export default function App() {
             eyeMin={spec.eyeMin}
             eyeMax={spec.eyeMax}
             busy={bgBusy}
-            busyLabel="배경 분리 중…"
+            busyLabel={t('app.separatingBg')}
             adjust={adjust}
             effects={effects}
             face={face}
@@ -534,21 +546,21 @@ export default function App() {
               className={tool === 'adjust' ? 'active' : ''}
               onClick={() => setTool('adjust')}
             >
-              보정
+              {t('app.tabAdjust')}
             </button>
             <button
               role="tab"
               className={tool === 'effects' ? 'active' : ''}
               onClick={() => setTool('effects')}
             >
-              배경·효과
+              {t('app.tabEffects')}
             </button>
             <button
               role="tab"
               className={tool === 'output' ? 'active' : ''}
               onClick={() => setTool('output')}
             >
-              출력
+              {t('app.tabOutput')}
             </button>
           </div>
 
@@ -578,7 +590,7 @@ export default function App() {
           )}
           <div className="actions">
             <button className="secondary" onClick={() => fileRef.current?.click()}>
-              다른 사진
+              {t('app.anotherPhoto')}
             </button>
             <button
               onClick={() => {
@@ -586,7 +598,7 @@ export default function App() {
                 setScreen('result')
               }}
             >
-              완료 · 미리보기
+              {t('app.donePreview')}
             </button>
           </div>
           <TipsCard usage={usage} />
@@ -598,23 +610,23 @@ export default function App() {
       {screen === 'result' && (
         <>
           <header className="editor-head">
-            <button className="ghost-btn" onClick={() => setScreen('editor')} aria-label="뒤로">
+            <button className="ghost-btn" onClick={() => setScreen('editor')} aria-label={t('app.back')}>
               <IconChevL />
             </button>
-            <span className="head-title">완성</span>
+            <span className="head-title">{t('app.doneTitle')}</span>
             {billing?.premium && <span className="green-badge sm">PRO</span>}
-            <button className="ghost-btn" onClick={openSettings} aria-label="설정">
+            <button className="ghost-btn" onClick={openSettings} aria-label={t('app.settings')}>
               ⚙
             </button>
           </header>
 
           <div className="result-preview">
             {resultUrl ? (
-              <img src={resultUrl} alt="결과 미리보기" />
+              <img src={resultUrl} alt={t('app.resultAlt')} />
             ) : (
               <div className="result-loading">
                 <div className="progress-bar" />
-                <span>렌더링 중…</span>
+                <span>{t('app.rendering')}</span>
               </div>
             )}
           </div>
@@ -622,7 +634,7 @@ export default function App() {
           {!isExam(usage) && (
             <div className="seg result-seg">
               <button className={!printSheet ? 'active' : ''} onClick={() => setPrintSheet(false)}>
-                증명사진 1매
+                {t('app.singlePhoto')}
               </button>
               <button
                 className={printSheet ? 'active' : ''}
@@ -631,7 +643,7 @@ export default function App() {
                   if (!billing?.premium) setShowPaywall(true)
                 }}
               >
-                인화 시트 ({sheetGrid(spec.targetW, spec.targetH).count}매)
+                {t('app.printSheet', { count: sheetGrid(spec.targetW, spec.targetH).count })}
                 {!billing?.premium && <span className="lock-badge">🔒</span>}
               </button>
             </div>
@@ -639,33 +651,44 @@ export default function App() {
 
           <div className="panel checklist">
             <div className="check-line">
-              ✓ {spec.label} 규격 ·{' '}
+              ✓ {t('app.checkSpec', { label: spec.label })} ·{' '}
               {isExam(usage)
-                ? `${spec.targetW}×${spec.targetH}px · ${(spec.format ?? 'jpg').toUpperCase()} · ≤${spec.maxKB}KB 자동`
-                : `${spec.targetW}×${spec.targetH}px @${spec.dpi}DPI`}
+                ? t('app.checkDigital', {
+                    w: spec.targetW,
+                    h: spec.targetH,
+                    fmt: (spec.format ?? 'jpg').toUpperCase(),
+                    kb: spec.maxKB,
+                  })
+                : t('app.checkPrint', { w: spec.targetW, h: spec.targetH, dpi: spec.dpi })}
             </div>
-            <div className="check-line">✓ 규격·여백 자동 보정</div>
-            <div className="check-line">✓ 기기 안에서만 처리</div>
-            {outSize && <div className="check-line muted">파일 {formatBytes(outSize.bytes)}</div>}
+            <div className="check-line">✓ {t('app.checkAutoFit')}</div>
+            <div className="check-line">✓ {t('app.checkOnDevice')}</div>
+            {outSize && (
+              <div className="check-line muted">
+                {t('app.checkFileSize', { size: formatBytes(outSize.bytes) })}
+              </div>
+            )}
             {isRegulated(usage) && (
-              <div className="check-line warn">⚠ 6개월 이내 촬영 · AI 편집·필터 사진은 반려될 수 있어요</div>
+              <div className="check-line warn">⚠ {t('app.checkRegulatedWarn')}</div>
             )}
           </div>
 
           {locked ? (
             <>
               <div className="upsell">
-                {requiresPremium(usage) ? '해외 규격' : '인화 시트'}은 평생 이용 전용이에요.
+                {requiresPremium(usage)
+                  ? t('app.upsellOverseas')
+                  : t('app.upsellSheet')}
               </div>
               <div className="actions">
-                <button onClick={() => setShowPaywall(true)}>평생 이용으로 잠금 해제 · ₩4,900</button>
+                <button onClick={() => setShowPaywall(true)}>{t('app.unlockLifetime')} · ₩4,900</button>
               </div>
             </>
           ) : billing && !canDownload(billing) ? (
             <>
-              <div className="upsell">무료 5장을 모두 받았어요. 더 받으시겠어요?</div>
+              <div className="upsell">{t('app.upsellFreeUsedUp')}</div>
               <div className="actions">
-                <button onClick={() => setShowPaywall(true)}>평생 무제한 · ₩4,900</button>
+                <button onClick={() => setShowPaywall(true)}>{t('app.lifetimeUnlimited')} · ₩4,900</button>
               </div>
             </>
           ) : (
@@ -673,12 +696,14 @@ export default function App() {
               <div className="actions">
                 <button onClick={onDownload}>
                   {billing?.premium
-                    ? '다운로드'
-                    : `무료로 다운로드${billing ? ` (${freeLeft(billing)}회 남음)` : ''}`}
+                    ? t('app.download')
+                    : billing
+                      ? t('app.downloadFreeLeft', { n: freeLeft(billing) })
+                      : t('app.downloadFree')}
                 </button>
               </div>
               {billing && !billing.premium && (
-                <p className="billing-caption">무료 5장 제공 · 추가는 ₩4,900 평생</p>
+                <p className="billing-caption">{t('app.billingCaption')}</p>
               )}
             </>
           )}
@@ -686,14 +711,14 @@ export default function App() {
           {saved && (
             <div className="saved-box">
               <div className="saved-line">
-                <span className="saved-check">✓</span> 갤러리에 저장됨
+                <span className="saved-check">✓</span> {t('app.savedToGallery')}
               </div>
               {APPLY_SITE[usage] && (
                 <>
                   <button className="apply-cta" onClick={() => openExternal(APPLY_SITE[usage]!.url)}>
-                    신청하러 가기 →
+                    {t('app.applyCta')}
                   </button>
-                  <p className="apply-note">{APPLY_SITE[usage]!.label} · 참고 링크 · 정부 제휴 아님</p>
+                  <p className="apply-note">{t('app.applyNote', { label: APPLY_SITE[usage]!.label })}</p>
                 </>
               )}
             </div>
@@ -704,10 +729,10 @@ export default function App() {
       {screen === 'settings' && (
         <>
           <header className="editor-head">
-            <button className="ghost-btn" onClick={() => setScreen(settingsReturn)} aria-label="뒤로">
+            <button className="ghost-btn" onClick={() => setScreen(settingsReturn)} aria-label={t('app.back')}>
               <IconChevL />
             </button>
-            <span className="head-title">설정 · 소개</span>
+            <span className="head-title">{t('app.settingsTitle')}</span>
             <span className="head-spacer" />
           </header>
 
@@ -716,45 +741,45 @@ export default function App() {
               <IconShield size={26} />
             </span>
             <div>
-              <strong>사진은 기기를 떠나지 않아요</strong>
-              <p>모든 편집은 기기 안에서만 처리되며, 어떤 사진도 서버로 전송·저장되지 않습니다.</p>
+              <strong>{t('app.privacyHeroTitle')}</strong>
+              <p>{t('app.privacyHeroBody')}</p>
             </div>
           </div>
 
-          <div className="section-label">플랜</div>
+          <div className="section-label">{t('app.sectionPlan')}</div>
           <div className="settings-card">
             <SettingsRow
               icon={<IconSpark />}
-              title={billing?.premium ? '평생 무제한' : '무료 플랜'}
+              title={billing?.premium ? t('app.planPremiumTitle') : t('app.planFreeTitle')}
               desc={
                 billing?.premium
-                  ? '평생 이용 중'
+                  ? t('app.planPremiumDesc')
                   : billing
-                    ? `무료 ${freeLeft(billing)}장 남음 · 추가는 ₩4,900 평생`
+                    ? t('app.planFreeDesc', { n: freeLeft(billing) })
                     : ''
               }
               right={
                 billing?.premium ? (
                   <span className="green-badge sm">PRO</span>
                 ) : (
-                  <span className="tonal-tag">업그레이드</span>
+                  <span className="tonal-tag">{t('app.upgrade')}</span>
                 )
               }
               onClick={billing?.premium ? undefined : () => setShowPaywall(true)}
             />
           </div>
 
-          <div className="section-label">약관 · 정보</div>
+          <div className="section-label">{t('app.sectionLegal')}</div>
           <div className="settings-card">
-            <SettingsRow icon={<IconLock />} title="개인정보처리방침" onClick={() => openLegal(PRIVACY)} />
+            <SettingsRow icon={<IconLock />} title={t('app.privacyPolicy')} onClick={() => openLegal(PRIVACY)} />
             <div className="hr" />
-            <SettingsRow icon={<IconDoc />} title="이용약관" onClick={() => openLegal(TERMS)} />
+            <SettingsRow icon={<IconDoc />} title={t('app.terms')} onClick={() => openLegal(TERMS)} />
             <div className="hr" />
-            <SettingsRow icon={<IconInfo />} title="자주 묻는 질문" onClick={() => openLegal(FAQ)} />
+            <SettingsRow icon={<IconInfo />} title={t('app.faq')} onClick={() => openLegal(FAQ)} />
           </div>
 
           <button className="row-btn" onClick={onRestore}>
-            구매 복원
+            {t('app.restorePurchase')}
           </button>
 
           <div className="notice disclaimer">
@@ -762,20 +787,19 @@ export default function App() {
               <IconAlert />
             </span>
             <div>
-              <strong>공인 서비스가 아닙니다</strong>
-              본 앱은 규격에 맞춘 사진 제작을 돕는 도구이며, 정부·공공기관의 공인 서비스가
-              아닙니다. 심사 합격을 보장하지 않으니 최종 규정은 발급 기관 안내를 확인하세요.
+              <strong>{t('app.disclaimerTitle')}</strong>
+              {t('app.disclaimerBody')}
             </div>
           </div>
 
-          <p className="settings-footer">Yei ID · 버전 {appVersion}</p>
+          <p className="settings-footer">{t('app.footerVersion', { version: appVersion })}</p>
         </>
       )}
 
       {screen === 'legal' && legalDoc && (
         <>
           <header className="editor-head">
-            <button className="ghost-btn" onClick={() => setScreen('settings')} aria-label="뒤로">
+            <button className="ghost-btn" onClick={() => setScreen('settings')} aria-label={t('app.back')}>
               <IconChevL />
             </button>
             <span className="head-title">{legalDoc.title}</span>
@@ -838,15 +862,15 @@ function AdjustPanel({
   return (
     <div className="panel">
       <div className="panel-head">
-        <span>가벼운 보정</span>
+        <span>{t('app.adjustTitle')}</span>
         <button className="link" onClick={() => onChange(NEUTRAL)}>
-          초기화
+          {t('app.reset')}
         </button>
       </div>
-      <Slider label="노출" min={0.6} max={1.6} step={0.01} value={adjust.exposure} onChange={set('exposure')} />
-      <Slider label="밝기" min={-40} max={40} step={1} value={adjust.brightness} onChange={set('brightness')} />
-      <Slider label="화이트밸런스" min={-30} max={30} step={1} value={adjust.temp} onChange={set('temp')} />
-      <p className="panel-hint">피부톤을 왜곡하지 않는 선에서 사용하세요. (여권 허용 범위)</p>
+      <Slider label={t('app.exposure')} min={0.6} max={1.6} step={0.01} value={adjust.exposure} onChange={set('exposure')} />
+      <Slider label={t('app.brightness')} min={-40} max={40} step={1} value={adjust.brightness} onChange={set('brightness')} />
+      <Slider label={t('app.whiteBalance')} min={-30} max={30} step={1} value={adjust.temp} onChange={set('temp')} />
+      <p className="panel-hint">{t('app.adjustHint')}</p>
     </div>
   )
 }
@@ -901,23 +925,23 @@ function EffectsPanel({
   return (
     <div className="panel">
       <div className="panel-head">
-        <span>배경 · 효과</span>
+        <span>{t('app.effectsTitle')}</span>
         <button className="link" onClick={() => onChange(NEUTRAL_EFFECTS)}>
-          초기화
+          {t('app.reset')}
         </button>
       </div>
 
       {bgSupported ? (
         <>
           <div className="bg-row">
-            <span>배경</span>
+            <span>{t('app.background')}</span>
             <div className="bg-swatches">
               <button
                 className={`swatch none ${effects.bgColor === null ? 'active' : ''}`}
                 onClick={() => onChange({ ...effects, bgColor: null })}
-                title="원본 배경"
+                title={t('app.originalBg')}
               >
-                없음
+                {t('app.bgNone')}
               </button>
               {BG_COLORS.map((c) => (
                 <button
@@ -934,19 +958,19 @@ function EffectsPanel({
           {/* 모델 품질 선택은 웹(@imgly) 전용 — 네이티브(ML Kit)는 단일 모델 */}
           {!isNative && effects.bgColor !== null && (
             <div className="bg-row">
-              <span>모델 품질</span>
+              <span>{t('app.modelQuality')}</span>
               <div className="seg">
                 <button
                   className={bgModel === 'isnet_fp16' ? 'active' : ''}
                   onClick={() => onModelChange('isnet_fp16')}
                 >
-                  빠름
+                  {t('app.modelFast')}
                 </button>
                 <button
                   className={bgModel === 'isnet' ? 'active' : ''}
                   onClick={() => onModelChange('isnet')}
                 >
-                  고품질
+                  {t('app.modelHighQuality')}
                 </button>
               </div>
             </div>
@@ -954,13 +978,13 @@ function EffectsPanel({
           {bgBusy && (
             <div className="bg-busy">
               <div className="progress-bar" />
-              <span>배경 분리 중… {bgProgress || '잠시만요'}</span>
+              <span>{bgProgress || t('app.justAMoment')}</span>
             </div>
           )}
           {bgError && <p className="panel-hint error">{bgError}</p>}
 
           <Slider
-            label="뽀샤시"
+            label={t('app.glow')}
             min={0}
             max={100}
             step={1}
@@ -971,20 +995,20 @@ function EffectsPanel({
           {isNative && (
             <>
               <Slider
-                label="잡티 완화"
+                label={t('app.smooth')}
                 min={0}
                 max={100}
                 step={1}
                 value={effects.smooth}
                 onChange={(e) => onChange({ ...effects, smooth: Number(e.target.value) })}
               />
-              {faceBusy && <p className="panel-hint">얼굴 분석 중… 잠시만요</p>}
+              {faceBusy && <p className="panel-hint">{t('app.analyzingFace')}</p>}
             </>
           )}
         </>
       ) : (
         <p className="panel-hint">
-          이 규격은 규정상 <b>배경 교체·보정</b>이 제한됩니다. 흰색 배경 앞에서 촬영하세요.
+          {t('app.bgRestrictedPre')} <b>{t('app.bgRestrictedBold')}</b> {t('app.bgRestrictedPost')}
         </p>
       )}
     </div>
@@ -1009,7 +1033,7 @@ function OutputPanel({
   return (
     <div className="panel">
       <div className="panel-head">
-        <span>출력 (JPEG)</span>
+        <span>{t('app.outputTitle')}</span>
       </div>
 
       <label className="check-row">
@@ -1018,11 +1042,11 @@ function OutputPanel({
           checked={targetEnabled}
           onChange={(e) => onToggle(e.target.checked)}
         />
-        목표 용량 맞추기
+        {t('app.fitTargetSize')}
       </label>
       {targetEnabled && (
         <div className="bg-row">
-          <span>목표 용량</span>
+          <span>{t('app.targetSize')}</span>
           <div className="kb-input">
             <input
               type="number"
@@ -1032,18 +1056,18 @@ function OutputPanel({
               value={targetKB}
               onChange={(e) => onTargetKB(Number(e.target.value))}
             />
-            KB 이하
+            {t('app.kbOrLess')}
           </div>
         </div>
       )}
 
       <p className="panel-hint">
-        결과 용량:{' '}
+        {t('app.outputSizeLabel')}{' '}
         <b className={over ? 'error' : ''}>
-          {outSize ? formatBytes(outSize.bytes) : '계산 중…'}
+          {outSize ? formatBytes(outSize.bytes) : t('app.calculating')}
         </b>
-        {outSize && ` (품질 ${Math.round(outSize.quality * 100)}%)`}
-        {over && ' — 목표보다 큼: 규격이 커서 최저 품질로도 초과'}
+        {outSize && ` ${t('app.qualityPct', { pct: Math.round(outSize.quality * 100) })}`}
+        {over && ` ${t('app.overTarget')}`}
       </p>
     </div>
   )
@@ -1295,7 +1319,7 @@ function SampleCard({ usage }: { usage: Usage }) {
         <span className="cm br" />
       </div>
       <div className="sample-foot">
-        <span className="green-badge sm">{spec.label} 규격</span>
+        <span className="green-badge sm">{t('app.specBadge', { label: spec.label })}</span>
         <span className="sample-dim">
           {spec.widthMm} × {spec.heightMm}mm
         </span>
@@ -1326,19 +1350,19 @@ function Landing({
         <Logo />
         <Wordmark />
         <span className="head-spacer" />
-        <button className="ghost-btn floating" onClick={onSettings} aria-label="설정">
+        <button className="ghost-btn floating" onClick={onSettings} aria-label={t('app.settings')}>
           ⚙
         </button>
       </div>
       <h1 className="display">
-        집에서 가볍고 산뜻하게,
+        {t('app.headlineLine1')}
         <br />
-        규격에 딱 맞는
+        {t('app.headlineLine2')}
         <br />
-        <mark>증명사진</mark>.
+        <mark>{t('app.headlineMark')}</mark>.
       </h1>
       <p className="landing-sub">
-        여권 · 운전면허 · 자격증 · 일반 증명사진을 사진관 없이. 업로드한 사진은 서버로 전송되지 않습니다.
+        {t('app.landingSub')}
       </p>
       <SampleCard usage={usage} />
       <div className="doc-chips">
@@ -1358,15 +1382,15 @@ function Landing({
         ))}
       </div>
       <button className="cta" onClick={onStart}>
-        <IconUpload /> 사진 올리기
+        <IconUpload /> {t('app.uploadPhoto')}
       </button>
       <button className="cta-secondary" onClick={onCamera}>
-        <IconCamera /> 카메라로 촬영
+        <IconCamera /> {t('app.takePhoto')}
       </button>
       <p className="landing-privacy">
-        <IconLock /> 프라이버시 보장 — 사진은 기기 밖으로 나가지 않아요
+        <IconLock /> {t('app.landingPrivacy')}
       </p>
-      <p className="landing-cap">무료로 5장 다운로드 · 가입 없이 바로 시작</p>
+      <p className="landing-cap">{t('app.landingCap')}</p>
     </div>
   )
 }
@@ -1374,17 +1398,17 @@ function Landing({
 /** 잘 나오는 팁 카드 (편집 화면 하단) */
 function TipsCard({ usage }: { usage: Usage }) {
   const tips: { icon: React.ReactNode; text: string }[] = [
-    { icon: <IconSun />, text: '밝고 균일한 조명에서 촬영' },
-    { icon: <IconWall />, text: '벽 등 단색 배경 앞에 서기' },
-    { icon: <IconUser size={17} />, text: '정면을 보고 어깨가 보이게' },
+    { icon: <IconSun />, text: t('app.tipLighting') },
+    { icon: <IconWall />, text: t('app.tipBackground') },
+    { icon: <IconUser size={17} />, text: t('app.tipPose') },
   ]
   // 면허·일반·시험 등 비제한 규격만: 잡티 완화로 인상 산뜻 (여권·해외=원본 보존이라 제외)
   if (!isRegulated(usage)) {
-    tips.push({ icon: <IconSpark />, text: '잡티 살짝 완화하면 인상이 산뜻·젊어 보여요' })
+    tips.push({ icon: <IconSpark />, text: t('app.tipSmooth') })
   }
   return (
     <div className="panel tips-card">
-      <div className="tips-title">잘 나오는 팁</div>
+      <div className="tips-title">{t('app.tipsTitle')}</div>
       {tips.map((t, i) => (
         <div className="tip-row" key={i}>
           <span className="tip-ic">{t.icon}</span>

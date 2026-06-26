@@ -5,6 +5,7 @@
 import { Capacitor } from '@capacitor/core'
 import { loadImageFromFile, refineCutoutAlpha, type Cutout } from './imageUtils'
 import { Segmentation } from './native/segmentation'
+import { t } from './strings'
 
 /** 배경 제거 모델(웹 전용): fast=isnet_fp16(88MB), high=isnet(176MB, 가장자리 더 깔끔) */
 export type BgModel = 'isnet_fp16' | 'isnet'
@@ -29,10 +30,10 @@ async function toCutout(pngBase64: string): Promise<Cutout> {
 
 /** 네이티브 경로 (ML Kit) */
 async function removeBgNative(source: Blob, onProgress?: (msg: string) => void): Promise<Cutout> {
-  onProgress?.('배경 분리 중…')
+  onProgress?.(t('bgprogress.separating'))
   const base64 = await blobToBase64(source)
   const { cutout } = await Segmentation.segment({ data: base64 })
-  onProgress?.('가장자리 정제 중…')
+  onProgress?.(t('bgprogress.refining'))
   return toCutout(cutout)
 }
 
@@ -48,11 +49,11 @@ async function removeBgWeb(
     model,
     progress: (key, current, total) => {
       const pct = total ? Math.round((current / total) * 100) : 0
-      const stage = key.startsWith('fetch') ? '모델 준비' : '처리'
+      const stage = key.startsWith('fetch') ? t('bgprogress.preparingModel') : t('bgprogress.processing')
       onProgress?.(`${stage} ${pct}%`)
     },
   })
-  onProgress?.('가장자리 정제 중…')
+  onProgress?.(t('bgprogress.refining'))
   const raw = await loadImageFromFile(new File([blob], 'cutout.png', { type: blob.type }))
   const cutout = refineCutoutAlpha(raw)
   URL.revokeObjectURL(raw.src)

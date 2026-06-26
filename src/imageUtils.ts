@@ -2,6 +2,7 @@
 
 import { applyAdjust, isNeutral, type Adjust } from './adjust'
 import { applyGlow, applySkinSmooth, type Effects } from './effects'
+import { t } from './strings'
 
 /** 정규화된 크롭 영역 (이미지 자연크기 대비 0~1) */
 export type CropRect = { x: number; y: number; w: number; h: number }
@@ -52,7 +53,7 @@ export function loadImageFromFile(file: File): Promise<HTMLImageElement> {
     }
     img.onerror = () => {
       URL.revokeObjectURL(url)
-      reject(new Error('이미지를 불러올 수 없습니다.'))
+      reject(new Error(t('img.cannotLoad')))
     }
     img.src = url
   })
@@ -96,7 +97,7 @@ export async function loadSourcePhoto(file: File): Promise<HTMLCanvasElement> {
     sw = img.naturalWidth
     sh = img.naturalHeight
   }
-  if (!sw || !sh) throw new Error('이미지를 읽을 수 없습니다.')
+  if (!sw || !sh) throw new Error(t('img.cannotRead'))
 
   const scale = Math.min(1, MAX_SOURCE / Math.max(sw, sh))
   const w = Math.round(sw * scale)
@@ -471,7 +472,7 @@ function drawSheetFooter(
   ctx.stroke()
 
   const FONT = 'Pretendard, system-ui, -apple-system, sans-serif'
-  const labelText = `${footer.label} · ${footer.dims} · ${count}장`
+  const labelText = `${footer.label} · ${footer.dims} · ${t('img.sheetCount', { count })}`
   const logo = 30
   const gap1 = 9
   const gap2 = 16
@@ -530,7 +531,7 @@ export function canvasToBlob(
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
-      (blob) => (blob ? resolve(blob) : reject(new Error('내보내기 실패'))),
+      (blob) => (blob ? resolve(blob) : reject(new Error(t('img.exportFailed')))),
       type,
       quality,
     )

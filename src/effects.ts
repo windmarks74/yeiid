@@ -1,5 +1,7 @@
 // 효과 (면허증·일반 권장 / 여권 모드는 경고). AI 아님 — 캔버스 합성.
 
+import { t } from './strings'
+
 export type Effects = {
   /** 단색 배경 색. null = 원본 배경 유지 (배경 제거 안 함) */
   bgColor: string | null
@@ -12,9 +14,9 @@ export type Effects = {
 export const NEUTRAL_EFFECTS: Effects = { bgColor: null, glow: 0, smooth: 0 }
 
 export const BG_COLORS: { id: string; label: string; color: string }[] = [
-  { id: 'white', label: '흰색', color: '#ffffff' },
-  { id: 'blue', label: '연하늘', color: '#dCEcFb' },
-  { id: 'gray', label: '회색', color: '#d9dce1' },
+  { id: 'white', label: t('bgcolor.white'), color: '#ffffff' },
+  { id: 'blue', label: t('bgcolor.blue'), color: '#dCEcFb' },
+  { id: 'gray', label: t('bgcolor.gray'), color: '#d9dce1' },
 ]
 
 /** 여권 규정상 문제될 수 있는 효과가 켜져 있는지 */

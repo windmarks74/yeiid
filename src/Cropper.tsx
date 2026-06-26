@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { drawPhoto, type CropRect, type Cutout, type FaceBox } from './imageUtils'
 import type { Adjust } from './adjust'
 import type { Effects } from './effects'
+import { t } from './strings'
 
 type Props = {
   image: HTMLCanvasElement
@@ -197,7 +198,7 @@ export default function Cropper({
           {busy && (
             <div className="crop-busy">
               <div className="progress-bar" />
-              <span>{busyLabel || '처리 중…'}</span>
+              <span>{busyLabel || t('cropper.processing')}</span>
             </div>
           )}
         </div>
@@ -208,7 +209,7 @@ export default function Cropper({
       </div>
       <div className="zoom-row">
         <span className="ctrl-chip">
-          <IconZoom /> 확대
+          <IconZoom /> {t('cropper.zoom')}
         </span>
         <input
           type="range"
@@ -222,10 +223,10 @@ export default function Cropper({
           type="button"
           className="ctrl-chip"
           onClick={onRotate90}
-          aria-label="90° 회전"
-          title="90° 회전"
+          aria-label={t('cropper.rotate90')}
+          title={t('cropper.rotate90')}
         >
-          <IconRotate /> 회전
+          <IconRotate /> {t('cropper.rotate')}
         </button>
       </div>
       <div className="zoom-row tilt-row">
@@ -233,15 +234,15 @@ export default function Cropper({
           type="button"
           className="ctrl-chip"
           onClick={() => onRotation(0)}
-          title="기울기 초기화"
+          title={t('cropper.tiltReset')}
         >
-          <IconTilt /> 기울기{rotation !== 0 ? ` ${rotation > 0 ? '+' : ''}${rotation}°` : ''}
+          <IconTilt /> {t('cropper.tilt')}{rotation !== 0 ? ` ${rotation > 0 ? '+' : ''}${rotation}°` : ''}
         </button>
         <button
           type="button"
           className="step-btn"
           onClick={() => onRotation(clampTilt(rotation - 0.5))}
-          aria-label="기울기 -0.5도"
+          aria-label={t('cropper.tiltMinus')}
         >
           −
         </button>
@@ -257,7 +258,7 @@ export default function Cropper({
           type="button"
           className="step-btn"
           onClick={() => onRotation(clampTilt(rotation + 0.5))}
-          aria-label="기울기 +0.5도"
+          aria-label={t('cropper.tiltPlus')}
         >
           +
         </button>
@@ -330,14 +331,14 @@ function FaceGuide({
   return (
     <div className="face-guide" aria-hidden>
       <div className="guide-line crown" style={{ top: `${CROWN}%` }}>
-        <span>정수리</span>
+        <span>{t('cropper.crown')}</span>
       </div>
       <div className="chin-band" style={{ top: `${CROWN + faceMin}%`, height: `${faceMax - faceMin}%` }}>
-        <span>턱선 (머리 {faceMin}~{faceMax}%)</span>
+        <span>{t('cropper.chin', { min: faceMin, max: faceMax })}</span>
       </div>
       {hasEye && (
         <div className="eye-band" style={{ top: `${eyeMin}%`, height: `${eyeMax! - eyeMin!}%` }}>
-          <span>눈높이</span>
+          <span>{t('cropper.eye')}</span>
         </div>
       )}
       <div className="guide-line vcenter" />
