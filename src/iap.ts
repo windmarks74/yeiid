@@ -4,14 +4,14 @@
 //   - 웹: 스텁(구매=성공, 복원=없음) — 플로우만 검증
 // 플러그인은 네이티브에서만 동적 로드한다 (웹 번들 영향 없음).
 import { Capacitor } from '@capacitor/core'
-import { t } from './strings'
+import { t, LANG } from './strings'
 
 /** 플레이 콘솔에 만들 일회성(managed) 상품 ID — RevenueCat 상품과 동일하게 맞출 것 */
 export const PRODUCT_ID = 'yei_lifetime'
 /** RevenueCat 대시보드에서 만들 Entitlement 식별자 */
 export const ENTITLEMENT_ID = 'premium'
-/** 표시용 가격 (실제 가격은 스토어/RevenueCat에서 가져옴) */
-export const PRICE_LABEL = '₩4,900'
+/** 가격 표시 폴백(웹/조회 실패용). 실제 표시는 getPriceString의 스토어 현지화 가격을 우선 사용. */
+export const PRICE_LABEL = LANG === 'en' ? '$4.99' : '₩4,900'
 
 // RevenueCat 공개 SDK 키 (Google). 대시보드 → Project settings → API keys → "goog_..." 키.
 // public 키라 앱에 포함돼도 안전. 비어있으면 결제 시 안내 에러.
@@ -68,5 +68,23 @@ export async function checkEntitlement(): Promise<boolean> {
     return isActive(customerInfo)
   } catch {
     return false
+  }
+}
+
+/**
+ * 스토어 현지화 가격 문자열 (예 "$4.99"/"₩4,900" — 구글 플레이가 사용자 국가에 매긴 가격).
+ * 표시값과 실제 청구가 항상 일치한다. 웹/키 미설정/오류면 null → 호출부에서 PRICE_LABEL 폴백.
+ */
+export async function getPriceString(): Promise<string | null> {
+  if (!Capacitor.isNativePlatform() || !RC_API_KEY) return null
+  try {
+    const { Purchases } = await import('@revenuecat/purchases-capacitor')
+    await ensureConfigured()
+    const offerings = await Purchases.getOfferings()
+    const packages = offerings.current?.availablePackages ?? []
+    const pkg = packages.find((p) => p.product.identifier === PRODUCT_ID) ?? packages[0]
+    return pkg?.product.priceString ?? null
+  } catch {
+    return null
   }
 }

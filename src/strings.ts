@@ -8,6 +8,9 @@ export type Lang = 'ko' | 'en'
 
 function detectLang(): Lang {
   try {
+    // 테스트/QA: URL에 ?lang=en 또는 ?lang=ko 로 강제 가능 (네이티브에선 보통 무효).
+    const forced = new URLSearchParams(window.location.search).get('lang')
+    if (forced === 'en' || forced === 'ko') return forced
     const l = (navigator.language || 'ko').toLowerCase()
     return l.startsWith('en') ? 'en' : 'ko'
   } catch {
@@ -155,7 +158,7 @@ const STRINGS = {
   'app.separatingBg': { ko: '배경 분리 중…', en: 'Separating background…' },
 
   'app.tabAdjust': { ko: '보정', en: 'Adjust' },
-  'app.tabEffects': { ko: '배경·효과', en: 'Background & effects' },
+  'app.tabEffects': { ko: '배경·효과', en: 'Background' },
   'app.tabOutput': { ko: '출력', en: 'Output' },
 
   'app.anotherPhoto': { ko: '다른 사진', en: 'Another photo' },
@@ -184,7 +187,7 @@ const STRINGS = {
   'app.download': { ko: '다운로드', en: 'Download' },
   'app.downloadFree': { ko: '무료로 다운로드', en: 'Download free' },
   'app.downloadFreeLeft': { ko: '무료로 다운로드 ({n}회 남음)', en: 'Download free ({n} left)' },
-  'app.billingCaption': { ko: '무료 5장 제공 · 추가는 ₩4,900 평생', en: '5 free downloads · more for ₩4,900, lifetime' },
+  'app.billingCaption': { ko: '무료 5장 제공 · 추가는 {price} 평생', en: '5 free downloads · more for {price}, lifetime' },
 
   'app.savedToGallery': { ko: '갤러리에 저장됨', en: 'Saved to your gallery' },
   'app.applyCta': { ko: '신청하러 가기 →', en: 'Go apply →' },
@@ -197,7 +200,7 @@ const STRINGS = {
   'app.planPremiumTitle': { ko: '평생 무제한', en: 'Lifetime, unlimited' },
   'app.planFreeTitle': { ko: '무료 플랜', en: 'Free plan' },
   'app.planPremiumDesc': { ko: '평생 이용 중', en: 'Lifetime access active' },
-  'app.planFreeDesc': { ko: '무료 {n}장 남음 · 추가는 ₩4,900 평생', en: '{n} free left · more for ₩4,900, lifetime' },
+  'app.planFreeDesc': { ko: '무료 {n}장 남음 · 추가는 {price} 평생', en: '{n} free left · more for {price}, lifetime' },
   'app.upgrade': { ko: '업그레이드', en: 'Upgrade' },
 
   'app.sectionLegal': { ko: '약관 · 정보', en: 'Terms & info' },
@@ -258,6 +261,7 @@ const STRINGS = {
   'app.tipSmooth': { ko: '잡티 살짝 완화하면 인상이 산뜻·젊어 보여요', en: 'A touch of skin smoothing makes you look fresher and younger' },
 
   'app.specBadge': { ko: '{label} 규격', en: '{label} spec' },
+  'app.docTitle': { ko: '증명사진 만들기 — 여권·운전면허·자격증', en: 'Yei — ID & Passport Photo Maker' },
 
   // 배경 진행(bg.ts) · 이미지 에러(imageUtils.ts)
   'bgprogress.separating': { ko: '배경 분리 중…', en: 'Separating background…' },

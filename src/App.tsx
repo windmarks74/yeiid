@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper from './Cropper'
-import { USAGES, USAGE_SPECS, APPLY_SITE, isRegulated, requiresPremium, isExam, isSelectable, type Usage } from './usage'
+import { USAGES, USAGE_SPECS, APPLY_SITE, isRegulated, requiresPremium, isExam, isSelectable, sizeLabel, type Usage } from './usage'
 import { openExternal } from './external'
 import { NEUTRAL, type Adjust } from './adjust'
 import { BG_COLORS, NEUTRAL_EFFECTS, type Effects } from './effects'
@@ -8,7 +8,7 @@ import { Capacitor, type PluginListenerHandle } from '@capacitor/core'
 import { removeBg, type BgModel } from './bg'
 import { detectFace } from './face'
 import { saveJpeg } from './save'
-import { checkEntitlement, restorePurchases } from './iap'
+import { checkEntitlement, restorePurchases, getPriceString, PRICE_LABEL } from './iap'
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
 import { t } from './strings'
@@ -57,6 +57,7 @@ export default function App() {
   const [outSize, setOutSize] = useState<{ bytes: number; quality: number } | null>(null)
   const [sizeTick, setSizeTick] = useState(0)
   const [billing, setBilling] = useState<BillingState | null>(null)
+  const [price, setPrice] = useState(PRICE_LABEL)
   const [showPaywall, setShowPaywall] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [printSheet, setPrintSheet] = useState(false)
@@ -211,7 +212,7 @@ export default function App() {
     const canvas = printSheet
       ? renderPrintSheet(input, spec.targetW, spec.targetH, {
           label: spec.label,
-          dims: `${spec.widthMm}×${spec.heightMm}mm · ${spec.dpi}DPI`,
+          dims: `${sizeLabel(usage)} · ${spec.dpi}DPI`,
         })
       : renderCrop(spec.targetW, spec.targetH, input)
     if (targetEnabled && targetKB > 0) {
@@ -228,7 +229,7 @@ export default function App() {
     const full = printSheet
       ? renderPrintSheet(input, spec.targetW, spec.targetH, {
           label: spec.label,
-          dims: `${spec.widthMm}×${spec.heightMm}mm · ${spec.dpi}DPI`,
+          dims: `${sizeLabel(usage)} · ${spec.dpi}DPI`,
         })
       : renderCrop(spec.targetW, spec.targetH, input)
     const cap = 800
@@ -278,6 +279,11 @@ export default function App() {
       }
       setBilling(b)
     })()
+  }, [])
+
+  // 스토어 현지화 가격 표시 (예 "$4.99"/"₩4,900"). 실패/웹이면 PRICE_LABEL 폴백 유지.
+  useEffect(() => {
+    getPriceString().then((p) => p && setPrice(p))
   }, [])
 
   // 앱 실제 버전 읽기 (네이티브). 설정 푸터에 "버전 1.1.2 (4)" 형태로 표시 → 빌드마다 자동 갱신
@@ -494,7 +500,7 @@ export default function App() {
 
       <div className="spec-card">
         <div className="spec-dims">
-          {spec.widthMm} × {spec.heightMm}mm
+          {sizeLabel(usage)}
         </div>
         <div className="spec-sub">
           {isExam(usage)
@@ -681,14 +687,14 @@ export default function App() {
                   : t('app.upsellSheet')}
               </div>
               <div className="actions">
-                <button onClick={() => setShowPaywall(true)}>{t('app.unlockLifetime')} · ₩4,900</button>
+                <button onClick={() => setShowPaywall(true)}>{t('app.unlockLifetime')} · {price}</button>
               </div>
             </>
           ) : billing && !canDownload(billing) ? (
             <>
               <div className="upsell">{t('app.upsellFreeUsedUp')}</div>
               <div className="actions">
-                <button onClick={() => setShowPaywall(true)}>{t('app.lifetimeUnlimited')} · ₩4,900</button>
+                <button onClick={() => setShowPaywall(true)}>{t('app.lifetimeUnlimited')} · {price}</button>
               </div>
             </>
           ) : (
@@ -703,7 +709,7 @@ export default function App() {
                 </button>
               </div>
               {billing && !billing.premium && (
-                <p className="billing-caption">{t('app.billingCaption')}</p>
+                <p className="billing-caption">{t('app.billingCaption', { price })}</p>
               )}
             </>
           )}
@@ -755,7 +761,7 @@ export default function App() {
                 billing?.premium
                   ? t('app.planPremiumDesc')
                   : billing
-                    ? t('app.planFreeDesc', { n: freeLeft(billing) })
+                    ? t('app.planFreeDesc', { n: freeLeft(billing), price })
                     : ''
               }
               right={
@@ -842,7 +848,7 @@ export default function App() {
         onChange={onPick}
       />
 
-      {showPaywall && <Paywall onUnlock={onUnlock} onClose={() => setShowPaywall(false)} />}
+      {showPaywall && <Paywall price={price} onUnlock={onUnlock} onClose={() => setShowPaywall(false)} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
   )
@@ -1321,7 +1327,7 @@ function SampleCard({ usage }: { usage: Usage }) {
       <div className="sample-foot">
         <span className="green-badge sm">{t('app.specBadge', { label: spec.label })}</span>
         <span className="sample-dim">
-          {spec.widthMm} × {spec.heightMm}mm
+          {sizeLabel(usage)}
         </span>
       </div>
     </div>

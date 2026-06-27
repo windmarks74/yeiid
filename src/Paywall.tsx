@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { PRICE_LABEL, purchaseLifetime, restorePurchases } from './iap'
+import { purchaseLifetime, restorePurchases } from './iap'
 import { t, type StringKey } from './strings'
 
 type Props = {
   /** 구매/복원 성공 → 영구 해제 */
   onUnlock: () => void
   onClose: () => void
+  /** 스토어 현지화 가격 문자열 (예 "$4.99") */
+  price: string
 }
 
 const BENEFITS: StringKey[] = [
@@ -16,7 +18,7 @@ const BENEFITS: StringKey[] = [
 ]
 
 /** 페이월: ₩4,900 영구 라이센스 구매 + 구매 복원 */
-export default function Paywall({ onUnlock, onClose }: Props) {
+export default function Paywall({ onUnlock, onClose, price }: Props) {
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
 
@@ -56,7 +58,7 @@ export default function Paywall({ onUnlock, onClose }: Props) {
 
       <div className="paywall-foot">
         <div className="paywall-price">
-          {PRICE_LABEL} <span>{t('paywall.priceNote')}</span>
+          {price} <span>{t('paywall.priceNote')}</span>
         </div>
         <button
           className="paywall-buy"

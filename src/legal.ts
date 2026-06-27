@@ -1,6 +1,8 @@
 // 개인정보처리방침 · 이용약관 본문 (Yei). 온디바이스 처리·무수집 기준.
 // 연락처·시행일 실제 정보 반영됨. 공개 호스팅본은 프로젝트 루트 privacy.html (동일 내용 유지).
 
+import { LANG } from './strings'
+
 export type LegalDoc = {
   title: string
   updated: string
@@ -9,7 +11,7 @@ export type LegalDoc = {
 
 const CONTACT = 'shhwang0424@gmail.com'
 
-export const PRIVACY: LegalDoc = {
+const PRIVACY_KO: LegalDoc = {
   title: '개인정보처리방침',
   updated: '시행일: 2026년 6월 12일',
   sections: [
@@ -66,7 +68,7 @@ export const PRIVACY: LegalDoc = {
 
 // 자주 묻는 질문 — LegalDoc 형식 재사용 (h=질문, body=답변).
 // 가격·무료횟수는 앱 실제 값(5회 · ₩4,900) 반영. 지원 규격은 현재 구현 기준.
-export const FAQ: LegalDoc = {
+const FAQ_KO: LegalDoc = {
   title: '자주 묻는 질문',
   updated: '',
   sections: [
@@ -123,7 +125,7 @@ export const FAQ: LegalDoc = {
   ],
 }
 
-export const TERMS: LegalDoc = {
+const TERMS_KO: LegalDoc = {
   title: '이용약관',
   updated: '시행일: 2026년 6월 2일',
   sections: [
@@ -157,3 +159,160 @@ export const TERMS: LegalDoc = {
     },
   ],
 }
+
+// ── English (U.S.-context draft) ───────────────────────────────────────────
+// ⚠️ 초안 — 법률 자문 아님. 미국 맥락 재작성(PIPA 인용 제거, COPPA 13세, CCPA 섹션 추가,
+//    준거법 소비자보호 단서). 운영자 법적 이름·주소는 공개 범위 결정 후 보완. 공개 전 검토 권장.
+const PRIVACY_EN: LegalDoc = {
+  title: 'Privacy Policy',
+  updated: 'Effective: June 12, 2026',
+  sections: [
+    {
+      body: 'Yei ID ("the App") respects your privacy and complies with applicable data-protection laws. The App processes your photos entirely on your device and does not transmit them off your device.',
+    },
+    {
+      h: '1. How your photos are handled (core)',
+      body: 'Photos you load are processed only on your device. They are not sent to, collected by, or stored on our servers or any third party. Cropping, sizing, brightness adjustment, background processing, and all other editing happen on your device. A photo leaves your device only when you choose to save or share it.',
+    },
+    {
+      h: '2. Information we process',
+      body:
+        'The App has no account or login and does not directly collect personal information such as your name or email. However, the following may be processed:\n\n' +
+        'a. Stored on your device\nYour number of free downloads and your purchase (license) status are stored locally on your device. The App does not send these to a separate server, although depending on your device settings they may be included in Android automatic backup (your own Google account).\n\n' +
+        'b. Payments and purchase management (third parties)\nPurchases are handled by Google Play in-app billing, and purchase-status checks and restores use RevenueCat. To verify purchase status when the App runs, an anonymous identifier, device identifier, IP address, country, and OS/app version may be sent to and processed by RevenueCat. The App does not directly collect or store financial information such as card numbers.\n\n' +
+        'c. On-device face detection and person segmentation (Google ML Kit)\nFace detection and person segmentation (background removal) run on your device through Google ML Kit on-device APIs, and your photos are not transmitted. However, the ML Kit SDK may send device metadata, app identifiers, and performance diagnostics to Google.',
+    },
+    {
+      h: '3. Third-party services',
+      body:
+        'We use the following providers for payment/purchase management and on-device image processing. Please refer to each provider’s privacy policy.\n' +
+        '• Google LLC (Google Play in-app billing)\n' +
+        '• RevenueCat, Inc. (purchase-status management and restore)\n' +
+        '• Google LLC (ML Kit on-device face detection and segmentation — diagnostics and usage data)',
+      links: [
+        { label: 'Google Privacy Policy', url: 'https://policies.google.com/privacy' },
+        { label: 'RevenueCat Privacy', url: 'https://www.revenuecat.com/privacy' },
+        { label: 'ML Kit Data Disclosure', url: 'https://developers.google.com/ml-kit/android-data-disclosure' },
+      ],
+    },
+    {
+      h: '4. Retention',
+      body: 'Information stored on your device is deleted when you delete the App or its data. Purchase-related information is retained and managed in accordance with applicable law and the policies of the third-party services above.',
+    },
+    {
+      h: '5. Your choices',
+      body: 'You can delete the App’s data through your device settings. For access to or deletion of purchase-related information, contact us using the details below.',
+    },
+    {
+      h: '6. Children’s privacy',
+      body: 'The App is not directed to children under 13, and we do not knowingly collect personal information from children. If you believe a child has provided information, contact us and we will address it.',
+    },
+    {
+      h: '7. California privacy rights',
+      body: 'The App processes photos only on your device and does not collect, sell, or share your personal information. Because we do not sell or share personal information, no "Do Not Sell or Share My Personal Information" option applies. California residents may contact us with any privacy questions or requests using the contact below.',
+    },
+    {
+      h: '8. Contact',
+      body: `Operator / privacy contact: Yei (individual developer)\nEmail: ${CONTACT}`,
+    },
+    {
+      h: '9. Changes to this policy',
+      body: 'If this policy changes, we will post the changes and their effective date within the App or on a public page.',
+    },
+  ],
+}
+
+const FAQ_EN: LegalDoc = {
+  title: 'Frequently Asked Questions',
+  updated: '',
+  sections: [
+    {
+      h: 'Are my photos sent to a server? Is my privacy safe?',
+      body: 'No. Yei ID does all editing on your device. Photos are not uploaded to a server, and there is no account or login. Editing and saving work even without an internet connection. (A network is used for payments and purchase-status checks — see the Privacy Policy for details.)',
+    },
+    {
+      h: 'Will photos made with this app always be accepted?',
+      body: 'The app helps you match the spec (size, head ratio, background, expression) to improve your chances, but the final decision is made by the issuing authority. Yei ID is not a government-certified app and does not guarantee acceptance. Check the relevant authority’s rules before you submit.',
+    },
+    {
+      h: 'Why can’t I replace the background or retouch in passport mode?',
+      body: 'Many passport and visa authorities — including the U.S. — prohibit background editing and heavy retouching and may reject altered photos. To help avoid rejection, these features are turned off in passport and other regulated modes. You can use background replacement and retouching in driver’s license and general modes.',
+    },
+    {
+      h: 'Which specs are supported?',
+      body: 'Passport, driver’s license, and general ID photos, plus international specs such as the United States (2×2 in) and Schengen. (More specs and custom sizing are in the works.)',
+    },
+    {
+      h: 'How many times can I use it for free? What does it cost?',
+      body: 'You can save up to 5 photos for free. After that, a one-time purchase unlocks unlimited use for life — it’s a single purchase, not a subscription. See the in-app price for your region.',
+    },
+    {
+      h: 'Do I have to pay again if I change devices or reinstall?',
+      body: 'No. Your purchase is tied to your Google Play account. On the same account, use "Restore purchase" to restore it without buying again.',
+    },
+    {
+      h: 'How do I print the photo?',
+      body: 'Save your finished photo, or make a 4×6 print sheet (several photos arranged together) and print it inexpensively at a photo printer or print shop.',
+    },
+    {
+      h: 'Where do I apply after making the photo?',
+      body:
+        'Apply on the official government site. Yei ID is not affiliated with any government agency; the link below is for reference.\n\n' +
+        '• U.S. passports: requirements and online renewal at travel.state.gov.\n' +
+        '• For other countries or document types, check your local issuing authority.\n\n' +
+        '※ Use a photo taken within 6 months of your application date.',
+      links: [
+        { label: 'U.S. Passports (travel.state.gov)', url: 'https://travel.state.gov/content/travel/en/passports.html' },
+      ],
+    },
+    {
+      h: 'Background removal looks off, or the hair edges look strange.',
+      body: 'Background separation runs on your device and looks cleanest with a simple background and even lighting. With busy backgrounds or flyaway hair, the edges may not be perfect. If you can, shoot in front of a plain, solid-colored wall.',
+    },
+    {
+      h: 'Can I use it where there’s no internet?',
+      body: 'Yes. Editing and saving all happen on your device, so you can use it offline. An internet connection is only needed for purchases and restoring a purchase.',
+    },
+  ],
+}
+
+const TERMS_EN: LegalDoc = {
+  title: 'Terms of Service',
+  updated: 'Effective: June 2, 2026',
+  sections: [
+    {
+      h: '1. Service',
+      body: 'Yei ID ("the App") is a tool that helps you edit and save photos to match common specifications (passport, driver’s license, general ID photos, and more).',
+    },
+    {
+      h: '2. Not an official service',
+      body: 'The App is a supporting tool that helps you create spec-compliant photos. It is not an official government or public-agency service and does not guarantee that a photo will be accepted or meet requirements. Always check the official guidance of the issuing authority (passport, license, etc.) for the final specifications and rules.',
+    },
+    {
+      h: '3. Paid service',
+      body: 'A limited number of free downloads is provided; further use is available through a one-time, perpetual license purchase. Payments and refunds follow Google Play policies. See the in-app price for your region.',
+    },
+    {
+      h: '4. Your responsibilities',
+      body: 'You must use only photos you have the right to use, and you are responsible for how the output is used and submitted.',
+    },
+    {
+      h: '5. Limitation of liability',
+      body: 'To the extent permitted by applicable law, the App is not liable for the suitability of the output, the outcome of any review, or similar matters.',
+    },
+    {
+      h: '6. Changes to these terms',
+      body: 'These terms may change. We will give notice through the App when they do.',
+    },
+    {
+      h: '7. Governing law',
+      body: 'These terms are governed by the laws of the Republic of Korea, except where mandatory consumer-protection laws of your place of residence apply.',
+    },
+  ],
+}
+
+// 로케일 선택: 영어 기기 → 영문, 그 외 → 한국어. (소비 코드는 PRIVACY/TERMS/FAQ 그대로 사용.)
+const EN = LANG === 'en'
+export const PRIVACY: LegalDoc = EN ? PRIVACY_EN : PRIVACY_KO
+export const FAQ: LegalDoc = EN ? FAQ_EN : FAQ_KO
+export const TERMS: LegalDoc = EN ? TERMS_EN : TERMS_KO

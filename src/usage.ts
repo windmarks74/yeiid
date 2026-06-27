@@ -48,6 +48,8 @@ export type UsageSpec = {
   /** 안경 정책: 'forbid'=반려 경고, 'warn'=권고(시험류) */
   glasses?: 'warn' | 'forbid'
   recencyMonths?: number
+  /** 치수 표시 단위가 inch인 규격(미국 등) — 영어 로케일에서 "2 × 2 in"로 표기. */
+  displayInch?: boolean
   /**
    * 규격 출처 + 검증 상태. verified=true(공식 직접 확정)인 시험 프리셋만 사용자에게 노출(isSelectable).
    * checked=마지막 점검일(YYYY-MM). 자세한 근거·충돌은 note에. (⚠️ 출시 전 공식 페이지 직접 재확인)
@@ -112,6 +114,7 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     eyeMin: 31, // 눈선 상단 기준 % (바닥 29~35mm → 상단 31~43%)
     eyeMax: 43,
     maxKB: 240, // 비자(DS-160)·DV 디지털 업로드 상한
+    displayInch: true, // 영어 로케일에서 "2 × 2 in" 표기
     restricted: true,
     premium: true,
     notice: {
@@ -335,4 +338,14 @@ export function isSelectable(usage: Usage): boolean {
   const spec = USAGE_SPECS[usage]
   if (spec.group === 'exam') return LANG === 'ko' && spec.source?.verified === true
   return true
+}
+
+/** 치수 표시 문자열. 영어 로케일 + inch 규격(미국)은 "2 × 2 in", 그 외 "51 × 51mm". */
+export function sizeLabel(usage: Usage): string {
+  const s = USAGE_SPECS[usage]
+  if (LANG === 'en' && s.displayInch) {
+    const inch = (mm: number) => String(Math.round((mm / 25.4) * 10) / 10)
+    return `${inch(s.widthMm)} × ${inch(s.heightMm)} in`
+  }
+  return `${s.widthMm} × ${s.heightMm}mm`
 }
