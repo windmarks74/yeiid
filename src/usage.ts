@@ -50,6 +50,8 @@ export type UsageSpec = {
   recencyMonths?: number
   /** 치수 표시 단위가 inch인 규격(미국 등) — 영어 로케일에서 "2 × 2 in"로 표기. */
   displayInch?: boolean
+  /** 목표 용량 인코딩 시 선호 품질 하한(용량 상한과 충돌하면 용량 상한이 우선). */
+  minQuality?: number
   /**
    * 규격 출처 + 검증 상태. verified=true(공식 직접 확정)인 시험 프리셋만 사용자에게 노출(isSelectable).
    * checked=마지막 점검일(YYYY-MM). 자세한 근거·충돌은 note에. (⚠️ 출시 전 공식 페이지 직접 재확인)
@@ -62,11 +64,13 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     label: t('usage.passport.label'),
     widthMm: 35,
     heightMm: 45,
-    dpi: 300,
-    targetW: 413, // 35mm @300dpi
-    targetH: 531, // 45mm @300dpi
+    dpi: 600, // 300→600: 저화질 반려 대응 — 같은 35×45mm를 2배 해상도로(200KB 여유 안에서 더 선명)
+    targetW: 826, // 35mm @600dpi (413→826, 2배)
+    targetH: 1062, // 45mm @600dpi (531→1062, 2배)
     faceMin: 70,
     faceMax: 80,
+    maxKB: 200, // 외교부 온라인 제출 상한 (하드 상한 — 이 안에서 최고 품질로 인코딩)
+    minQuality: 0.75, // 선호 품질 하한 (413×531 q0.75가 200KB 초과 시엔 용량 상한이 이김)
     restricted: true,
     notice: {
       title: t('usage.passport.notice.title'),

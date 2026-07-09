@@ -156,6 +156,18 @@ input[type='range']::-moz-range-thumb {
   color: var(--yellow-700);
 }
 
+/* 저해상 소스 경고 (여권) */
+.lowres-warn {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #fff3cd;
+  border: 1px solid var(--soft-line, #ead58a);
+  color: #7a5c00;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 /* 에디터 툴 칩 (보정 / 배경·효과 / 출력) */
 .tool-chips {
   display: flex;

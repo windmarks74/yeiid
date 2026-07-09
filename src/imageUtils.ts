@@ -540,31 +540,47 @@ export function canvasToBlob(
 
 /**
  * JPEG 품질을 이분 탐색해 목표 용량(바이트) 이하 중 가장 높은 품질로 인코딩.
- * 최저 품질에서도 목표를 못 맞추면 그 결과를 반환한다.
+ * `minQuality` = 선호 품질 하한. 단 **용량 상한이 항상 우선** — 선호 하한 품질이 목표 용량을 넘으면
+ * 하한 아래로도 낮춰 목표 용량을 지킨다(과대 파일 절대 금지). 최저 품질에서도 목표 초과면 그 결과 반환.
  */
 export async function encodeToTargetSize(
   canvas: HTMLCanvasElement,
   targetBytes: number,
+  minQuality = 0.3,
 ): Promise<{ blob: Blob; quality: number }> {
-  let lo = 0.3
-  let hi = 0.95
-  let best: { blob: Blob; quality: number } | null = null
+  const HARD_MIN = 0.3
+  const floor = Math.max(HARD_MIN, minQuality)
 
-  // 먼저 최저 품질이 목표를 넘으면 그걸로 확정(더 줄일 수 없음)
-  const lowest = await canvasToBlob(canvas, 'image/jpeg', lo)
-  if (lowest.size > targetBytes) return { blob: lowest, quality: lo }
+  // 절대 최저 품질에서도 목표 초과면 더 줄일 수 없음 → 그걸로 확정.
+  const lowest = await canvasToBlob(canvas, 'image/jpeg', HARD_MIN)
+  if (lowest.size > targetBytes) return { blob: lowest, quality: HARD_MIN }
+
+  // 선호 하한이 목표에 들어가면 [floor, 0.95]에서 최대화, 아니면(용량 상한 우선) [HARD_MIN, floor]에서.
+  const atFloor = floor > HARD_MIN ? await canvasToBlob(canvas, 'image/jpeg', floor) : lowest
+  let lo: number
+  let hi: number
+  let best: { blob: Blob; quality: number }
+  if (atFloor.size <= targetBytes) {
+    best = { blob: atFloor, quality: floor } // 하한 품질 확보 가능 → 위로 최대화
+    lo = floor
+    hi = 0.95
+  } else {
+    best = { blob: lowest, quality: HARD_MIN } // 용량 상한이 이김 → 하한 아래로 탐색
+    lo = HARD_MIN
+    hi = floor
+  }
 
   for (let i = 0; i < 7; i++) {
     const q = (lo + hi) / 2
     const blob = await canvasToBlob(canvas, 'image/jpeg', q)
     if (blob.size <= targetBytes) {
-      best = { blob, quality: q } // 목표 이하 → 더 높은 품질 시도
+      best = { blob, quality: q }
       lo = q
     } else {
       hi = q
     }
   }
-  return best ?? { blob: lowest, quality: lo }
+  return best
 }
 
 export function formatBytes(n: number): string {

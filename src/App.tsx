@@ -55,6 +55,7 @@ export default function App() {
   const [targetEnabled, setTargetEnabled] = useState(false)
   const [targetKB, setTargetKB] = useState(200)
   const [outSize, setOutSize] = useState<{ bytes: number; quality: number } | null>(null)
+  const [lowRes, setLowRes] = useState(false)
   const [sizeTick, setSizeTick] = useState(0)
   const [billing, setBilling] = useState<BillingState | null>(null)
   const [price, setPrice] = useState(PRICE_LABEL)
@@ -194,6 +195,8 @@ export default function App() {
     if (mk) {
       setTargetEnabled(true)
       setTargetKB(mk)
+    } else {
+      setTargetEnabled(false) // maxKB 없는 규격(면허·일반)은 목표용량 자동 해제 — 규격 전환 시 상태 누수 방지
     }
   }, [usage])
 
@@ -216,7 +219,7 @@ export default function App() {
         })
       : renderCrop(spec.targetW, spec.targetH, input)
     if (targetEnabled && targetKB > 0) {
-      return encodeToTargetSize(canvas, targetKB * 1024)
+      return encodeToTargetSize(canvas, targetKB * 1024, spec.minQuality)
     }
     const blob = await canvasToBlob(canvas, 'image/jpeg', 0.92)
     return { blob, quality: 0.92 }
@@ -252,6 +255,13 @@ export default function App() {
     if (!image) return
     let cancelled = false
     const t = window.setTimeout(async () => {
+      // 저해상 소스 감지: 크롭 영역 픽셀이 출력 규격보다 작으면 업스케일 → 흐림
+      const c = cropRef.current
+      if (!cancelled && c && image) {
+        const cw = c.w * image.width
+        const ch = c.h * image.height
+        setLowRes(cw < spec.targetW || ch < spec.targetH)
+      }
       try {
         const res = await encodeCurrent()
         if (!cancelled && res) setOutSize({ bytes: res.blob.size, quality: res.quality })
@@ -546,6 +556,9 @@ export default function App() {
             onRotate90={rotate90}
             onCrop={onCrop}
           />
+          {usage === 'passport' && lowRes && (
+            <p className="lowres-warn">{t('app.lowResWarn')}</p>
+          )}
           <div className="tool-chips" role="tablist">
             <button
               role="tab"

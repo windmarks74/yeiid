@@ -262,6 +262,7 @@ const STRINGS = {
 
   'app.specBadge': { ko: '{label} 규격', en: '{label} spec' },
   'app.docTitle': { ko: '증명사진 만들기 — 여권·운전면허·자격증', en: 'Yei — ID & Passport Photo Maker' },
+  'app.lowResWarn': { ko: '원본 해상도가 낮아 사진이 흐릴 수 있어요. 더 큰(고해상도) 사진을 사용하세요.', en: 'Your source photo is low-resolution and may look blurry. Use a larger (higher-resolution) photo.' },
 
   // 배경 진행(bg.ts) · 이미지 에러(imageUtils.ts)
   'bgprogress.separating': { ko: '배경 분리 중…', en: 'Separating background…' },
