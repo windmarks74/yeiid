@@ -67,6 +67,8 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     dpi: 600, // 300→600: 저화질 반려 대응 — 같은 35×45mm를 2배 해상도로(200KB 여유 안에서 더 선명)
     targetW: 826, // 35mm @600dpi (413→826, 2배)
     targetH: 1062, // 45mm @600dpi (531→1062, 2배)
+    minW: 413, // 저해상 경고 기준 = 외교부 최소(413×531). 목표(826)로 재면 정상 사진도 오경고 → 최소로 비교
+    minH: 531,
     faceMin: 70,
     faceMax: 80,
     maxKB: 200, // 외교부 온라인 제출 상한 (하드 상한 — 이 안에서 최고 품질로 인코딩)

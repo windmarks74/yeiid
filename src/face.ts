@@ -42,3 +42,27 @@ export async function detectFace(source: HTMLCanvasElement): Promise<FaceBox | n
     return null
   }
 }
+
+/**
+ * 촬영/업로드 사진 품질 점검 (네이티브만). 반려 유발 요소를 문제 키 배열로 반환.
+ * []=문제 없음(또는 웹/실패 — 비차단). 임계값은 폰에서 조정 가능.
+ */
+export async function assessCapture(source: HTMLCanvasElement): Promise<string[]> {
+  if (!Capacitor.isNativePlatform()) return []
+  try {
+    const base64 = toDetectBase64(source)
+    const { face } = await FaceDetect.detect({ data: base64 })
+    if (!face) return ['capture.noFace']
+    const issues: string[] = []
+    const yaw = Math.abs(face.angleY ?? 0) // 좌우 돌림
+    const pitch = Math.abs(face.angleX ?? 0) // 상하
+    const roll = Math.abs(face.angleZ ?? 0) // 기울기
+    if (yaw > 12 || pitch > 12) issues.push('capture.headTurned')
+    if (roll > 8) issues.push('capture.tilted')
+    if (face.h < 0.3) issues.push('capture.faceSmall') // 멀거나 저해상
+    else if (face.h > 0.92) issues.push('capture.tooClose') // 너무 가까움(왜곡 주의)
+    return issues
+  } catch {
+    return []
+  }
+}

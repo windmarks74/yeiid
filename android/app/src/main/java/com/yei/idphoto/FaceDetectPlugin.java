@@ -82,6 +82,10 @@ public class FaceDetectPlugin extends Plugin {
                 putLandmark(face, "leftEye", best.getLandmark(FaceLandmark.LEFT_EYE), iw, ih);
                 putLandmark(face, "rightEye", best.getLandmark(FaceLandmark.RIGHT_EYE), iw, ih);
                 putLandmark(face, "mouth", best.getLandmark(FaceLandmark.MOUTH_BOTTOM), iw, ih);
+                // 고개 각도 (정면 여부 판정용) — ML Kit이 검출과 함께 제공
+                face.put("angleX", best.getHeadEulerAngleX());
+                face.put("angleY", best.getHeadEulerAngleY());
+                face.put("angleZ", best.getHeadEulerAngleZ());
 
                 ret.put("face", face);
                 call.resolve(ret);

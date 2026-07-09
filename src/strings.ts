@@ -264,6 +264,22 @@ const STRINGS = {
   'app.docTitle': { ko: '증명사진 만들기 — 여권·운전면허·자격증', en: 'Yei — ID & Passport Photo Maker' },
   'app.lowResWarn': { ko: '원본 해상도가 낮아 사진이 흐릴 수 있어요. 더 큰(고해상도) 사진을 사용하세요.', en: 'Your source photo is low-resolution and may look blurry. Use a larger (higher-resolution) photo.' },
 
+  // 촬영 후 검증 경고 (ML Kit)
+  'capture.noFace': { ko: '얼굴이 감지되지 않았어요. 정면 얼굴이 나오게 다시 촬영하세요.', en: 'No face detected. Retake with your face clearly visible and facing forward.' },
+  'capture.headTurned': { ko: '고개가 정면이 아니에요. 카메라를 똑바로 보고 다시 촬영하세요.', en: 'Your head isn’t facing forward. Look straight at the camera and retake.' },
+  'capture.tilted': { ko: '고개가 기울었어요. 수평을 맞춰 다시 촬영하세요.', en: 'Your head is tilted. Keep it level and retake.' },
+  'capture.faceSmall': { ko: '얼굴이 작아 흐릴 수 있어요. 조금 더 가까이(단, 팔 길이보단 멀리) 또는 고해상 사진을 쓰세요.', en: 'Your face is small and may look blurry. Move a little closer (but farther than arm’s length), or use a higher-resolution photo.' },
+  'capture.tooClose': { ko: '너무 가까워 얼굴이 왜곡될 수 있어요. 1m 이상 떨어져 다시 촬영하세요.', en: 'You’re too close — this can distort your face. Step back 1m+ and retake.' },
+
+  // 촬영 전 팁 (카메라)
+  'camtips.title': { ko: '잘 나오는 사진 찍기', en: 'Take a photo that passes' },
+  'camtips.t1': { ko: '정면을 보고 턱은 수평으로', en: 'Face forward, chin level' },
+  'camtips.t2': { ko: '1m 이상 떨어져서 (팔 길이보다 멀리) — 가까우면 얼굴이 왜곡돼요', en: 'Stand 1m+ away (farther than arm’s length) — being close distorts your face' },
+  'camtips.t3': { ko: '가능하면 다른 사람이 후면 카메라로 찍어주기', en: 'If you can, have someone take it with the rear camera' },
+  'camtips.t4': { ko: '밝고 균일한 조명 · 단색 배경', en: 'Bright, even lighting · plain background' },
+  'camtips.t5': { ko: '안경·모자·머리로 얼굴 가리지 않기', en: 'No glasses, hats, or hair covering your face' },
+  'camtips.start': { ko: '촬영 시작', en: 'Start camera' },
+
   // 배경 진행(bg.ts) · 이미지 에러(imageUtils.ts)
   'bgprogress.separating': { ko: '배경 분리 중…', en: 'Separating background…' },
   'bgprogress.refining': { ko: '가장자리 정제 중…', en: 'Refining edges…' },

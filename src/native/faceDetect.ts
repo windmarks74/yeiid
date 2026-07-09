@@ -12,6 +12,10 @@ export type DetectedFace = {
   leftEye?: Point
   rightEye?: Point
   mouth?: Point
+  /** 고개 각도(도): Y=좌우 돌림, X=상하, Z=기울기. 정면 여부 판정용. */
+  angleX?: number
+  angleY?: number
+  angleZ?: number
 }
 
 export interface FaceDetectPlugin {

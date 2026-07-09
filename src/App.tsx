@@ -6,12 +6,12 @@ import { NEUTRAL, type Adjust } from './adjust'
 import { BG_COLORS, NEUTRAL_EFFECTS, type Effects } from './effects'
 import { Capacitor, type PluginListenerHandle } from '@capacitor/core'
 import { removeBg, type BgModel } from './bg'
-import { detectFace } from './face'
+import { detectFace, assessCapture } from './face'
 import { saveJpeg } from './save'
 import { checkEntitlement, restorePurchases, getPriceString, PRICE_LABEL } from './iap'
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
-import { t } from './strings'
+import { t, type StringKey } from './strings'
 import {
   canDownload,
   freeLeft,
@@ -56,6 +56,8 @@ export default function App() {
   const [targetKB, setTargetKB] = useState(200)
   const [outSize, setOutSize] = useState<{ bytes: number; quality: number } | null>(null)
   const [lowRes, setLowRes] = useState(false)
+  const [captureIssues, setCaptureIssues] = useState<string[]>([])
+  const [showCamTips, setShowCamTips] = useState(false)
   const [sizeTick, setSizeTick] = useState(0)
   const [billing, setBilling] = useState<BillingState | null>(null)
   const [price, setPrice] = useState(PRICE_LABEL)
@@ -101,6 +103,9 @@ export default function App() {
       setToast(null)
       clearResultCache()
       setScreen('editor')
+      // 촬영/업로드 품질 점검 (네이티브만, 비차단) — 고개 방향·크기 등
+      setCaptureIssues([])
+      assessCapture(canvas).then(setCaptureIssues)
     } catch (err) {
       console.error('[사진 불러오기 실패]', err)
       setToast(t('app.loadPhotoFailed', { msg: (err as Error)?.message ?? '' }))
@@ -260,7 +265,8 @@ export default function App() {
       if (!cancelled && c && image) {
         const cw = c.w * image.width
         const ch = c.h * image.height
-        setLowRes(cw < spec.targetW || ch < spec.targetH)
+        // 경고 기준 = 최소 규격(minW/minH). 목표(2배)로 재면 정상 사진도 오경고 → 최소로 비교.
+        setLowRes(cw < (spec.minW ?? spec.targetW) || ch < (spec.minH ?? spec.targetH))
       }
       try {
         const res = await encodeCurrent()
@@ -474,7 +480,7 @@ export default function App() {
           onSelectUsage={selectUsage}
           premium={!!billing?.premium}
           onStart={() => fileRef.current?.click()}
-          onCamera={() => cameraRef.current?.click()}
+          onCamera={() => setShowCamTips(true)}
           onSettings={openSettings}
         />
       )}
@@ -556,8 +562,13 @@ export default function App() {
             onRotate90={rotate90}
             onCrop={onCrop}
           />
+          {captureIssues.map((k) => (
+            <p className="lowres-warn" key={k}>
+              ⚠ {t(k as StringKey)}
+            </p>
+          ))}
           {usage === 'passport' && lowRes && (
-            <p className="lowres-warn">{t('app.lowResWarn')}</p>
+            <p className="lowres-warn">⚠ {t('app.lowResWarn')}</p>
           )}
           <div className="tool-chips" role="tablist">
             <button
@@ -862,6 +873,42 @@ export default function App() {
       />
 
       {showPaywall && <Paywall price={price} onUnlock={onUnlock} onClose={() => setShowPaywall(false)} />}
+      {showCamTips && (
+        <div className="paywall-screen" role="dialog" aria-modal>
+          <button
+            className="paywall-x"
+            onClick={() => setShowCamTips(false)}
+            aria-label={t('paywall.close')}
+          >
+            ✕
+          </button>
+          <div className="paywall-hero">
+            <div className="paywall-icon">📷</div>
+            <h2>{t('camtips.title')}</h2>
+          </div>
+          <div className="paywall-card">
+            {(['camtips.t1', 'camtips.t2', 'camtips.t3', 'camtips.t4', 'camtips.t5'] as StringKey[]).map(
+              (k) => (
+                <div className="benefit" key={k}>
+                  <span className="benefit-check">✓</span>
+                  {t(k)}
+                </div>
+              ),
+            )}
+          </div>
+          <div className="paywall-foot">
+            <button
+              className="paywall-buy"
+              onClick={() => {
+                setShowCamTips(false)
+                cameraRef.current?.click()
+              }}
+            >
+              {t('camtips.start')}
+            </button>
+          </div>
+        </div>
+      )}
       {toast && <div className="toast">{toast}</div>}
     </div>
   )
