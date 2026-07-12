@@ -168,6 +168,99 @@ input[type='range']::-moz-range-thumb {
   line-height: 1.5;
 }
 
+/* 자체 카메라 (getUserMedia) + 규격 가이드선 */
+.cam-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.cam-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cam-video.mirror {
+  transform: scaleX(-1);
+}
+.cam-overlay {
+  position: relative;
+  height: 82%;
+  max-width: 92%;
+  aspect-ratio: 35 / 45;
+  pointer-events: none;
+}
+.cam-frame,
+.cam-oval {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2.5;
+}
+.cam-guide {
+  stroke: rgba(255, 214, 74, 0.9);
+  stroke-width: 2;
+  stroke-dasharray: 8 8;
+}
+.cam-hint {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  padding: 0 20px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+.cam-controls {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 28px;
+}
+.cam-x,
+.cam-flip {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+.cam-shutter {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.85);
+  background: #fff;
+  cursor: pointer;
+}
+.cam-shutter:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.cam-error {
+  color: #fff;
+  text-align: center;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+}
+
 /* 에디터 툴 칩 (보정 / 배경·효과 / 출력) */
 .tool-chips {
   display: flex;

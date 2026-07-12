@@ -32,6 +32,8 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 자체 카메라(getUserMedia) 미리보기 + 규격 가이드선 -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <!-- 갤러리(공용 Pictures) 저장 — Android 9 이하에서만 필요. 10+는 스코프드 스토리지로 불필요 -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"

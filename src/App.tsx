@@ -11,6 +11,7 @@ import { saveJpeg } from './save'
 import { checkEntitlement, restorePurchases, getPriceString, PRICE_LABEL } from './iap'
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
+import CameraCapture from './CameraCapture'
 import { t, type StringKey } from './strings'
 import {
   canDownload,
@@ -58,6 +59,7 @@ export default function App() {
   const [lowRes, setLowRes] = useState(false)
   const [captureIssues, setCaptureIssues] = useState<string[]>([])
   const [showCamTips, setShowCamTips] = useState(false)
+  const [showCamera, setShowCamera] = useState(false)
   const [sizeTick, setSizeTick] = useState(0)
   const [billing, setBilling] = useState<BillingState | null>(null)
   const [price, setPrice] = useState(PRICE_LABEL)
@@ -86,10 +88,7 @@ export default function App() {
 
   const spec = USAGE_SPECS[usage]
 
-  async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    e.target.value = '' // 같은 파일 재선택도 동작하도록
-    if (!file) return
+  async function importPhoto(file: File) {
     setToast(t('app.loadingPhoto'))
     try {
       // HEIC 변환 + EXIF 방향 정규화 + 다운스케일 → 캔버스 (재인코딩 없음 = 빠름)
@@ -110,6 +109,13 @@ export default function App() {
       console.error('[사진 불러오기 실패]', err)
       setToast(t('app.loadPhotoFailed', { msg: (err as Error)?.message ?? '' }))
     }
+  }
+
+  async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = '' // 같은 파일 재선택도 동작하도록
+    if (!file) return
+    await importPhoto(file)
   }
 
   // 배경 색이 선택됐는데 누끼가 아직 없으면 1회 배경 제거 실행 (무거움).
@@ -901,13 +907,26 @@ export default function App() {
               className="paywall-buy"
               onClick={() => {
                 setShowCamTips(false)
-                cameraRef.current?.click()
+                setShowCamera(true)
               }}
             >
               {t('camtips.start')}
             </button>
           </div>
         </div>
+      )}
+      {showCamera && (
+        <CameraCapture
+          onCapture={(blob) => {
+            setShowCamera(false)
+            importPhoto(new File([blob], 'camera.jpg', { type: 'image/jpeg' }))
+          }}
+          onClose={() => setShowCamera(false)}
+          onFallback={() => {
+            setShowCamera(false)
+            cameraRef.current?.click()
+          }}
+        />
       )}
       {toast && <div className="toast">{toast}</div>}
     </div>

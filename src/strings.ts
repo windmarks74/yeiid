@@ -280,6 +280,14 @@ const STRINGS = {
   'camtips.t5': { ko: '안경·모자·머리로 얼굴 가리지 않기', en: 'No glasses, hats, or hair covering your face' },
   'camtips.start': { ko: '촬영 시작', en: 'Start camera' },
 
+  // 자체 카메라 (getUserMedia)
+  'cam.hint': { ko: '얼굴을 타원 안에 맞추고, 카메라를 정면으로 보세요', en: 'Fit your face in the oval and look straight at the camera' },
+  'cam.loading': { ko: '카메라 준비 중…', en: 'Preparing camera…' },
+  'cam.capture': { ko: '촬영', en: 'Capture' },
+  'cam.flip': { ko: '카메라 전환', en: 'Switch camera' },
+  'cam.error': { ko: '카메라를 열 수 없어요. 기본 카메라로 촬영할까요?', en: 'Couldn’t open the camera. Use the default camera instead?' },
+  'cam.useOs': { ko: '기본 카메라로', en: 'Use default camera' },
+
   // 배경 진행(bg.ts) · 이미지 에러(imageUtils.ts)
   'bgprogress.separating': { ko: '배경 분리 중…', en: 'Separating background…' },
   'bgprogress.refining': { ko: '가장자리 정제 중…', en: 'Refining edges…' },
