@@ -278,6 +278,7 @@ const STRINGS = {
   'camtips.t3': { ko: '가능하면 다른 사람이 후면 카메라로 찍어주기', en: 'If you can, have someone take it with the rear camera' },
   'camtips.t4': { ko: '밝고 균일한 조명 · 단색 배경', en: 'Bright, even lighting · plain background' },
   'camtips.t5': { ko: '안경·모자·머리로 얼굴 가리지 않기', en: 'No glasses, hats, or hair covering your face' },
+  'camtips.t6': { ko: '카메라 앱 설정에서 안내선(격자)·수평계를 켜면 정면·수평 맞추기 쉬워요', en: 'Turn on your camera app’s grid lines and level to keep the shot straight and centered' },
   'camtips.start': { ko: '촬영 시작', en: 'Start camera' },
 
   // 배경 진행(bg.ts) · 이미지 에러(imageUtils.ts)

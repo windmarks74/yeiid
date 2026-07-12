@@ -887,7 +887,7 @@ export default function App() {
             <h2>{t('camtips.title')}</h2>
           </div>
           <div className="paywall-card">
-            {(['camtips.t1', 'camtips.t2', 'camtips.t3', 'camtips.t4', 'camtips.t5'] as StringKey[]).map(
+            {(['camtips.t1', 'camtips.t6', 'camtips.t2', 'camtips.t3', 'camtips.t4', 'camtips.t5'] as StringKey[]).map(
               (k) => (
                 <div className="benefit" key={k}>
                   <span className="benefit-check">✓</span>
