@@ -152,6 +152,25 @@
   .card li b { font-weight: 650; }
   .card li span { color: var(--muted); font-size: 14px; text-align: right; flex: none; }
 
+  /* ---------- Screenshots ---------- */
+  .strip {
+    display: flex; gap: 16px; overflow-x: auto;
+    padding: 4px 0 20px; margin: 0 -20px; padding-inline: 20px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+  .shot { flex: 0 0 228px; scroll-snap-align: center; }
+  .shot img {
+    width: 100%; height: auto; background: #fff;
+    border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow-md);
+  }
+  .shot p {
+    margin: 13px 4px 0; font-size: 14.5px; font-weight: 650;
+    color: var(--muted); line-height: 1.5;
+  }
+  .hint { font-size: 14px; color: var(--muted); margin: 0; }
+
   /* ---------- Why ---------- */
   .why { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
   .why div h3 { margin: 0 0 6px; font-size: 17.5px; font-weight: 750; letter-spacing: -.02em; }
@@ -258,6 +277,42 @@
 </header>
 
 <main>
+
+<section id="shots">
+  <div class="wrap">
+    <h2>앱 화면 미리보기</h2>
+    <p class="sub">설치 전에 어떤 화면인지 먼저 보세요.</p>
+
+    <div class="strip">
+      <figure class="shot">
+        <img src="shots/spec.png" width="540" height="960" loading="lazy"
+             alt="여권·운전면허·일반 증명 탭에서 정수리·턱선 가이드가 자동으로 잡힌 편집 화면" />
+        <p>용도만 고르면 정수리·턱선 가이드까지 자동</p>
+      </figure>
+      <figure class="shot">
+        <img src="shots/exam.png" width="540" height="960" loading="lazy"
+             alt="큐넷 자격증 규격으로 300×400px, 200KB 이하에 맞춰 저장되는 화면" />
+        <p>큐넷 300×400px · 200KB 이하 자동 맞춤</p>
+      </figure>
+      <figure class="shot">
+        <img src="shots/global.png" width="540" height="960" loading="lazy"
+             alt="미국 비자·여권 2×2인치 규격과 눈높이 가이드가 적용된 화면" />
+        <p>미국 2×2인치 · 셰겐까지 규격 그대로</p>
+      </figure>
+      <figure class="shot">
+        <img src="shots/privacy.png" width="540" height="960" loading="lazy"
+             alt="사진이 기기를 떠나지 않고 서버 업로드·회원가입이 없다는 설정 화면" />
+        <p>사진은 기기 밖으로 나가지 않아요</p>
+      </figure>
+      <figure class="shot">
+        <img src="shots/price.png" width="540" height="960" loading="lazy"
+             alt="한 번 결제로 평생 무제한 이용할 수 있음을 안내하는 화면" />
+        <p>한 번 결제하면 평생 무제한</p>
+      </figure>
+    </div>
+    <p class="hint">옆으로 밀어서 더 보기 →</p>
+  </div>
+</section>
 
 <section id="specs">
   <div class="wrap">
