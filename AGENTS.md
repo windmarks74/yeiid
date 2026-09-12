@@ -1,7 +1,7 @@
 # Yei (YeiID) — 증명사진/여권사진 앱 · 프로젝트 헌법 (Always Loaded)
 
 > 상세: `README.md` · 결제 `IAP_SETUP.md` · 스토어 `STORE_LISTING.md` · 데이터보안 `DATA_SAFETY.md`
-> · 규격 점검 `MAINTENANCE.md` · 매뉴얼 `docs/manuals/` · 직원 `.claude/agents/staff-{pm,dev,qa}.md`
+> · 규격 점검 `MAINTENANCE.md` · 매뉴얼 `docs/manuals/` · 직원 `.codex/agents/staff-{pm,dev,qa}.toml`
 
 ## 명의 / 소속 (중요)
 
