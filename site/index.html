@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow" />
+
+<!--
+  Yei ID 랜딩 페이지 (1페이지, 의존성 없음)
+
+  용도: ① Play Console "웹사이트" URL  ② 네이버·구글 SEO  ③ 검색광고 착지점
+
+  배포 전 바꿔야 하는 것 — 아래 SITE_ORIGIN 자리 3곳:
+    · <link rel="canonical">
+    · og:url / og:image
+    · JSON-LD 안의 url
+  현재는 임시로 GitHub Pages 경로를 넣어 뒀다. 커스텀 도메인이 정해지면 전부 그 도메인으로 교체.
+
+  수치는 src/usage.ts 실제 출력값과 반드시 일치시킬 것. 어긋나면 반려·불신으로 직결된다.
+  가격(₩4,900)은 src/iap.ts의 PRICE_LABEL과 동기화.
+  "보장 / 100% 통과 / 공인" 워딩 금지 — 정책·신뢰 리스크.
+-->
+
+<title>여권사진·증명사진 만들기 — 폰에서 1분 | Yei ID</title>
+<meta name="description" content="여권사진·운전면허·증명사진과 큐넷·공무원·토익·KPC 시험 접수 사진을 스마트폰에서 규격에 맞춰 1분 만에. 픽셀·용량 자동, 광고 없음, 사진은 기기 밖으로 나가지 않습니다." />
+<link rel="canonical" href="https://windmarks74.github.io/yeiid/site/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Yei ID" />
+<meta property="og:title" content="여권사진·증명사진 만들기 — 폰에서 1분 | Yei ID" />
+<meta property="og:description" content="여권·운전면허·증명사진과 큐넷·공무원·토익·KPC 접수 사진을 규격에 맞춰 자동으로. 사진은 기기 밖으로 나가지 않습니다." />
+<meta property="og:url" content="https://windmarks74.github.io/yeiid/site/" />
+<meta property="og:image" content="https://windmarks74.github.io/yeiid/site/icon-512.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="icon-512.png" />
+<link rel="apple-touch-icon" href="icon-512.png" />
+
+<style>
+  :root {
+    --yellow: #ffd12e;
+    --yellow-bright: #ffda4d;
+    --yellow-deep: #f2be00;
+    --yellow-pale: #fff6d6;
+    --ink: #17161c;
+    --muted: #615f6b;
+    --line: #ece9e1;
+    --bg: #f8f6ef;
+    --surface: #ffffff;
+    --green: #15a66e;
+    --green-pale: #e8f7f0;
+    --r-md: 16px;
+    --r-lg: 22px;
+    --r-pill: 999px;
+    --shadow-sm: 0 1px 2px rgba(23,22,28,.05), 0 1px 3px rgba(23,22,28,.04);
+    --shadow-md: 0 2px 6px rgba(23,22,28,.06), 0 8px 20px rgba(23,22,28,.07);
+    --maxw: 960px;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+                 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: radial-gradient(120% 90% at 50% 0%, var(--yellow-bright) 0%, var(--yellow) 55%, var(--yellow-deep) 100%);
+    padding: 56px 0 64px;
+    text-align: center;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--ink); color: #fff;
+    padding: 8px 16px 8px 10px; border-radius: var(--r-pill);
+    font-weight: 700; font-size: 15px; letter-spacing: -.01em;
+  }
+  .brand img { width: 26px; height: 26px; border-radius: 7px; }
+  h1 {
+    font-size: clamp(30px, 6.4vw, 50px);
+    line-height: 1.22; letter-spacing: -.03em;
+    margin: 22px 0 14px; font-weight: 800;
+  }
+  .lede {
+    font-size: clamp(16px, 2.4vw, 19px);
+    color: #4a4632; max-width: 620px; margin: 0 auto 28px; font-weight: 500;
+  }
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--ink); color: #fff; text-decoration: none;
+    padding: 16px 30px; border-radius: var(--r-pill);
+    font-weight: 700; font-size: 17px;
+    box-shadow: 0 6px 18px rgba(23,22,28,.22);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(23,22,28,.28); }
+  .cta svg { width: 20px; height: 22px; flex: none; }
+  .cta-note { margin-top: 14px; font-size: 14.5px; color: #5c573f; font-weight: 600; }
+
+  .badges {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    margin-top: 26px;
+  }
+  .badge {
+    background: rgba(255,255,255,.72); border: 1px solid rgba(23,22,28,.09);
+    padding: 7px 14px; border-radius: var(--r-pill);
+    font-size: 14px; font-weight: 650;
+  }
+
+  /* ---------- Sections ---------- */
+  section { padding: 60px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 {
+    font-size: clamp(23px, 4vw, 31px); letter-spacing: -.025em;
+    margin: 0 0 10px; font-weight: 800;
+  }
+  .sub { color: var(--muted); margin: 0 0 30px; font-size: 16px; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(272px, 1fr)); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card h3 {
+    margin: 0 0 4px; font-size: 18px; font-weight: 750; letter-spacing: -.02em;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 12px; font-weight: 700; color: #8a6a00;
+    background: var(--yellow-pale); border: 1px solid #f3e4ad;
+    padding: 3px 9px; border-radius: var(--r-pill);
+  }
+  .card ul { list-style: none; margin: 14px 0 0; padding: 0; }
+  .card li {
+    padding: 9px 0; border-top: 1px solid var(--line);
+    font-size: 15.5px; display: flex; justify-content: space-between; gap: 14px;
+  }
+  .card li:first-child { border-top: 0; }
+  .card li b { font-weight: 650; }
+  .card li span { color: var(--muted); font-size: 14px; text-align: right; flex: none; }
+
+  /* ---------- Why ---------- */
+  .why { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .why div h3 { margin: 0 0 6px; font-size: 17.5px; font-weight: 750; letter-spacing: -.02em; }
+  .why div p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  .why .ico {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: var(--yellow-pale); border: 1px solid #f3e4ad;
+    display: grid; place-items: center; font-size: 19px; margin-bottom: 12px;
+  }
+
+  /* ---------- Steps ---------- */
+  .steps { counter-reset: s; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .steps li {
+    counter-increment: s; list-style: none;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-md); padding: 22px 22px 22px 62px; position: relative;
+    font-size: 15.5px; color: var(--muted);
+  }
+  .steps li::before {
+    content: counter(s);
+    position: absolute; left: 20px; top: 21px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--yellow); color: var(--ink);
+    display: grid; place-items: center; font-weight: 800; font-size: 14px;
+  }
+  .steps li b { display: block; color: var(--ink); font-weight: 750; font-size: 16.5px; margin-bottom: 3px; }
+
+  /* ---------- Price ---------- */
+  .price {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: 34px; text-align: center;
+    box-shadow: var(--shadow-md);
+  }
+  .price .amt { font-size: 42px; font-weight: 800; letter-spacing: -.03em; }
+  .price .amt small { font-size: 17px; font-weight: 650; color: var(--muted); letter-spacing: 0; }
+  .price ul { list-style: none; padding: 0; margin: 20px auto 0; max-width: 420px; text-align: left; }
+  .price li { padding: 8px 0; font-size: 15.5px; display: flex; gap: 10px; }
+  .price li::before {
+    content: '✓'; color: var(--green); font-weight: 800; flex: none;
+  }
+
+  /* ---------- FAQ ---------- */
+  details {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-md); padding: 0 20px; margin-bottom: 10px;
+  }
+  summary {
+    cursor: pointer; padding: 17px 0; font-weight: 700; font-size: 16.5px;
+    letter-spacing: -.02em; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '＋'; float: right; color: var(--muted); font-weight: 600; }
+  details[open] summary::after { content: '－'; }
+  details p { margin: 0 0 18px; color: var(--muted); font-size: 15.5px; }
+
+  /* ---------- Footer ---------- */
+  .note {
+    background: #fffdf5; border: 1px solid #f0e7c9; border-radius: var(--r-md);
+    padding: 18px 20px; font-size: 14.5px; color: #6b6450; margin-top: 30px;
+  }
+  footer {
+    border-top: 1px solid var(--line); padding: 34px 0 48px;
+    font-size: 14.5px; color: var(--muted);
+  }
+  footer a { color: var(--ink); font-weight: 650; }
+  .flinks { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 14px; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    section { padding: 46px 0; }
+    .hero { padding: 42px 0 50px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand"><img src="icon-512.png" alt="" /> Yei ID</div>
+    <h1>사진관 갈 시간에,<br />폰에서 1분.</h1>
+    <p class="lede">
+      여권·운전면허·증명사진부터 큐넷·공무원·토익·KPC 접수 사진까지.
+      용도만 고르면 크기·얼굴 비율·파일 용량을 알아서 맞춥니다.
+    </p>
+
+    <a class="cta" href="https://play.google.com/store/apps/details?id=com.yei.idphoto">
+      <svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor">
+        <path d="M.7.6A1.7 1.7 0 0 0 .3 1.8v18.4c0 .5.2.9.4 1.2l.1.1L11 11.1v-.2L.8.6H.7Z"/>
+        <path d="m14.4 14.5-3.4-3.4v-.2l3.4-3.4.1.1 4 2.3c1.2.7 1.2 1.8 0 2.4l-4 2.2Z"/>
+        <path d="M14.5 14.4 11 11 .7 21.4c.4.4 1 .5 1.8.1l12-6.9Z"/>
+        <path d="M14.5 7.6 2.5.7C1.7.3 1.1.3.7.7L11 11l3.5-3.4Z"/>
+      </svg>
+      Google Play에서 받기
+    </a>
+    <p class="cta-note">처음 몇 장은 무료 · 광고 없음 · 회원가입 없음</p>
+
+    <div class="badges">
+      <span class="badge">📵 사진 서버 전송 없음</span>
+      <span class="badge">📐 규격 자동</span>
+      <span class="badge">💾 용량 자동 맞춤</span>
+      <span class="badge">🖨 4×6 인화 시트</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="specs">
+  <div class="wrap">
+    <h2>어떤 사진이 필요하세요?</h2>
+    <p class="sub">용도를 고르면 크기·머리 비율·눈높이 가이드가 자동으로 잡힙니다.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>국내 신분증 <span class="tag">가장 많이 씀</span></h3>
+        <ul>
+          <li><b>여권</b><span>35 × 45mm</span></li>
+          <li><b>운전면허증</b><span>35 × 45mm</span></li>
+          <li><b>일반 증명사진</b><span>30 × 40mm</span></li>
+          <li><b>이력서 · 반명함</b><span>취업·자소서용</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>시험 · 자격증 접수 <span class="tag">픽셀·용량 자동</span></h3>
+        <ul>
+          <li><b>큐넷(Q-Net)</b><span>300 × 400px · JPG<br />200KB 이하</span></li>
+          <li><b>공무원 채용</b><span>137 × 177px · JPG/PNG<br />350KB 미만</span></li>
+          <li><b>토익 · 토익스피킹</b><span>3 × 4cm · JPG<br />머리 비율 80~90%</span></li>
+          <li><b>KPC(ITQ·GTQ·SMAT 등)</b><span>225 × 300px<br />500KB 이하</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>해외 비자 · 여권</h3>
+        <ul>
+          <li><b>미국 비자 · 여권</b><span>2 × 2인치<br />600 × 600px · 300DPI</span></li>
+          <li><b>셰겐(유럽) 비자</b><span>35 × 45mm</span></li>
+        </ul>
+        <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
+          여권·비자처럼 규정이 엄격한 용도에서는 배경 교체·보정을 자동으로 꺼서
+          과한 편집으로 인한 반려 위험을 줄입니다.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <h2>왜 Yei인가</h2>
+    <p class="sub">사진관 없이도, 반려 걱정 없이.</p>
+
+    <div class="why">
+      <div>
+        <div class="ico">🔒</div>
+        <h3>사진이 폰 밖으로 안 나갑니다</h3>
+        <p>모든 처리는 기기 안에서. 서버 업로드도, 회원가입·로그인도 없습니다. 얼굴 사진을 어디에도 보내지 않습니다.</p>
+      </div>
+      <div>
+        <div class="ico">📐</div>
+        <h3>규격은 정확하게</h3>
+        <p>정수리·턱선·눈높이 가이드에 얼굴만 맞추면 끝. 용도별 크기와 머리 비율이 자동으로 잡힙니다.</p>
+      </div>
+      <div>
+        <div class="ico">💾</div>
+        <h3>"용량 초과"로 막히지 않게</h3>
+        <p>온라인 접수는 파일 용량이 조금만 넘어도 등록이 막힙니다. 기준 이하로 자동 조정해 바로 업로드할 수 있습니다.</p>
+      </div>
+      <div>
+        <div class="ico">🖨</div>
+        <h3>인화도 한 번에</h3>
+        <p>4×6 인화 시트로 여러 장을 배치해 편의점 무인 출력기나 집 프린터에서 저렴하게 뽑을 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>쓰는 법은 세 단계</h2>
+    <p class="sub">벽 앞에서 찍은 셀카 한 장이면 충분합니다.</p>
+    <ol class="steps">
+      <li><b>용도 선택</b>여권, 운전면허, 큐넷, 미국 비자… 필요한 것을 고릅니다.</li>
+      <li><b>얼굴 맞추기</b>정수리·턱선 가이드에 맞춰 사진을 올리고 위치만 조정합니다.</li>
+      <li><b>저장 · 제출</b>규격·용량에 맞춘 파일이 갤러리에 저장됩니다. 그대로 업로드하거나 인화하세요.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="price">
+  <div class="wrap">
+    <h2>한 번 결제, 평생 무제한</h2>
+    <p class="sub">장당 결제도, 매달 구독도 아닙니다.</p>
+    <div class="price">
+      <div class="amt">₩4,900 <small>한 번만</small></div>
+      <ul>
+        <li>무제한으로 만들고 저장</li>
+        <li>광고 없음 · 구독 아님</li>
+        <li>규정이 바뀌면 앱 업데이트로 반영 · 추가 비용 없음</li>
+        <li>해외 규격(미국·셰겐)과 인화 시트 포함</li>
+      </ul>
+      <p style="margin:24px 0 0">
+        <a class="cta" href="https://play.google.com/store/apps/details?id=com.yei.idphoto">Google Play에서 받기</a>
+      </p>
+      <p class="cta-note" style="color:var(--muted)">먼저 무료로 만들어 보고 결정하세요.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>자주 묻는 질문</h2>
+    <p class="sub">접수 전에 가장 많이 막히는 것들.</p>
+
+    <details open>
+      <summary>큐넷 자격증 사진 규격이 어떻게 되나요?</summary>
+      <p>국가기술자격 원서접수는 300 × 400픽셀 JPG, 파일 용량 200KB 이하를 요구합니다. Yei는 이 크기로 잘라내고 용량도 기준 아래로 자동 조정해 저장합니다.</p>
+    </details>
+
+    <details>
+      <summary>공무원 채용 원서 사진은요?</summary>
+      <p>국가공무원채용시스템 기준 137 × 177픽셀, JPG 또는 PNG, 350KB 미만입니다. 용도에서 "공무원"을 고르면 그대로 맞춰집니다.</p>
+    </details>
+
+    <details>
+      <summary>토익 접수 사진은 어떤 걸 올려야 하나요?</summary>
+      <p>YBM 안내 기준 3 × 4cm 규격에 머리 비율 80~90%의 상반신 사진입니다. Yei는 해당 비율 가이드를 띄워 맞출 수 있게 합니다.</p>
+    </details>
+
+    <details>
+      <summary>집에서 찍은 셀카도 되나요?</summary>
+      <p>됩니다. 밝은 곳에서 단색 벽을 등지고 정면으로 찍으면 충분합니다. 운전면허·일반·이력서 사진은 배경을 흰색으로 바꿀 수 있고, 인물 분리도 기기 안에서 처리됩니다.</p>
+    </details>
+
+    <details>
+      <summary>제 사진이 서버로 전송되나요?</summary>
+      <p>아닙니다. 편집과 저장은 전부 기기 안에서 이뤄지며 사진은 서버로 전송·저장되지 않습니다. 회원가입이나 로그인도 없습니다. 자세한 내용은 개인정보처리방침을 확인하세요.</p>
+    </details>
+
+    <details>
+      <summary>여권·비자 사진도 이걸로 제출할 수 있나요?</summary>
+      <p>여권(35 × 45mm), 미국 비자·여권(2 × 2인치), 셰겐 비자 규격을 지원합니다. 다만 규정이 엄격한 용도라 배경 교체·보정은 자동으로 꺼집니다. 최종 승인 여부는 제출 기관의 판단에 따릅니다.</p>
+    </details>
+
+    <div class="note">
+      Yei ID는 공개된 규격 기준에 맞춰 사진을 만들어 드리지만, <b>최종 승인 여부는 제출 기관의 판단에 따릅니다.</b>
+      규정은 기관·시점에 따라 달라질 수 있으니 제출 전 해당 기관의 공식 안내를 확인하시기 바랍니다.
+      본 앱은 정부·공공기관의 공인 서비스가 아닙니다.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="https://play.google.com/store/apps/details?id=com.yei.idphoto">Google Play</a>
+      <a href="https://windmarks74.github.io/yeiid/privacy.html">개인정보처리방침</a>
+      <a href="mailto:shhwang0424@gmail.com">문의 shhwang0424@gmail.com</a>
+    </div>
+    <div>© 2026 Yei ID · 증명사진·여권사진 앱</div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Yei ID — 여권사진·증명사진 만들기",
+  "operatingSystem": "Android",
+  "applicationCategory": "PhotographyApplication",
+  "url": "https://windmarks74.github.io/yeiid/site/",
+  "installUrl": "https://play.google.com/store/apps/details?id=com.yei.idphoto",
+  "description": "여권·운전면허·증명사진과 큐넷·공무원·토익·KPC 시험 접수 사진을 규격에 맞춰 만드는 증명사진 앱. 사진은 기기 밖으로 전송되지 않습니다.",
+  "offers": {
+    "@type": "Offer",
+    "price": "4900",
+    "priceCurrency": "KRW"
+  }
+}
+</script>
+
+</body>
+</html>

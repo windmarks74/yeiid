@@ -214,3 +214,6 @@
 - **웹사이트 URL 등록**: GitHub Pages 루트(`windmarks74.github.io/yeiid/`)가 빌드 안 된
   Vite `index.html`을 서빙 중이라 **빈 화면**이다(`/src/main.tsx` 404). 랜딩 페이지를
   만들기 전에는 등록하면 안 된다. 네이버 검색광고의 전제조건이기도 하므로 우선순위 상위.
+  → **2026-09-12 `site/index.html` 제작 완료.** 배포처(도메인/호스팅)는 미정 —
+  회사 도메인이 Cloudflare를 쓴다고 하니 Cloudflare Pages가 유력. 배포 확정 후
+  canonical·og:url·JSON-LD의 URL 3곳을 실제 도메인으로 교체하고 콘솔 웹사이트란에 등록할 것.
