@@ -39,7 +39,10 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # accountId 는 일부러 넣지 않는다. 토큰이 계정 하나에만 스코프돼 있어
+          # wrangler 가 스스로 찾는다 (토큰에 Account Settings:Read, Memberships:Read 있음).
+          # 계정이 여러 개로 늘어나 "more than one account" 오류가 나면 그때
+          # CLOUDFLARE_ACCOUNT_ID 시크릿을 추가하고 이 줄을 살리면 된다.
           # Cloudflare 대시보드 빌드가 쓰던 버전으로 고정 — 자동 업그레이드로
           # 어느 날 갑자기 깨지는 일을 막는다.
           wranglerVersion: '4.131.1'
