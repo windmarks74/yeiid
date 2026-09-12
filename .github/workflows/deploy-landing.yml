@@ -1,0 +1,48 @@
+# 랜딩 페이지(yeiid.itbrown.com) 자동 배포.
+#
+# main 에 랜딩 관련 파일이 바뀌면 Cloudflare Workers 로 배포한다.
+# 배포 대상·커스텀 도메인은 레포 루트 wrangler.jsonc 에 선언돼 있다.
+#
+# 필요한 GitHub Secrets (레포 → Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   — Cloudflare API 토큰
+#   CLOUDFLARE_ACCOUNT_ID  — Cloudflare 계정 ID
+#
+# 앱(Capacitor) 빌드와는 무관하다. 안드로이드 릴리스는 지금도 수동이다.
+
+name: Deploy landing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/yeiid/**'
+      - 'wrangler.jsonc'
+      - '.github/workflows/deploy-landing.yml'
+  # 파일 변경 없이 손으로 한 번 돌리고 싶을 때 (Actions 탭 → Run workflow)
+  workflow_dispatch:
+
+# 연달아 push 했을 때 마지막 것만 배포되게 한다.
+concurrency:
+  group: deploy-landing
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # 기본 GITHUB_TOKEN 권한 최소화 (이 잡은 레포에 아무것도 쓰지 않는다)
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Cloudflare 대시보드 빌드가 쓰던 버전으로 고정 — 자동 업그레이드로
+          # 어느 날 갑자기 깨지는 일을 막는다.
+          wranglerVersion: '4.131.1'
+          # 레포에 Capacitor 의존성이 잔뜩 있지만 배포에는 필요 없다.
+          # wrangler-action 이 wrangler 만 따로 설치하므로 npm ci 를 돌리지 않는다.
+          command: deploy
