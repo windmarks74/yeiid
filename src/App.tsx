@@ -24,7 +24,9 @@ import {
 } from './billing'
 import {
   canvasToBlob,
+  encodeJpeg,
   encodeToTargetSize,
+  type EncodedJpeg,
   formatBytes,
   loadSourcePhoto,
   renderCrop,
@@ -227,7 +229,7 @@ export default function App() {
     img: HTMLCanvasElement
     cutout: Cutout | null
     key: string
-    p: Promise<{ blob: Blob; quality: number } | null>
+    p: Promise<EncodedJpeg | null>
   } | null>(null)
 
   /** 출력 결과를 결정하는 모든 입력의 지문. 하나라도 다르면 다시 인코딩한다. */
@@ -256,7 +258,7 @@ export default function App() {
   }
 
   /** 같은 입력이면 이전(또는 진행 중) 인코딩을 재사용. 입력이 바뀌면 새로 인코딩. */
-  function encodeShared(): Promise<{ blob: Blob; quality: number } | null> {
+  function encodeShared(): Promise<EncodedJpeg | null> {
     if (!image || !cropRef.current) return Promise.resolve(null)
     const key = encodeKey()
     const hit = encodeCacheRef.current
@@ -274,7 +276,7 @@ export default function App() {
   }
 
   // 현재 설정으로 출력 JPEG 인코딩 (목표 용량이 켜지면 이분 탐색)
-  async function encodeCurrent(): Promise<{ blob: Blob; quality: number } | null> {
+  async function encodeCurrent(): Promise<EncodedJpeg | null> {
     if (!image || !cropRef.current) return null
     const input = { img: image, cutout, crop: cropRef.current, adjust, effects, face, rotation }
     const canvas = printSheet
@@ -286,12 +288,12 @@ export default function App() {
     if (targetEnabled && targetKB > 0) {
       return encodeToTargetSize(canvas, targetKB * 1024, spec.minQuality)
     }
-    const blob = await canvasToBlob(canvas, 'image/jpeg', 0.92)
-    return { blob, quality: 0.92 }
+    return encodeJpeg(canvas, 0.92)
   }
 
-  // 결과 화면 미리보기용 — 축소해서 빠르게 인코딩 (다운로드는 encodeCurrent로 풀해상도)
-  async function renderPreviewBlob(): Promise<Blob | null> {
+  // 결과 화면 미리보기용 — 축소해서 빠르게 인코딩 (다운로드는 encodeCurrent로 풀해상도).
+  // data URL 반환: toBlob 콜백이 화면 정지 시 밀리는 문제를 피한다(imageUtils.encodeJpeg 주석).
+  async function renderPreviewBlob(): Promise<string | null> {
     if (!image || !cropRef.current) return null
     const input = { img: image, cutout, crop: cropRef.current, adjust, effects, face, rotation }
     const full = printSheet
@@ -312,7 +314,7 @@ export default function App() {
       ctx.drawImage(full, 0, 0, s.width, s.height)
       src = s
     }
-    return canvasToBlob(src, 'image/jpeg', 0.85)
+    return encodeJpeg(src, 0.85).dataUrl
   }
 
   // 결과 용량 실시간 표시 (설정/크롭 변경 후 350ms 디바운스 재계산)
@@ -330,7 +332,7 @@ export default function App() {
       }
       try {
         const res = await encodeShared()
-        if (!cancelled && res) setOutSize({ bytes: res.blob.size, quality: res.quality })
+        if (!cancelled && res) setOutSize({ bytes: res.bytes, quality: res.quality })
       } catch (err) {
         // 인코딩 실패 시 unhandled rejection 방지 — 용량 표시는 이전 값 유지
         console.error('[용량 계산 실패]', err)
@@ -437,10 +439,9 @@ export default function App() {
     let cancelled = false
     setResultUrl(null)
     renderPreviewBlob()
-      .then((blob) => {
-        if (cancelled || !blob) return
-        const url = URL.createObjectURL(blob)
-        resultCacheRef.current[key] = url // 캐시(여기서 해제 안 함 — clearResultCache가 관리)
+      .then((url) => {
+        if (cancelled || !url) return
+        resultCacheRef.current[key] = url // data URL — 해제 불필요, 화면 전환 시 버리기만 하면 된다
         setResultUrl(url)
       })
       .catch((err) => {
@@ -491,9 +492,7 @@ export default function App() {
 
   // 결과 미리보기 캐시 비우기 (편집 반영 위해 결과 진입/새 사진 시 호출)
   function clearResultCache() {
-    const c = resultCacheRef.current
-    if (c.single) URL.revokeObjectURL(c.single)
-    if (c.sheet) URL.revokeObjectURL(c.sheet)
+    // data URL 이라 해제할 객체 URL 이 없다 — 참조만 버리면 GC 대상.
     resultCacheRef.current = { single: null, sheet: null }
   }
 
@@ -522,7 +521,9 @@ export default function App() {
     if (downloading) return
     setDownloading(true)
     try {
-      let res: { blob: Blob; quality: number } | null
+      // 인코딩이 동기라 메인 스레드를 잠깐 잡는다 → "저장 중…"을 먼저 그리게 한 틱 양보.
+      await new Promise((r) => setTimeout(r, 0))
+      let res: EncodedJpeg | null
       try {
         res = await encodeShared() // 용량 표시용 인코딩이 이미 있으면 재사용
       } catch (e) {
@@ -530,13 +531,13 @@ export default function App() {
         return
       }
       if (!res) return
-      setOutSize({ bytes: res.blob.size, quality: res.quality })
+      setOutSize({ bytes: res.bytes, quality: res.quality })
       // 저장마다 유니크 파일명(밀리초까지) → 갤러리에 매번 새 항목으로 누적, 덮어쓰기 방지
       const filename = printSheet
         ? `Yei_${usage}_sheet_${nowStamp()}.jpg`
         : `Yei_${usage}_${nowStamp()}.jpg`
       try {
-        await saveJpeg(res.blob, filename)
+        await saveJpeg(res.dataUrl, filename)
       } catch (e) {
         setToast(t('app.saveFailed', { msg: (e as Error)?.message ?? e }))
         return

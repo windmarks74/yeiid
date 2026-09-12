@@ -558,43 +558,72 @@ export function canvasToBlob(
   })
 }
 
+/** 인코딩 결과. 갤러리 저장이 data URL을 받으므로 그대로 넘길 수 있다. */
+export type EncodedJpeg = { dataUrl: string; bytes: number; quality: number }
+
+/**
+ * **동기** JPEG 인코딩.
+ *
+ * `canvas.toBlob` 은 결과를 콜백으로 돌려주는데, 화면이 정지해 있으면 기기가 주사율을
+ * 크게 낮추면서(삼성 가변주사율) 그 콜백 전달이 초 단위로 밀린다. 한 번이면 티가 안 나지만
+ * 목표 용량 이분탐색처럼 순차로 9번 호출하면, 사용자가 화면을 건드리지 않는 한 수십 초가 걸린다.
+ * (실측: 여권 저장이 가만히 두면 40~90초, 스크롤하면 즉시 완료.)
+ * `toDataURL` 은 동기라 콜백 대기가 없다.
+ */
+export function encodeJpeg(canvas: HTMLCanvasElement, quality: number): EncodedJpeg {
+  const dataUrl = canvas.toDataURL('image/jpeg', quality)
+  const b64 = dataUrl.slice(dataUrl.indexOf(',') + 1)
+  const pad = b64.endsWith('==') ? 2 : b64.endsWith('=') ? 1 : 0
+  return { dataUrl, bytes: Math.floor((b64.length * 3) / 4) - pad, quality }
+}
+
+/** data URL → Blob (동기). 웹 다운로드 경로에서만 필요. */
+export function dataUrlToBlob(dataUrl: string): Blob {
+  const type = dataUrl.slice(5, dataUrl.indexOf(';'))
+  const bin = atob(dataUrl.slice(dataUrl.indexOf(',') + 1))
+  const arr = new Uint8Array(bin.length)
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i)
+  return new Blob([arr], { type })
+}
+
 /**
  * JPEG 품질을 이분 탐색해 목표 용량(바이트) 이하 중 가장 높은 품질로 인코딩.
  * `minQuality` = 선호 품질 하한. 단 **용량 상한이 항상 우선** — 선호 하한 품질이 목표 용량을 넘으면
  * 하한 아래로도 낮춰 목표 용량을 지킨다(과대 파일 절대 금지). 최저 품질에서도 목표 초과면 그 결과 반환.
+ * 전 구간 동기 — 이유는 encodeJpeg 주석 참고.
  */
-export async function encodeToTargetSize(
+export function encodeToTargetSize(
   canvas: HTMLCanvasElement,
   targetBytes: number,
   minQuality = 0.3,
-): Promise<{ blob: Blob; quality: number }> {
+): EncodedJpeg {
   const HARD_MIN = 0.3
   const floor = Math.max(HARD_MIN, minQuality)
 
   // 절대 최저 품질에서도 목표 초과면 더 줄일 수 없음 → 그걸로 확정.
-  const lowest = await canvasToBlob(canvas, 'image/jpeg', HARD_MIN)
-  if (lowest.size > targetBytes) return { blob: lowest, quality: HARD_MIN }
+  const lowest = encodeJpeg(canvas, HARD_MIN)
+  if (lowest.bytes > targetBytes) return lowest
 
   // 선호 하한이 목표에 들어가면 [floor, 0.95]에서 최대화, 아니면(용량 상한 우선) [HARD_MIN, floor]에서.
-  const atFloor = floor > HARD_MIN ? await canvasToBlob(canvas, 'image/jpeg', floor) : lowest
+  const atFloor = floor > HARD_MIN ? encodeJpeg(canvas, floor) : lowest
   let lo: number
   let hi: number
-  let best: { blob: Blob; quality: number }
-  if (atFloor.size <= targetBytes) {
-    best = { blob: atFloor, quality: floor } // 하한 품질 확보 가능 → 위로 최대화
+  let best: EncodedJpeg
+  if (atFloor.bytes <= targetBytes) {
+    best = atFloor // 하한 품질 확보 가능 → 위로 최대화
     lo = floor
     hi = 0.95
   } else {
-    best = { blob: lowest, quality: HARD_MIN } // 용량 상한이 이김 → 하한 아래로 탐색
+    best = lowest // 용량 상한이 이김 → 하한 아래로 탐색
     lo = HARD_MIN
     hi = floor
   }
 
   for (let i = 0; i < 7; i++) {
     const q = (lo + hi) / 2
-    const blob = await canvasToBlob(canvas, 'image/jpeg', q)
-    if (blob.size <= targetBytes) {
-      best = { blob, quality: q }
+    const e = encodeJpeg(canvas, q)
+    if (e.bytes <= targetBytes) {
+      best = e
       lo = q
     } else {
       hi = q
