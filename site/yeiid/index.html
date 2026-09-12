@@ -10,11 +10,13 @@
 
   용도: ① Play Console "웹사이트" URL  ② 네이버·구글 SEO  ③ 검색광고 착지점
 
-  배포 위치: https://www.itbrown.com/yeiid/  (회사 사이트와 같은 오리진의 하위 경로)
-  → 이 폴더(site/yeiid)를 회사 사이트 정적 루트에 `yeiid/` 그대로 올린다.
-  자산 경로를 `/yeiid/...` 루트 기준 절대경로로 쓴 이유: 방문자가 슬래시 없이
-  `/yeiid` 로 들어와도 상대경로가 `/icon-512.png` 로 풀려 깨지는 걸 막기 위해서다.
-  로컬 미리보기는 site/ 를 문서 루트로 띄우면 실제와 같은 /yeiid/ 경로가 된다.
+  배포 위치: https://yeiid.itbrown.com/   (Cloudflare Pages · 이 레포 직결)
+  Pages 프로젝트 설정 — Build command 없음 / Build output directory = `site/yeiid`.
+  즉 이 폴더가 곧 사이트 루트라 자산은 `/icon-512.png`, `/shots/...` 로 쓴다.
+
+  회사 사이트(itbrown-site.pages.dev)와 배포가 완전히 분리된다. 하위 경로
+  (www.itbrown.com/yeiid)로 가려면 회사 사이트 빌드에 이 폴더를 넣어야 해서
+  두 사이트가 한 배포본을 공유하게 되는데, 그걸 피하려고 서브도메인을 골랐다.
 
   수치는 src/usage.ts 실제 출력값과 반드시 일치시킬 것. 어긋나면 반려·불신으로 직결된다.
   가격(₩4,900)은 src/iap.ts의 PRICE_LABEL과 동기화.
@@ -23,18 +25,18 @@
 
 <title>여권사진·증명사진 만들기 — 폰에서 1분 | Yei ID</title>
 <meta name="description" content="여권사진·운전면허·증명사진과 큐넷·공무원·토익·KPC 시험 접수 사진을 스마트폰에서 규격에 맞춰 1분 만에. 픽셀·용량 자동, 광고 없음, 사진은 기기 밖으로 나가지 않습니다." />
-<link rel="canonical" href="https://www.itbrown.com/yeiid/" />
+<link rel="canonical" href="https://yeiid.itbrown.com/" />
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Yei ID" />
 <meta property="og:title" content="여권사진·증명사진 만들기 — 폰에서 1분 | Yei ID" />
 <meta property="og:description" content="여권·운전면허·증명사진과 큐넷·공무원·토익·KPC 접수 사진을 규격에 맞춰 자동으로. 사진은 기기 밖으로 나가지 않습니다." />
-<meta property="og:url" content="https://www.itbrown.com/yeiid/" />
-<meta property="og:image" content="https://www.itbrown.com/yeiid/icon-512.png" />
+<meta property="og:url" content="https://yeiid.itbrown.com/" />
+<meta property="og:image" content="https://yeiid.itbrown.com/icon-512.png" />
 <meta name="twitter:card" content="summary_large_image" />
 
-<link rel="icon" href="/yeiid/icon-512.png" />
-<link rel="apple-touch-icon" href="/yeiid/icon-512.png" />
+<link rel="icon" href="/icon-512.png" />
+<link rel="apple-touch-icon" href="/icon-512.png" />
 
 <style>
   :root {
@@ -249,7 +251,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="brand"><img src="/yeiid/icon-512.png" alt="" width="26" height="26" /> Yei ID</div>
+    <div class="brand"><img src="/icon-512.png" alt="" width="26" height="26" /> Yei ID</div>
     <h1>사진관 갈 시간에,<br />폰에서 1분.</h1>
     <p class="lede">
       여권·운전면허·증명사진부터 큐넷·공무원·토익·KPC 접수 사진까지.
@@ -285,27 +287,27 @@
 
     <div class="strip">
       <figure class="shot">
-        <img src="/yeiid/shots/spec.png" width="540" height="960" loading="lazy"
+        <img src="/shots/spec.png" width="540" height="960" loading="lazy"
              alt="여권·운전면허·일반 증명 탭에서 정수리·턱선 가이드가 자동으로 잡힌 편집 화면" />
         <p>용도만 고르면 정수리·턱선 가이드까지 자동</p>
       </figure>
       <figure class="shot">
-        <img src="/yeiid/shots/exam.png" width="540" height="960" loading="lazy"
+        <img src="/shots/exam.png" width="540" height="960" loading="lazy"
              alt="큐넷 자격증 규격으로 300×400px, 200KB 이하에 맞춰 저장되는 화면" />
         <p>큐넷 300×400px · 200KB 이하 자동 맞춤</p>
       </figure>
       <figure class="shot">
-        <img src="/yeiid/shots/global.png" width="540" height="960" loading="lazy"
+        <img src="/shots/global.png" width="540" height="960" loading="lazy"
              alt="미국 비자·여권 2×2인치 규격과 눈높이 가이드가 적용된 화면" />
         <p>미국 2×2인치 · 셰겐까지 규격 그대로</p>
       </figure>
       <figure class="shot">
-        <img src="/yeiid/shots/privacy.png" width="540" height="960" loading="lazy"
+        <img src="/shots/privacy.png" width="540" height="960" loading="lazy"
              alt="사진이 기기를 떠나지 않고 서버 업로드·회원가입이 없다는 설정 화면" />
         <p>사진은 기기 밖으로 나가지 않아요</p>
       </figure>
       <figure class="shot">
-        <img src="/yeiid/shots/price.png" width="540" height="960" loading="lazy"
+        <img src="/shots/price.png" width="540" height="960" loading="lazy"
              alt="한 번 결제로 평생 무제한 이용할 수 있음을 안내하는 화면" />
         <p>한 번 결제하면 평생 무제한</p>
       </figure>
@@ -480,7 +482,7 @@
   "name": "Yei ID — 여권사진·증명사진 만들기",
   "operatingSystem": "Android",
   "applicationCategory": "PhotographyApplication",
-  "url": "https://www.itbrown.com/yeiid/",
+  "url": "https://yeiid.itbrown.com/",
   "installUrl": "https://play.google.com/store/apps/details?id=com.yei.idphoto",
   "description": "여권·운전면허·증명사진과 큐넷·공무원·토익·KPC 시험 접수 사진을 규격에 맞춰 만드는 증명사진 앱. 사진은 기기 밖으로 전송되지 않습니다.",
   "offers": {

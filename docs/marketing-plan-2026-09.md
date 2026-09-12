@@ -214,11 +214,19 @@
 - **웹사이트 URL 등록**: GitHub Pages 루트(`windmarks74.github.io/yeiid/`)가 빌드 안 된
   Vite `index.html`을 서빙 중이라 **빈 화면**이다(`/src/main.tsx` 404). 랜딩 페이지를
   만들기 전에는 등록하면 안 된다. 네이버 검색광고의 전제조건이기도 하므로 우선순위 상위.
-  → **2026-09-12 랜딩 제작 완료 (`site/yeiid/`).** 배포 주소 확정: `https://www.itbrown.com/yeiid/`.
-  canonical·og·JSON-LD는 이미 이 주소로 맞췄고, 자산은 `/yeiid/...` 루트 기준 절대경로다.
+  → **2026-09-12 랜딩 제작 완료 (`site/yeiid/`). 배포 주소 `https://yeiid.itbrown.com/`.**
 
-  **남은 것 — 실제 배포는 회사 사이트 쪽 작업이다.** `www.itbrown.com`은 Cloudflare 위
-  정적 사이트이고 `/*` catch-all이 걸려 있어(없는 경로도 200 + 회사 홈 반환) 하위 경로를
-  붙이려면 그 사이트의 정적 루트에 `yeiid/` 폴더를 넣어야 한다. Cloudflare Pages는 실제
-  정적 파일을 catch-all보다 먼저 서빙하므로 폴더만 넣으면 그대로 뜬다.
+  **왜 하위 경로가 아니라 서브도메인인가.** 처음엔 `www.itbrown.com/yeiid`로 잡았으나
+  조사 결과 `www`·apex 모두 CNAME → `itbrown-site.pages.dev`(Cloudflare Pages)였다.
+  하위 경로로 붙이려면 회사 사이트 빌드 산출물에 이 폴더를 넣어야 하고, 그러면
+  **두 사이트가 배포본 하나를 공유**한다(회사 홈 빌드가 깨지면 랜딩도 죽는다).
+  Worker 라우트로 우회하는 방법도 있으나 회사 운영 도메인에 장애 지점을 더하는 값이 크다.
+  서브도메인은 배포가 완전히 분리되고 회사 레포 접근도 불필요하며, AGENTS.md의
+  명의 분리(개인 ↔ 법인) 규칙과도 맞는다. SEO 손해는 사실상 0 — itbrown.com이 쌓은
+  권위는 SQL Server 관제 쪽이라 "여권사진" 주제로 물려받을 게 없다.
+
+  **Cloudflare Pages 설정값**: Connect to Git `windmarks74/yeiid` · Production branch `main`
+  · Framework preset None · Build command 없음 · **Build output directory `site/yeiid`**
+  · Custom domains에 `yeiid.itbrown.com` 추가(같은 계정 존이라 CNAME 자동 생성).
+
   배포 후 Play Console 스토어 설정 → 웹사이트란에 등록할 것.
