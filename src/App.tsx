@@ -12,8 +12,10 @@ import { checkEntitlement, restorePurchases, getPriceString, PRICE_LABEL } from 
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
 import { t, type StringKey } from './strings'
+import { noteSaveAndMaybeReview } from './review'
 import {
   canDownload,
+  FREE_LIMIT,
   freeLeft,
   grantPremium,
   loadBilling,
@@ -73,7 +75,7 @@ export default function App() {
   const [saved, setSaved] = useState(false)
   const [settingsReturn, setSettingsReturn] = useState<'landing' | 'editor' | 'result'>('landing')
   // 설정 푸터 표시용 앱 버전 (네이티브 실제 버전을 읽어옴 → 빌드마다 자동 반영)
-  const [appVersion, setAppVersion] = useState('1.1.7')
+  const [appVersion, setAppVersion] = useState('1.2.1')
   const cropRef = useRef<CropRect | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
@@ -468,6 +470,7 @@ export default function App() {
     }
     setToast(t('app.saved'))
     setSaved(true) // 결과 화면에 저장 확인 + 신청 CTA 노출
+    void noteSaveAndMaybeReview() // 첫 저장 직후 인앱 리뷰 요청 (네이티브, 설치당 1회)
     // 저장 성공 후에만 카운트
     if (billing) setBilling(await recordDownload(billing))
   }
@@ -550,6 +553,7 @@ export default function App() {
             aspect={spec.targetW / spec.targetH}
             faceMin={spec.faceMin}
             faceMax={spec.faceMax}
+            crown={spec.crownPct}
             eyeMin={spec.eyeMin}
             eyeMax={spec.eyeMax}
             busy={bgBusy}
@@ -716,7 +720,7 @@ export default function App() {
             </>
           ) : billing && !canDownload(billing) ? (
             <>
-              <div className="upsell">{t('app.upsellFreeUsedUp')}</div>
+              <div className="upsell">{t('app.upsellFreeUsedUp', { n: FREE_LIMIT })}</div>
               <div className="actions">
                 <button onClick={() => setShowPaywall(true)}>{t('app.lifetimeUnlimited')} · {price}</button>
               </div>
@@ -733,7 +737,7 @@ export default function App() {
                 </button>
               </div>
               {billing && !billing.premium && (
-                <p className="billing-caption">{t('app.billingCaption', { price })}</p>
+                <p className="billing-caption">{t('app.billingCaption', { n: FREE_LIMIT, price })}</p>
               )}
             </>
           )}
@@ -1456,7 +1460,7 @@ function Landing({
       <p className="landing-privacy">
         <IconLock /> {t('app.landingPrivacy')}
       </p>
-      <p className="landing-cap">{t('app.landingCap')}</p>
+      <p className="landing-cap">{t('app.landingCap', { n: FREE_LIMIT })}</p>
     </div>
   )
 }

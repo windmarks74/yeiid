@@ -12,6 +12,8 @@ type Props = {
   /** 머리(정수리~턱) 권장 비율 % (용도별) */
   faceMin: number
   faceMax: number
+  /** 정수리선 상단 여백 %. 미지정=11. 머리 비율이 큰 규격(토익 80~90%)은 줄여야 턱선 밴드가 프레임 안에 들어온다 */
+  crown?: number
   /** 눈높이 가이드 밴드(상단 기준 %). 미국 등 눈높이 규정이 있을 때만 표시 */
   eyeMin?: number
   eyeMax?: number
@@ -46,6 +48,7 @@ export default function Cropper({
   aspect,
   faceMin,
   faceMax,
+  crown,
   eyeMin,
   eyeMax,
   busy,
@@ -194,7 +197,7 @@ export default function Cropper({
           onPointerCancel={onPointerUp}
         >
           <canvas className="crop-canvas" ref={canvasRef} />
-          <FaceGuide faceMin={faceMin} faceMax={faceMax} eyeMin={eyeMin} eyeMax={eyeMax} />
+          <FaceGuide faceMin={faceMin} faceMax={faceMax} crown={crown} eyeMin={eyeMin} eyeMax={eyeMax} />
           {busy && (
             <div className="crop-busy">
               <div className="progress-bar" />
@@ -312,21 +315,23 @@ function IconRotate() {
 }
 
 /**
- * 얼굴 위치 가이드. 정수리선(상단 여백 11%)과 턱 허용 밴드를 표시한다.
+ * 얼굴 위치 가이드. 정수리선(상단 여백, 기본 11%)과 턱 허용 밴드를 표시한다.
  * 밴드 = 정수리 + 머리비율[faceMin..faceMax] → 용도별 규격에 맞춰 동적.
  */
 function FaceGuide({
   faceMin,
   faceMax,
+  crown,
   eyeMin,
   eyeMax,
 }: {
   faceMin: number
   faceMax: number
+  crown?: number
   eyeMin?: number
   eyeMax?: number
 }) {
-  const CROWN = 11 // 정수리선 상단 여백 %
+  const CROWN = crown ?? 11 // 정수리선 상단 여백 %
   const hasEye = eyeMin != null && eyeMax != null
   return (
     <div className="face-guide" aria-hidden>

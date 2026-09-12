@@ -1,7 +1,7 @@
 {
   "name": "id-photo-app",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
     "sync:android": "tsc -b && vite build && node scripts/strip-model.mjs && cap sync android"
   },
   "dependencies": {
+    "@capacitor-community/in-app-review": "^8.0.0",
     "@capacitor-community/media": "^9.1.0",
     "@capacitor/android": "^8.3.4",
     "@capacitor/app": "^8.1.0",
@@ -31,6 +32,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "sharp": "^0.32.6",
     "typescript": "^5.6.3",
     "vite": "^6.0.5"
   }

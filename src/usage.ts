@@ -26,6 +26,8 @@ export type UsageSpec = {
   /** 머리(정수리~턱)가 사진 높이에서 차지하는 권장 비율 % */
   faceMin: number
   faceMax: number
+  /** 정수리선 상단 여백 %(크롭 가이드). 미지정=11. 머리 비율이 큰 규격(토익 80~90%)은 줄여야 턱선 밴드가 프레임 안에 들어온다 */
+  crownPct?: number
   /** 규정상 AI 배경교체·잡티·강한 보정을 막는 제한 규격(여권·해외 등) */
   restricted: boolean
   /** 프리미엄(해외 규격) 잠금 — 기존 entitlement로 해제 */
@@ -159,7 +161,7 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
   },
   // ── 시험·자격증 (국내, 무료). 핵심 = 디지털 업로드 규격 자동 맞춤(특히 용량 캡).
   //    배경 흰색 가능, 보정은 보수적 권고(restricted 아님). 안경=경고 권고.
-  // ⚠️ 수치는 1차 골격값 — 출시 전 각 기관 공식 페이지에서 px·용량·머리비율 직접 재확인할 것(source 참고).
+  // 4종 모두 공식 페이지 라이브 확인값(MAINTENANCE.md 2026-09-02). 접수 시즌 직전 재점검 — 각 source.url 참고.
   qnet: {
     label: t('usage.qnet.label'),
     widthMm: 30,
@@ -199,24 +201,24 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     widthMm: 30,
     heightMm: 40,
     dpi: 300,
-    targetW: 300,
-    targetH: 400,
-    minW: 300,
-    minH: 400,
+    targetW: 225, // 공식 범위(가로 115~235·세로 150~315) 안의 3:4 — 큐넷(300×400)과 다름
+    targetH: 300,
+    minW: 115,
+    minH: 150,
     faceMin: 62,
     faceMax: 78,
-    maxKB: 200,
+    maxKB: 500,
     format: 'jpg',
-    allowedFormats: ['jpg'],
+    allowedFormats: ['jpg', 'png'], // 공식: PNG 권장, JPG·GIF 가능
     glasses: 'warn',
     recencyMonths: 6,
     restricted: false,
     group: 'exam',
     source: {
-      url: 'https://license.kpc.or.kr',
-      verified: false, // 🔴 디지털 미확인 — 보류
-      checked: '2026-06',
-      note: '물리만 공식 확정(3×4cm·6개월·상반신 정면 탈모). 디지털 px/용량은 공식 미명시(큐넷 준용 추정, 미확정). KPC 원서접수 화면 확인 후 verified=true.',
+      url: 'https://license.kpc.or.kr/nasec/rceptexmncnfirm/orgrcept/selectAcceptPhotoRule.do',
+      verified: true, // ✅ 공식 직접 확정 (2026-09-02 라이브 재확인, 2026-06-19 1차 확인과 동일)
+      checked: '2026-09',
+      note: '공식 확정(KPC 사진 등록 규정 페이지 + FAQ "사진 등록이 되지 않아요" 동일): 가로 115~235px·세로 150~315px, 500KB 이하, PNG 권장(JPG·GIF 가능), 300dpi 권장, 3×4cm, 최근 6개월 이내, 단색 배경(별도 배경 없음), 컬러·정면 상반신(어깨까지)·탈모·정수리~턱 전부 노출. 큐넷 준용 아님(자체 규격, 값 다름). 앱 출력 225×300(3:4, 범위 내)·JPG.',
     },
     notice: {
       title: t('usage.kpc.notice.title'),
@@ -233,11 +235,11 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     widthMm: 35,
     heightMm: 45,
     dpi: 300,
-    targetW: 137, // 사이버국가고시센터 업로드 px
+    targetW: 137, // 국가공무원채용시스템 업로드 px (공식: 3.5×4.5cm = 137×177 pixel 기준)
     targetH: 177,
     faceMin: 70,
     faceMax: 80,
-    maxKB: 100,
+    maxKB: 340, // 공식 "350KB 미만" — 단위 해석(1000/1024) 어느 쪽이든 미만이 되도록 340KB로 인코딩
     format: 'jpg',
     allowedFormats: ['jpg', 'png'],
     glasses: 'warn',
@@ -245,10 +247,10 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     restricted: false,
     group: 'exam',
     source: {
-      url: 'https://gongmuwon.gosi.kr',
-      verified: false, // 🟡 값 신뢰 높음, 공식 원문 미확보 — 폰 1회 확인 후 true
-      checked: '2026-06',
-      note: '값 신뢰 높음(다수 출처가 센터 인용): JPG/PNG·3.5×4.5cm(137×177px)·100KB 미만. 단 gongmuwon.gosi.kr 공식 원문은 PDF/JS라 직접 미확보 → 폰 원서접수 사진등록 화면 1회 확인 후 verified=true. (2026 사이버국가고시센터→gongmuwon.gosi.kr 전면 이전, 구 사이트 4/30 종료) 시간선택제·중증장애인 선발은 용량 예외.',
+      url: 'https://gongmuwon.gosi.kr/oprut/AppApAplfSbmsnAplfRcptGd.do',
+      verified: true, // ✅ 공식 직접 확정 (2026-09-02 안내 페이지 원문 + 인사혁신처 공고 제2026-1호, 2026-06-19 1차 확인과 동일)
+      checked: '2026-09',
+      note: '공식 확정(국가공무원채용시스템 > 원서접수 > 응시원서 제출 안내): "사진파일(JPG, PNG) 규격 ① 3.5cm×4.5cm(137×177 pixel) 기준 ② 파일용량 350KB 미만(중증장애인 선발시험 제외)". 옛 100KB는 구 사이버국가고시센터(gosi.kr, 2026-04-30 종료) 값 → 폐기. 6개월 이내·단색 배경·이마/귀 노출은 정부민원안내(110.go.kr) 기준 "권장"(본인 식별 명확하면 허용) — 필수 아님. 안경 규정 없음.',
     },
     notice: {
       title: t('usage.gosi.notice.title'),
@@ -265,11 +267,12 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     widthMm: 30,
     heightMm: 40,
     dpi: 300,
-    targetW: 115, // YBM 업로드 px
-    targetH: 150,
-    faceMin: 72,
-    faceMax: 82, // 정수리~턱 3.2~3.6cm(큰 편) — 가이드 범위로 근사. TODO 확인
-    maxKB: 500, // TODO: 500KB vs 6MB 출처 충돌 — 공식 확인 후 수정
+    targetW: 300, // 공식 px 규정 없음 — 업로드 시스템이 3:4 재단 후 최대 300×400으로 저장 → 그 크기로 출력
+    targetH: 400,
+    faceMin: 80, // 공식: 정수리~턱 3.2~3.6cm / 4cm = 80~90%
+    faceMax: 90,
+    crownPct: 5, // 머리가 커서 기본 정수리 여백(11%)이면 턱선 밴드가 프레임 밖 → 상단 여백 5%
+    maxKB: 500, // 공식 상한 6MB — 500KB는 그 안의 안전값(표기는 notice에서 6MB로)
     format: 'jpg',
     allowedFormats: ['jpg'],
     glasses: 'warn',
@@ -277,10 +280,10 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     restricted: false,
     group: 'exam',
     source: {
-      url: 'https://www.toeic.co.kr',
-      verified: false, // 🟡 YBM 내부 충돌 — px만 폰 확인 후 true
-      checked: '2026-06',
-      note: 'YBM 내부 충돌: 공식 FAQ(m.toeic.co.kr)=3×4cm·6MB 이하 vs 토익위원회(토익스토리)=115×150px·500KB 이하. 안전하게 ≤500KB로 설정(양쪽 충족, 6MB도 자동 통과). 흰배경, 머리 정수리~턱 3.2~3.6cm. px(115×150 저해상)만 폰 1회 확인 후 verified=true.',
+      url: 'https://m.toeic.co.kr/customer/csFaq.php',
+      verified: true, // ✅ 공식 직접 확정 (FAQ 라이브 2026-09-02 + 사진등록 팝업 JS 2024-06 캡처, 2026-06-19 1차 확인과 동일)
+      checked: '2026-09',
+      note: '공식 확정(m.toeic.co.kr / m.toeicswt.co.kr FAQ, TOEIC·Speaking 동일): JPG만, 6MB 이하, 3×4cm, 최근 6개월 이내, 흰 배경, 정수리~턱 3.2~3.6cm(80~90%), 천연색·정면·탈모·두 귀 노출·어깨까지. 공식 px 규정 없음 — 업로드 팝업이 3:4 크로퍼로 재단 후 최대 300×400 저장(photoUpload.php JS). 500KB·115×150px는 토익스토리 2016~18 옛값(폐기). 잔여 리스크: 로그인 필요한 업로드 화면은 2024-06 캡처 기준 — 접수 시즌에 1회 육안 확인 권장.',
     },
     notice: {
       title: t('usage.toeic.notice.title'),
@@ -294,10 +297,10 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
   },
 }
 
-// 화면 표시 순서: 국내(여권·면허·일반) → 큐넷(시험·무료) → 해외(잠금) → 미검증 시험(숨김).
+// 화면 표시 순서: 국내(여권·면허·일반) → 시험·자격증(큐넷·KPC·공무원·토익, 무료) → 해외(잠금). 미검증 시험은 isSelectable이 숨김.
 // 랜딩 칩·에디터 탭 공통 — 순서는 여기 한 곳만 바꾸면 됨.
 const DISPLAY_ORDER: Usage[] = [
-  'passport', 'license', 'general', 'qnet', 'us', 'schengen', 'kpc', 'gosi', 'toeic',
+  'passport', 'license', 'general', 'qnet', 'kpc', 'gosi', 'toeic', 'us', 'schengen',
 ]
 export const USAGES: { id: Usage; label: string }[] = DISPLAY_ORDER.map((id) => ({
   id,

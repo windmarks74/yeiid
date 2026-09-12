@@ -1,5 +1,6 @@
 // 개인정보처리방침 · 이용약관 본문 (Yei). 온디바이스 처리·무수집 기준.
 // 연락처·시행일 실제 정보 반영됨. 공개 호스팅본은 프로젝트 루트 privacy.html (동일 내용 유지).
+import { FREE_LIMIT } from './billing'
 
 import { LANG } from './strings'
 
@@ -67,7 +68,7 @@ const PRIVACY_KO: LegalDoc = {
 }
 
 // 자주 묻는 질문 — LegalDoc 형식 재사용 (h=질문, body=답변).
-// 가격·무료횟수는 앱 실제 값(5회 · ₩4,900) 반영. 지원 규격은 현재 구현 기준.
+// 가격·무료횟수는 앱 실제 값(FREE_LIMIT · ₩4,900) 반영. 지원 규격은 현재 구현 기준.
 const FAQ_KO: LegalDoc = {
   title: '자주 묻는 질문',
   updated: '',
@@ -90,7 +91,7 @@ const FAQ_KO: LegalDoc = {
     },
     {
       h: '무료로 몇 번 쓸 수 있나요? 요금은요?',
-      body: '무료로 5회까지 저장할 수 있고, 이후엔 ₩4,900을 한 번만 결제하면 평생 무제한입니다. 구독이 아니라 1회 결제예요.',
+      body: `무료로 ${FREE_LIMIT}회까지 저장할 수 있고, 이후엔 ₩4,900을 한 번만 결제하면 평생 무제한입니다. 구독이 아니라 1회 결제예요.`,
     },
     {
       h: '기기를 바꾸거나 재설치하면 다시 결제해야 하나요?',
@@ -244,7 +245,7 @@ const FAQ_EN: LegalDoc = {
     },
     {
       h: 'How many times can I use it for free? What does it cost?',
-      body: 'You can save up to 5 photos for free. After that, a one-time purchase unlocks unlimited use for life — it’s a single purchase, not a subscription. See the in-app price for your region.',
+      body: `You can save up to ${FREE_LIMIT} photos for free. After that, a one-time purchase unlocks unlimited use for life — it’s a single purchase, not a subscription. See the in-app price for your region.`,
     },
     {
       h: 'Do I have to pay again if I change devices or reinstall?',
