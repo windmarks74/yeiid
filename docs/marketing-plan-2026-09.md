@@ -214,6 +214,11 @@
 - **웹사이트 URL 등록**: GitHub Pages 루트(`windmarks74.github.io/yeiid/`)가 빌드 안 된
   Vite `index.html`을 서빙 중이라 **빈 화면**이다(`/src/main.tsx` 404). 랜딩 페이지를
   만들기 전에는 등록하면 안 된다. 네이버 검색광고의 전제조건이기도 하므로 우선순위 상위.
-  → **2026-09-12 `site/index.html` 제작 완료.** 배포처(도메인/호스팅)는 미정 —
-  회사 도메인이 Cloudflare를 쓴다고 하니 Cloudflare Pages가 유력. 배포 확정 후
-  canonical·og:url·JSON-LD의 URL 3곳을 실제 도메인으로 교체하고 콘솔 웹사이트란에 등록할 것.
+  → **2026-09-12 랜딩 제작 완료 (`site/yeiid/`).** 배포 주소 확정: `https://www.itbrown.com/yeiid/`.
+  canonical·og·JSON-LD는 이미 이 주소로 맞췄고, 자산은 `/yeiid/...` 루트 기준 절대경로다.
+
+  **남은 것 — 실제 배포는 회사 사이트 쪽 작업이다.** `www.itbrown.com`은 Cloudflare 위
+  정적 사이트이고 `/*` catch-all이 걸려 있어(없는 경로도 200 + 회사 홈 반환) 하위 경로를
+  붙이려면 그 사이트의 정적 루트에 `yeiid/` 폴더를 넣어야 한다. Cloudflare Pages는 실제
+  정적 파일을 catch-all보다 먼저 서빙하므로 폴더만 넣으면 그대로 뜬다.
+  배포 후 Play Console 스토어 설정 → 웹사이트란에 등록할 것.
