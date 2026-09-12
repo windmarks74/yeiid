@@ -75,11 +75,12 @@ export default function App() {
   const [saved, setSaved] = useState(false)
   const [settingsReturn, setSettingsReturn] = useState<'landing' | 'editor' | 'result'>('landing')
   // 설정 푸터 표시용 앱 버전 (네이티브 실제 버전을 읽어옴 → 빌드마다 자동 반영)
-  const [appVersion, setAppVersion] = useState('1.2.1')
+  const [appVersion, setAppVersion] = useState('1.2.2')
   const cropRef = useRef<CropRect | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
   const settleRef = useRef<number | undefined>(undefined)
+  const savedRef = useRef<HTMLDivElement>(null)
   // 결과 미리보기 캐시 (1매/시트 각각) — 전환 시 재렌더 안 하도록
   const resultCacheRef = useRef<{ single: string | null; sheet: string | null }>({
     single: null,
@@ -324,6 +325,16 @@ export default function App() {
     const t = window.setTimeout(() => setToast(null), 2600)
     return () => clearTimeout(t)
   }, [toast])
+
+  // 저장 직후 "갤러리에 저장됨 + 신청하러 가기"는 결과 화면 맨 아래에 새로 생긴다.
+  // 그냥 두면 화면 밖이라 사용자가 스크롤하기 전까지 못 본다 → 생기면 시야로 끌어온다.
+  useEffect(() => {
+    if (!saved) return
+    const id = window.requestAnimationFrame(() =>
+      savedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+    )
+    return () => cancelAnimationFrame(id)
+  }, [saved])
 
   // 안드로이드 하드웨어 뒤로가기: 화면 상태 기반 내비게이션.
   // 리스너 미등록 시 Capacitor 기본 동작이 앱 종료라 편집 내용이 통째로 소실된다.
@@ -743,7 +754,7 @@ export default function App() {
           )}
 
           {saved && (
-            <div className="saved-box">
+            <div className="saved-box" ref={savedRef}>
               <div className="saved-line">
                 <span className="saved-check">✓</span> {t('app.savedToGallery')}
               </div>
