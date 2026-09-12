@@ -1,0 +1,18 @@
+// Cloudflare Workers 배포 설정 — 랜딩 페이지(yeiid.itbrown.com) 전용.
+//
+// 이 레포의 본체는 Capacitor 안드로이드 앱이고, 여기서 배포하는 건 site/yeiid/ 하나뿐이다.
+// 스크립트가 없는 "정적 자산 전용 Worker"라 main 항목이 없다 — assets.directory 만으로
+// Cloudflare가 파일을 그대로 서빙한다.
+//
+// Workers Builds 설정(대시보드):
+//   Build command  : (비움)
+//   Deploy command : npx wrangler deploy
+//
+// 앱 빌드(npm run build)와는 무관하다. dist/ 를 건드리지 않는다.
+{
+  "name": "yeiid",
+  "compatibility_date": "2026-09-12",
+  "assets": {
+    "directory": "./site/yeiid"
+  }
+}
