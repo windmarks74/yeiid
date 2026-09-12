@@ -220,7 +220,7 @@ export default function App() {
     if (!image || !cropRef.current) return null
     const input = { img: image, cutout, crop: cropRef.current, adjust, effects, face, rotation }
     const canvas = printSheet
-      ? renderPrintSheet(input, spec.targetW, spec.targetH, {
+      ? renderPrintSheet(input, spec, {
           label: spec.label,
           dims: `${sizeLabel(usage)} · ${spec.dpi}DPI`,
         })
@@ -237,7 +237,7 @@ export default function App() {
     if (!image || !cropRef.current) return null
     const input = { img: image, cutout, crop: cropRef.current, adjust, effects, face, rotation }
     const full = printSheet
-      ? renderPrintSheet(input, spec.targetW, spec.targetH, {
+      ? renderPrintSheet(input, spec, {
           label: spec.label,
           dims: `${sizeLabel(usage)} · ${spec.dpi}DPI`,
         })
@@ -677,7 +677,7 @@ export default function App() {
                   if (!billing?.premium) setShowPaywall(true)
                 }}
               >
-                {t('app.printSheet', { count: sheetGrid(spec.targetW, spec.targetH).count })}
+                {t('app.printSheet', { count: sheetGrid(spec.targetW, spec.targetH, spec.dpi).count })}
                 {!billing?.premium && <span className="lock-badge">🔒</span>}
               </button>
             </div>

@@ -403,25 +403,43 @@ function boxBlurChannel(src: Float32Array, w: number, h: number, r: number): Flo
 
 /** 인화 시트 규격: 4×6인치(10×15cm) @300DPI 세로 */
 export const PRINT_SHEET = { w: 1200, h: 1800 }
+/** 인화 시트 자체의 DPI. 1200×1800px ÷ 300 = 4×6인치. */
+const SHEET_DPI = 300
 /** 하단 브랜드·규격 라벨 띠 높이(px). 잘려나가는 여백이며 셀 배치에서 제외된다. */
 const FOOTER_H = 70
 
-/** 셀(증명사진) 크기로 시트에 몇 칸이 들어가는지 (하단 라벨 띠 제외) */
-export function sheetGrid(cellW: number, cellH: number) {
-  const cols = Math.max(1, Math.floor(PRINT_SHEET.w / cellW))
-  const rows = Math.max(1, Math.floor((PRINT_SHEET.h - FOOTER_H) / cellH))
+/**
+ * 시트에 배치할 셀 크기(px) — 출력 px를 시트 DPI 기준으로 환산한다.
+ * 출력 px를 그대로 쓰면 안 된다: 여권은 600DPI(826×1062)라 300DPI 시트에 그대로 놓으면
+ * 70×90mm로 2배 커지고 1매만 들어간다. targetW ÷ spec.dpi = 실제 인치이므로
+ * 여기에 시트 DPI를 곱하면 물리 크기가 규격대로 유지된다.
+ * (mm에서 직접 환산하지 않는 이유: 미국 51mm는 2인치의 반올림 표기값이라 602px가 되어
+ *  시트 폭 1200px에 2열이 안 들어간다. 출력 px 600은 정확한 2인치라 4매가 유지된다.)
+ * ※ 시험 규격은 targetW가 디지털 업로드 px라 이 환산이 성립하지 않지만,
+ *   isExam 규격은 인화 시트 자체가 비활성이라 해당 없음.
+ */
+export function sheetCellPx(targetW: number, targetH: number, dpi: number) {
+  const k = SHEET_DPI / dpi
+  return { w: Math.round(targetW * k), h: Math.round(targetH * k) }
+}
+
+/** 규격 출력 px·DPI로 시트에 몇 칸이 들어가는지 (하단 라벨 띠 제외) */
+export function sheetGrid(targetW: number, targetH: number, dpi: number) {
+  const cell = sheetCellPx(targetW, targetH, dpi)
+  const cols = Math.max(1, Math.floor(PRINT_SHEET.w / cell.w))
+  const rows = Math.max(1, Math.floor((PRINT_SHEET.h - FOOTER_H) / cell.h))
   return { cols, rows, count: cols * rows }
 }
 
 /**
- * 완성 사진을 4×6 인화지에 그리드로 배치(물리 크기 정확 — 셀 = 규격 px 그대로).
+ * 완성 사진을 4×6 인화지에 그리드로 배치. 물리 크기 정확 — 배치 칸은 규격 mm를 시트
+ * DPI로 환산한 크기다(출력 해상도와 무관). 셀은 출력 해상도(여권 600DPI 등) 그대로
+ * 1회 렌더한 뒤 칸 크기로 축소해 그린다 → 규격은 정확하고 인화 선명도는 유지된다.
  * 각 셀에 얇은 컷 가이드. 하단 footer(여백, 잘라내면 사라짐)에 Yei 로고 + 규격 라벨.
- * 셀은 한 번만 렌더해 재사용한다.
  */
 export function renderPrintSheet(
   input: RenderInput,
-  cellW: number,
-  cellH: number,
+  spec: { targetW: number; targetH: number; dpi: number },
   footer?: { label: string; dims: string },
 ): HTMLCanvasElement {
   const { w, h } = PRINT_SHEET
@@ -429,11 +447,13 @@ export function renderPrintSheet(
   canvas.width = w
   canvas.height = h
   const ctx = canvas.getContext('2d', { willReadFrequently: true })!
+  ctx.imageSmoothingQuality = 'high' // 고해상도 셀을 칸 크기로 축소하므로 품질 중요
   ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, w, h)
 
-  const { cols, rows } = sheetGrid(cellW, cellH)
-  const cell = renderCrop(cellW, cellH, input) // 셀 1회 렌더
+  const { cols, rows } = sheetGrid(spec.targetW, spec.targetH, spec.dpi)
+  const { w: cellW, h: cellH } = sheetCellPx(spec.targetW, spec.targetH, spec.dpi) // 배치 크기
+  const cell = renderCrop(spec.targetW, spec.targetH, input) // 셀 1회 렌더(출력 해상도)
   const gridH = h - FOOTER_H // 그리드는 footer 위 영역에 배치
   const ox = Math.round((w - cols * cellW) / 2)
   const oy = Math.round((gridH - rows * cellH) / 2)
