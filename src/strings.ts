@@ -184,6 +184,7 @@ const STRINGS = {
   'app.upsellFreeUsedUp': { ko: '무료 {n}장을 모두 받았어요. 더 받으시겠어요?', en: 'You’ve used all {n} free downloads. Want more?' },
   'app.lifetimeUnlimited': { ko: '평생 무제한', en: 'Lifetime, unlimited' },
 
+  'app.saving': { ko: '저장 중…', en: 'Saving…' },
   'app.download': { ko: '다운로드', en: 'Download' },
   'app.downloadFree': { ko: '무료로 다운로드', en: 'Download free' },
   'app.downloadFreeLeft': { ko: '무료로 다운로드 ({n}회 남음)', en: 'Download free ({n} left)' },

@@ -73,6 +73,7 @@ export default function App() {
   const [tool, setTool] = useState<'adjust' | 'effects' | 'output'>('adjust')
   const [resultUrl, setResultUrl] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
+  const [downloading, setDownloading] = useState(false)
   const [settingsReturn, setSettingsReturn] = useState<'landing' | 'editor' | 'result'>('landing')
   // 설정 푸터 표시용 앱 버전 (네이티브 실제 버전을 읽어옴 → 빌드마다 자동 반영)
   const [appVersion, setAppVersion] = useState('1.2.2')
@@ -216,6 +217,62 @@ export default function App() {
     settleRef.current = window.setTimeout(() => setSizeTick((t) => t + 1), 350)
   }, [])
 
+  /**
+   * 인코딩 결과 공유 캐시 — 용량 표시와 다운로드가 같은 인코딩을 재사용한다.
+   * 여권은 826×1062를 목표용량 이분탐색으로 9회 인코딩해 폰에서 수십 초가 걸린다.
+   * 전에는 용량 표시용 1회 + 다운로드용 1회로 그 비용을 두 번 치렀다.
+   * 진행 중이면 그 Promise를 그대로 넘겨 동시 실행도 막는다.
+   */
+  const encodeCacheRef = useRef<{
+    img: HTMLCanvasElement
+    cutout: Cutout | null
+    key: string
+    p: Promise<{ blob: Blob; quality: number } | null>
+  } | null>(null)
+
+  /** 출력 결과를 결정하는 모든 입력의 지문. 하나라도 다르면 다시 인코딩한다. */
+  function encodeKey(): string | null {
+    const c = cropRef.current
+    if (!c) return null
+    const r = (n: number) => Math.round(n * 1e6) // 크롭은 0~1 정규화값 — 정수화해 비교
+    return JSON.stringify([
+      usage,
+      printSheet,
+      targetEnabled,
+      targetKB,
+      rotation,
+      adjust.exposure,
+      adjust.brightness,
+      adjust.temp,
+      effects.bgColor,
+      effects.glow,
+      effects.smooth,
+      face ? [r(face.cx), r(face.cy), r(face.rx), r(face.ry)] : null,
+      r(c.x),
+      r(c.y),
+      r(c.w),
+      r(c.h),
+    ])
+  }
+
+  /** 같은 입력이면 이전(또는 진행 중) 인코딩을 재사용. 입력이 바뀌면 새로 인코딩. */
+  function encodeShared(): Promise<{ blob: Blob; quality: number } | null> {
+    if (!image || !cropRef.current) return Promise.resolve(null)
+    const key = encodeKey()
+    const hit = encodeCacheRef.current
+    if (key && hit && hit.key === key && hit.img === image && hit.cutout === cutout) return hit.p
+    const p = encodeCurrent()
+    if (key) {
+      const entry = { img: image, cutout, key, p }
+      encodeCacheRef.current = entry
+      // 실패한 인코딩을 캐시에 남기면 이후 호출이 전부 같은 에러를 받는다 → 비운다.
+      p.catch(() => {
+        if (encodeCacheRef.current === entry) encodeCacheRef.current = null
+      })
+    }
+    return p
+  }
+
   // 현재 설정으로 출력 JPEG 인코딩 (목표 용량이 켜지면 이분 탐색)
   async function encodeCurrent(): Promise<{ blob: Blob; quality: number } | null> {
     if (!image || !cropRef.current) return null
@@ -272,7 +329,7 @@ export default function App() {
         setLowRes(cw < (spec.minW ?? spec.targetW) || ch < (spec.minH ?? spec.targetH))
       }
       try {
-        const res = await encodeCurrent()
+        const res = await encodeShared()
         if (!cancelled && res) setOutSize({ bytes: res.blob.size, quality: res.quality })
       } catch (err) {
         // 인코딩 실패 시 unhandled rejection 방지 — 용량 표시는 이전 값 유지
@@ -460,30 +517,38 @@ export default function App() {
       setShowPaywall(true)
       return
     }
-    let res: { blob: Blob; quality: number } | null
+    // 여권(826×1062)은 목표용량 이분탐색으로 JPEG 인코딩을 9회 수행해 폰에서 4~6초 걸린다.
+    // 그동안 표시가 없으면 사용자는 눌리지 않은 줄 알고 다시 누른다 → 중복 저장·카운트 꼬임.
+    if (downloading) return
+    setDownloading(true)
     try {
-      res = await encodeCurrent()
-    } catch (e) {
-      setToast(t('app.exportFailed', { msg: (e as Error)?.message ?? e }))
-      return
+      let res: { blob: Blob; quality: number } | null
+      try {
+        res = await encodeShared() // 용량 표시용 인코딩이 이미 있으면 재사용
+      } catch (e) {
+        setToast(t('app.exportFailed', { msg: (e as Error)?.message ?? e }))
+        return
+      }
+      if (!res) return
+      setOutSize({ bytes: res.blob.size, quality: res.quality })
+      // 저장마다 유니크 파일명(밀리초까지) → 갤러리에 매번 새 항목으로 누적, 덮어쓰기 방지
+      const filename = printSheet
+        ? `Yei_${usage}_sheet_${nowStamp()}.jpg`
+        : `Yei_${usage}_${nowStamp()}.jpg`
+      try {
+        await saveJpeg(res.blob, filename)
+      } catch (e) {
+        setToast(t('app.saveFailed', { msg: (e as Error)?.message ?? e }))
+        return
+      }
+      setToast(t('app.saved'))
+      setSaved(true) // 결과 화면에 저장 확인 + 신청 CTA 노출
+      void noteSaveAndMaybeReview() // 첫 저장 직후 인앱 리뷰 요청 (네이티브, 설치당 1회)
+      // 저장 성공 후에만 카운트
+      if (billing) setBilling(await recordDownload(billing))
+    } finally {
+      setDownloading(false)
     }
-    if (!res) return
-    setOutSize({ bytes: res.blob.size, quality: res.quality })
-    // 저장마다 유니크 파일명(밀리초까지) → 갤러리에 매번 새 항목으로 누적, 덮어쓰기 방지
-    const filename = printSheet
-      ? `Yei_${usage}_sheet_${nowStamp()}.jpg`
-      : `Yei_${usage}_${nowStamp()}.jpg`
-    try {
-      await saveJpeg(res.blob, filename)
-    } catch (e) {
-      setToast(t('app.saveFailed', { msg: (e as Error)?.message ?? e }))
-      return
-    }
-    setToast(t('app.saved'))
-    setSaved(true) // 결과 화면에 저장 확인 + 신청 CTA 노출
-    void noteSaveAndMaybeReview() // 첫 저장 직후 인앱 리뷰 요청 (네이티브, 설치당 1회)
-    // 저장 성공 후에만 카운트
-    if (billing) setBilling(await recordDownload(billing))
   }
 
   return (
@@ -739,12 +804,14 @@ export default function App() {
           ) : (
             <>
               <div className="actions">
-                <button onClick={onDownload}>
-                  {billing?.premium
-                    ? t('app.download')
-                    : billing
-                      ? t('app.downloadFreeLeft', { n: freeLeft(billing) })
-                      : t('app.downloadFree')}
+                <button onClick={onDownload} disabled={downloading}>
+                  {downloading
+                    ? t('app.saving')
+                    : billing?.premium
+                      ? t('app.download')
+                      : billing
+                        ? t('app.downloadFreeLeft', { n: freeLeft(billing) })
+                        : t('app.downloadFree')}
                 </button>
               </div>
               {billing && !billing.premium && (

@@ -1331,6 +1331,13 @@ button.ctrl-chip {
 .actions button:active {
   transform: scale(0.975);
 }
+/* 저장 중(인코딩 진행) — 눌림 표시 + 재탭 차단. 여권은 4~6초 걸린다. */
+.actions button:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+  cursor: default;
+}
 .actions button.secondary {
   background: var(--surface);
   color: var(--ink);
