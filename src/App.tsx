@@ -168,6 +168,9 @@ export default function App() {
       })
     return () => {
       cancelled = true
+      // 위 finally 는 cancelled 면 건너뛴다. 여기서 안 끄면 "얼굴 분석 중…"이 영구히 남는다.
+      // (사진을 바꾸거나 잡티 완화를 끄면 이 cleanup 이 돈다.) 배경 제거 effect 와 같은 처리.
+      setFaceBusy(false)
     }
   }, [image, effects.smooth, face])
 
