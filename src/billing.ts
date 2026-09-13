@@ -45,6 +45,22 @@ export async function grantPremium(s: BillingState): Promise<BillingState> {
   return next
 }
 
+/**
+ * 환불·취소로 스토어 권한이 사라졌을 때 로컬 프리미엄을 회수한다.
+ *
+ * `used`는 일부러 보존한다. 초기화하면 "구매 → 5장 쓰고 환불 → 무료 5장 부활"이
+ * 반복 가능해진다. 환불은 결제를 되돌리는 것이지 쓴 횟수를 되돌리는 게 아니다.
+ *
+ * ⚠️ 호출 조건: entitlement가 **확실히 비활성**일 때만. 오프라인·오류('unknown')로
+ * 부르면 정당한 구매자가 잠긴다. iap.ts getEntitlementStatus() 참고.
+ */
+export async function revokePremium(s: BillingState): Promise<BillingState> {
+  if (!s.premium) return s
+  const next = { ...s, premium: false }
+  await save(next)
+  return next
+}
+
 export function canDownload(s: BillingState): boolean {
   return s.premium || s.used < FREE_LIMIT
 }

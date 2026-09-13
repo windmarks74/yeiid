@@ -8,7 +8,7 @@ import { Capacitor, type PluginListenerHandle } from '@capacitor/core'
 import { removeBg, type BgModel } from './bg'
 import { detectFace, assessCapture } from './face'
 import { saveJpeg } from './save'
-import { checkEntitlement, restorePurchases, getPriceString, PRICE_LABEL } from './iap'
+import { getEntitlementStatus, restorePurchases, getPriceString, PRICE_LABEL } from './iap'
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
 import { t, type StringKey } from './strings'
@@ -18,6 +18,7 @@ import {
   FREE_LIMIT,
   freeLeft,
   grantPremium,
+  revokePremium,
   loadBilling,
   recordDownload,
   type BillingState,
@@ -345,15 +346,26 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image, adjust, effects, cutout, face, rotation, usage, targetEnabled, targetKB, sizeTick, printSheet])
 
-  // 앱 시작 시 결제/카운터 상태 로드 + (네이티브) RevenueCat entitlement 확인
+  // 앱 시작 시 결제/카운터 상태 로드 + (네이티브) RevenueCat entitlement 확인.
+  //
+  // 예전에는 `!b.premium` 일 때만 확인해서, 한 번 켜진 프리미엄이 영구히 재검증되지 않았다
+  // → 환불한 사용자가 계속 프리미엄. 이제 매번 확인하고 양방향으로 반영한다.
+  //
+  // 단 3상태를 지켜야 한다. 'unknown'(오프라인·오류)을 '비활성'으로 취급해 회수하면
+  // 비행기 모드에서 앱을 켠 정당한 구매자가 잠긴다 — 환불 누수보다 이쪽이 더 나쁘다.
   useEffect(() => {
     ;(async () => {
       let b = await loadBilling()
       if (DEV_UNLOCK) {
         b = { ...b, premium: true } // 테스트: 메모리상 프리미엄
-      } else if (!b.premium && (await checkEntitlement())) {
-        // 기존 구매가 있으면(재설치/기기변경, 같은 구글 계정) 자동 해제
-        b = await grantPremium(b)
+      } else {
+        const status = await getEntitlementStatus()
+        if (status === 'active' && !b.premium) {
+          b = await grantPremium(b) // 기존 구매(재설치·기기변경, 같은 구글 계정) 자동 해제
+        } else if (status === 'inactive' && b.premium) {
+          b = await revokePremium(b) // 환불·취소 → 회수 (used 는 보존)
+        }
+        // 'unknown' → 로컬 상태 그대로 둔다
       }
       setBilling(b)
     })()
@@ -496,8 +508,10 @@ export default function App() {
     resultCacheRef.current = { single: null, sheet: null }
   }
 
-  // 잠금(프리미엄) 상태: 비프리미엄이 해외 규격 또는 인화 시트를 쓰려 할 때
-  const locked = !!billing && !billing.premium && (requiresPremium(usage) || printSheet)
+  // 잠금(프리미엄) 상태: 비프리미엄이 해외 규격 또는 인화 시트를 쓰려 할 때.
+  // billing 로딩 중(null)에도 잠근다 — fail-closed. 예전엔 `!!billing &&` 라서
+  // 로딩 창 동안 잠금이 풀려 있었다(초기화가 RevenueCat 네트워크 왕복 뒤에 끝나 수 초짜리 창).
+  const locked = !billing || (!billing.premium && (requiresPremium(usage) || printSheet))
 
   // 용도 선택: 해외(프리미엄) 규격이면 미리보기는 허용하되 페이월을 띄운다 (선택/내보내기 시 잠금)
   function selectUsage(u: Usage) {
@@ -506,13 +520,17 @@ export default function App() {
   }
 
   async function onDownload() {
+    // 결제 상태 로딩 중에는 아무것도 하지 않는다. 예전엔 아래 게이트들이 `billing &&` 라서
+    // billing===null 이면 통째로 건너뛰어져 무제한 다운로드가 됐다. 버튼도 disabled 이라
+    // 정상 경로로는 여기 오지 않지만, 게이트 자체가 fail-closed 여야 한다.
+    if (!billing) return
     // 해외 규격·인화 시트는 프리미엄 → 페이월
     if (locked) {
       setShowPaywall(true)
       return
     }
     // 무료 소진 + 비프리미엄 → 페이월
-    if (billing && !canDownload(billing)) {
+    if (!canDownload(billing)) {
       setShowPaywall(true)
       return
     }
@@ -805,14 +823,15 @@ export default function App() {
           ) : (
             <>
               <div className="actions">
-                <button onClick={onDownload} disabled={downloading}>
+                {/* billing 로딩 중에는 잠근다 — 그 창에서 눌리면 게이트를 지나칠 뻔했다 */}
+                <button onClick={onDownload} disabled={downloading || !billing}>
                   {downloading
                     ? t('app.saving')
-                    : billing?.premium
-                      ? t('app.download')
-                      : billing
-                        ? t('app.downloadFreeLeft', { n: freeLeft(billing) })
-                        : t('app.downloadFree')}
+                    : !billing
+                      ? t('app.checkingPlan')
+                      : billing.premium
+                        ? t('app.download')
+                        : t('app.downloadFreeLeft', { n: freeLeft(billing) })}
                 </button>
               </div>
               {billing && !billing.premium && (

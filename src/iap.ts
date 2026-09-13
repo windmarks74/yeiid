@@ -55,19 +55,26 @@ export async function restorePurchases(): Promise<boolean> {
   return isActive(customerInfo)
 }
 
+/** entitlement 확인 결과. 'unknown' = 네트워크·키 문제로 **확인 실패**(권한 없음이 아니다). */
+export type EntitlementStatus = 'active' | 'inactive' | 'unknown'
+
 /**
- * 앱 시작 시 기존 구매 여부 확인 (재설치/기기변경 시 같은 구글 계정이면 자동 반영).
- * 키 미설정/웹/오류면 false. (절대 throw 안 함)
+ * 앱 시작 시 기존 구매 여부 확인 (재설치/기기변경 시 같은 구글 계정이면 자동 반영) +
+ * 환불·취소 감지. 절대 throw 하지 않는다.
+ *
+ * 왜 3상태인가: 환불 후 권한을 회수하려면 "비활성"을 알아야 하는데, 실패를 false로
+ * 뭉개면 오프라인·오류와 구분이 안 된다. 그걸로 회수하면 **비행기 모드에서 앱을 켠
+ * 정당한 구매자가 잠긴다.** 'unknown'일 때는 로컬 상태를 건드리지 않는 것이 호출부의 계약이다.
  */
-export async function checkEntitlement(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform() || !RC_API_KEY) return false
+export async function getEntitlementStatus(): Promise<EntitlementStatus> {
+  if (!Capacitor.isNativePlatform() || !RC_API_KEY) return 'unknown'
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor')
     await ensureConfigured()
     const { customerInfo } = await Purchases.getCustomerInfo()
-    return isActive(customerInfo)
+    return isActive(customerInfo) ? 'active' : 'inactive'
   } catch {
-    return false
+    return 'unknown'
   }
 }
 

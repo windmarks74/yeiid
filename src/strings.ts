@@ -185,6 +185,7 @@ const STRINGS = {
   'app.lifetimeUnlimited': { ko: '평생 무제한', en: 'Lifetime, unlimited' },
 
   'app.saving': { ko: '저장 중…', en: 'Saving…' },
+  'app.checkingPlan': { ko: '확인 중…', en: 'Checking…' },
   'app.download': { ko: '다운로드', en: 'Download' },
   'app.downloadFree': { ko: '무료로 다운로드', en: 'Download free' },
   'app.downloadFreeLeft': { ko: '무료로 다운로드 ({n}회 남음)', en: 'Download free ({n} left)' },
