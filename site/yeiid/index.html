@@ -153,14 +153,43 @@
     padding: 3px 9px; border-radius: var(--r-pill);
   }
   .card ul { list-style: none; margin: 14px 0 0; padding: 0; }
-  .card li {
-    padding: 9px 0; border-top: 1px solid var(--line);
-    font-size: 15.5px; display: flex; justify-content: space-between; gap: 14px;
-  }
+  .card li { padding: 0; border-top: 1px solid var(--line); font-size: 15.5px; }
   .card li:first-child { border-top: 0; }
+  .card .row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px; padding: 11px 0;
+  }
   .card li b { font-weight: 650; }
-  .card li b a { color: inherit; text-decoration: underline; text-decoration-color: var(--yellow-deep); text-underline-offset: 3px; }
   .card li span { color: var(--muted); font-size: 14px; text-align: right; flex: none; }
+
+  /* 링크 행은 줄 전체가 눌린다 — 밑줄만으로는 누를 수 있는지 모르고 지나친다 */
+  .card a.row {
+    text-decoration: none; color: inherit; position: relative;
+    margin: 0 -12px; padding: 11px 34px 11px 12px; border-radius: 10px;
+    transition: background .12s ease;
+  }
+  .card a.row::after {
+    content: '›'; position: absolute; right: 13px; top: 50%;
+    transform: translateY(-54%);
+    color: var(--yellow-deep); font-size: 22px; font-weight: 800; line-height: 1;
+  }
+  .card a.row:hover { background: var(--yellow-pale); }
+  .card a.row:hover b { text-decoration: underline; text-decoration-color: var(--yellow-deep); text-underline-offset: 3px; }
+
+  /* 규격 사전 바로가기 — 섹션 위에 메뉴처럼 */
+  .dict {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    margin: 0 0 26px;
+  }
+  .dict > b { font-size: 14px; font-weight: 750; margin-right: 2px; }
+  .dict a {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 7px 13px; border-radius: var(--r-pill);
+    font-size: 14.5px; font-weight: 650; text-decoration: none; color: var(--ink);
+  }
+  .dict a::after { content: '›'; color: var(--yellow-deep); font-weight: 800; }
+  .dict a:hover { border-color: var(--yellow-deep); background: var(--yellow-pale); }
 
   /* ---------- Screenshots ---------- */
   .strip {
@@ -329,36 +358,47 @@
     <h2>어떤 사진이 필요하세요?</h2>
     <p class="sub">용도를 고르면 크기·머리 비율·눈높이 가이드가 자동으로 잡힙니다.</p>
 
+    <nav class="dict" aria-label="규격 사전">
+      <b>규격 사전</b>
+      <a href="/passport">여권</a>
+      <a href="/license">운전면허</a>
+      <a href="/resume">이력서·증명사진</a>
+      <a href="/qnet">큐넷</a>
+      <a href="/gosi">공무원</a>
+      <a href="/toeic">토익</a>
+      <a href="/kpc">KPC</a>
+      <a href="/us-visa">미국 비자</a>
+    </nav>
+
     <div class="grid">
       <div class="card">
         <h3>국내 신분증 <span class="tag">가장 많이 씀</span></h3>
         <ul>
-          <li><b><a href="/passport">여권</a></b><span>35 × 45mm</span></li>
-          <li><b><a href="/license">운전면허증</a></b><span>35 × 45mm</span></li>
-          <li><b>일반 증명사진</b><span>30 × 40mm</span></li>
-          <li><b><a href="/resume">이력서 · 반명함</a></b><span>취업·자소서용</span></li>
+          <li><a class="row" href="/passport"><b>여권</b><span>35 × 45mm</span></a></li>
+          <li><a class="row" href="/license"><b>운전면허증</b><span>35 × 45mm</span></a></li>
+          <li><a class="row" href="/resume"><b>일반 증명사진</b><span>30 × 40mm</span></a></li>
+          <li><a class="row" href="/resume"><b>이력서 · 반명함</b><span>취업·자소서용</span></a></li>
         </ul>
       </div>
 
       <div class="card">
         <h3>시험 · 자격증 접수 <span class="tag">픽셀·용량 자동</span></h3>
         <ul>
-          <li><b><a href="/qnet">큐넷(Q-Net)</a></b><span>300 × 400px · JPG<br />200KB 이하</span></li>
-          <li><b><a href="/gosi">공무원 채용</a></b><span>137 × 177px · JPG/PNG<br />350KB 미만</span></li>
-          <li><b><a href="/toeic">토익 · 토익스피킹</a></b><span>3 × 4cm · JPG<br />머리 비율 80~90%</span></li>
-          <li><b><a href="/kpc">KPC(ITQ·GTQ·SMAT 등)</a></b><span>225 × 300px<br />500KB 이하</span></li>
+          <li><a class="row" href="/qnet"><b>큐넷(Q-Net)</b><span>300 × 400px · JPG<br />200KB 이하</span></a></li>
+          <li><a class="row" href="/gosi"><b>공무원 채용</b><span>137 × 177px · JPG/PNG<br />350KB 미만</span></a></li>
+          <li><a class="row" href="/toeic"><b>토익 · 토익스피킹</b><span>3 × 4cm · JPG<br />머리 비율 80~90%</span></a></li>
+          <li><a class="row" href="/kpc"><b>KPC(ITQ·GTQ·SMAT 등)</b><span>225 × 300px<br />500KB 이하</span></a></li>
         </ul>
         <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
-          각 기관 공식 안내를 직접 확인해 반영했습니다. 규격 이름을 누르면 자세한 기준과
-          흔한 반려 사유를 볼 수 있습니다.
+          각 기관 공식 안내를 직접 확인해 반영했습니다. 각 줄을 누르면 자세한 기준과 흔한 반려 사유를 볼 수 있습니다.
         </p>
       </div>
 
       <div class="card">
         <h3>해외 비자 · 여권</h3>
         <ul>
-          <li><b><a href="/us-visa">미국 비자 · 여권</a></b><span>2 × 2인치<br />600 × 600px · 300DPI</span></li>
-          <li><b>셰겐(유럽) 비자</b><span>35 × 45mm</span></li>
+          <li><a class="row" href="/us-visa"><b>미국 비자 · 여권</b><span>2 × 2인치<br />600 × 600px · 300DPI</span></a></li>
+          <li><div class="row"><b>셰겐(유럽) 비자</b><span>35 × 45mm</span></div></li>
         </ul>
         <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
           여권·비자처럼 규정이 엄격한 용도에서는 배경 교체·보정을 자동으로 꺼서
