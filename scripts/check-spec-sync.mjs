@@ -39,7 +39,22 @@ const CHECKS = [
   ['kpc', 'minH', 150, '150~315px'],
   ['toeic', 'faceMin', 80, '80~90%'],
   ['toeic', 'faceMax', 90, null],
+  // 국내 신분증 · 해외
+  ['passport', 'targetW', 826, '826 × 1062px'],
+  ['passport', 'targetH', 1062, null],
+  ['passport', 'minW', 413, '413 × 531px 이상'],
+  ['passport', 'maxKB', 200, '200KB 이하'],
+  ['passport', 'faceMin', 70, '70~80%'],
+  ['us', 'targetW', 600, '600 × 600px'],
+  ['us', 'targetH', 600, null],
+  ['us', 'maxKB', 240, '240KB 이하'],
+  ['us', 'faceMax', 69, '50~69%'],
+  ['license', 'targetW', 413, '413 × 531px'],
+  ['license', 'targetH', 531, null],
 ]
+
+// usage.ts 의 용도 key ↔ 페이지 slug (다른 것만)
+const SLUG = { us: 'us-visa' }
 
 let fail = 0
 for (const [key, field, expected, mustAppear] of CHECKS) {
@@ -50,7 +65,7 @@ for (const [key, field, expected, mustAppear] of CHECKS) {
     continue
   }
   if (mustAppear) {
-    const html = read(`../site/yeiid/${key}.html`)
+    const html = read(`../site/yeiid/${SLUG[key] || key}.html`)
     if (!html.includes(mustAppear)) {
       console.error(`✗ ${key}.html 에 "${mustAppear}" 없음`)
       fail++
@@ -59,7 +74,7 @@ for (const [key, field, expected, mustAppear] of CHECKS) {
 }
 
 // JSON-LD 유효성
-for (const slug of ['qnet', 'gosi', 'toeic', 'kpc']) {
+for (const slug of ['qnet', 'gosi', 'toeic', 'kpc', 'passport', 'us-visa', 'license']) {
   const html = read(`../site/yeiid/${slug}.html`)
   const m = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)
   try {
@@ -75,4 +90,4 @@ if (fail) {
   console.error(`\n${fail}건 불일치 — 페이지와 앱이 다른 값을 말하고 있다.`)
   process.exit(1)
 }
-console.log(`규격 동기화 OK — usage.ts 대조 ${CHECKS.length}건, JSON-LD 4건 전부 통과`)
+console.log(`규격 동기화 OK — usage.ts 대조 ${CHECKS.length}건, JSON-LD 7건 전부 통과`)
