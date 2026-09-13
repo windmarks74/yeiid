@@ -79,7 +79,7 @@ export default function App() {
   const [downloading, setDownloading] = useState(false)
   const [settingsReturn, setSettingsReturn] = useState<'landing' | 'editor' | 'result'>('landing')
   // 설정 푸터 표시용 앱 버전 (네이티브 실제 버전을 읽어옴 → 빌드마다 자동 반영)
-  const [appVersion, setAppVersion] = useState('1.2.3')
+  const [appVersion, setAppVersion] = useState('1.2.4')
   const cropRef = useRef<CropRect | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
