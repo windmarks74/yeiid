@@ -191,3 +191,14 @@ footer a { color: var(--ink); font-weight: 650; }
   .answer div { flex-direction: column; gap: 2px; }
   .answer dd { text-align: left; }
 }
+
+/* 용도 비교표 — 이력서 페이지처럼 "뭐가 다른가"가 핵심인 경우 */
+.cmp { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+.cmp th, .cmp td { padding: 12px 10px; border-top: 1px solid var(--line); text-align: left; }
+.cmp thead th { border-top: 0; font-size: 13.5px; color: var(--muted); font-weight: 700; }
+.cmp tbody th { font-weight: 750; }
+.cmp td.size { font-weight: 750; white-space: nowrap; }
+.cmp tr.here { background: var(--yellow-pale); }
+.cmp tr.here th::after { content: ' ←'; color: var(--yellow-deep); }
+.cmp td small { display: block; font-size: 13px; color: var(--muted); font-weight: 600; }
+.cmp-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 4px 16px; }

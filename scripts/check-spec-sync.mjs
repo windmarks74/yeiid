@@ -49,12 +49,14 @@ const CHECKS = [
   ['us', 'targetH', 600, null],
   ['us', 'maxKB', 240, '240KB 이하'],
   ['us', 'faceMax', 69, '50~69%'],
+  ['general', 'targetW', 354, '354 × 472px'],
+  ['general', 'targetH', 472, null],
   ['license', 'targetW', 413, '413 × 531px'],
   ['license', 'targetH', 531, null],
 ]
 
 // usage.ts 의 용도 key ↔ 페이지 slug (다른 것만)
-const SLUG = { us: 'us-visa' }
+const SLUG = { us: 'us-visa', general: 'resume' }
 
 let fail = 0
 for (const [key, field, expected, mustAppear] of CHECKS) {
@@ -74,7 +76,7 @@ for (const [key, field, expected, mustAppear] of CHECKS) {
 }
 
 // JSON-LD 유효성
-for (const slug of ['qnet', 'gosi', 'toeic', 'kpc', 'passport', 'us-visa', 'license']) {
+for (const slug of ['qnet', 'gosi', 'toeic', 'kpc', 'passport', 'us-visa', 'license', 'resume']) {
   const html = read(`../site/yeiid/${slug}.html`)
   const m = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)
   try {
@@ -90,4 +92,4 @@ if (fail) {
   console.error(`\n${fail}건 불일치 — 페이지와 앱이 다른 값을 말하고 있다.`)
   process.exit(1)
 }
-console.log(`규격 동기화 OK — usage.ts 대조 ${CHECKS.length}건, JSON-LD 7건 전부 통과`)
+console.log(`규격 동기화 OK — usage.ts 대조 ${CHECKS.length}건, JSON-LD 8건 전부 통과`)
