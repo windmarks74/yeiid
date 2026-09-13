@@ -148,6 +148,7 @@ ol.steps li b { font-weight: 750; }
 }
 .cta svg { width: 19px; height: 21px; flex: none; }
 .cta-note { margin: 12px 0 0; font-size: 14.5px; color: var(--muted); font-weight: 600; }
+.cta-note b { font-weight: 800; color: var(--ink); }
 
 /* FAQ */
 details {

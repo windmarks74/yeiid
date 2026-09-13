@@ -75,6 +75,31 @@ for (const [key, field, expected, mustAppear] of CHECKS) {
   }
 }
 
+// 무료 횟수 — src/billing.ts FREE_LIMIT 과 페이지 문구가 갈라지면 안 된다.
+// "5장 무료"는 설치를 결정짓는 문구라 숫자가 틀리면 바로 신뢰 문제가 된다.
+{
+  const billing = read('../src/billing.ts')
+  const m = billing.match(/FREE_LIMIT\s*=\s*(\d+)/)
+  const limit = m ? +m[1] : null
+  if (!limit) {
+    console.error('✗ billing.ts 에서 FREE_LIMIT 을 못 찾음')
+    fail++
+  } else {
+    for (const slug of ['index', 'qnet', 'gosi', 'toeic', 'kpc', 'passport', 'us-visa', 'license', 'resume']) {
+      const html = read(`../site/yeiid/${slug}.html`)
+      if (!html.includes(`${limit}장 무료`)) {
+        console.error(`✗ ${slug}.html 에 "${limit}장 무료" 없음 (FREE_LIMIT=${limit})`)
+        fail++
+      }
+      const wrong = html.match(/(\d+)장 무료/g)?.filter((x) => x !== `${limit}장 무료`)
+      if (wrong?.length) {
+        console.error(`✗ ${slug}.html 에 다른 숫자: ${wrong.join(', ')}`)
+        fail++
+      }
+    }
+  }
+}
+
 // JSON-LD 유효성
 for (const slug of ['qnet', 'gosi', 'toeic', 'kpc', 'passport', 'us-visa', 'license', 'resume']) {
   const html = read(`../site/yeiid/${slug}.html`)
@@ -92,4 +117,4 @@ if (fail) {
   console.error(`\n${fail}건 불일치 — 페이지와 앱이 다른 값을 말하고 있다.`)
   process.exit(1)
 }
-console.log(`규격 동기화 OK — usage.ts 대조 ${CHECKS.length}건, JSON-LD 8건 전부 통과`)
+console.log(`규격 동기화 OK — usage.ts 대조 ${CHECKS.length}건, JSON-LD 8건 · 무료 횟수 9건 전부 통과`)
