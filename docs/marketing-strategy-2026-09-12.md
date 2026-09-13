@@ -190,7 +190,10 @@ yeiid.itbrown.com/
    랜딩 시험 카드에서도 연결. `sitemap.xml`(6 URL)·`robots.txt` 배포.
    생성: `scripts/make-spec-pages.mjs` · 수치 대조: `scripts/check-spec-sync.mjs`(13건 통과).
    → **남은 것은 색인 등록뿐.** 서치콘솔·서치어드바이저는 로그인이 필요해 본인 작업.
-6. **여권·미국비자·면허 페이지**
+6. ✅ **여권·미국비자·면허 페이지 — 2026-09-13 배포 완료.**
+   `/passport` `/us-visa` `/license` 라이브. 규격 사전 총 7종, sitemap 9 URL.
+   `check-spec-sync.mjs` 대조 24건 통과.
+   → 서치콘솔·서치어드바이저에 새 3개 URL 수집 요청은 미완(사이트맵으로도 잡히긴 한다).
 7. **스토어 설명에 취업/이력서 각도 보강** (현재 심사 통과 후)
 
 ### Phase C — 12주~: 관측과 조정
