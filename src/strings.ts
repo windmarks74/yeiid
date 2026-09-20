@@ -83,12 +83,20 @@ const STRINGS = {
 
   'usage.general.label': { ko: '일반', en: 'General' },
 
-  'usage.us.label': { ko: '미국', en: 'United States' },
-  'usage.us.notice.title': { ko: '미국 비자·여권 사진은 원본 그대로여야 합니다.', en: 'U.S. visa and passport photos must be unaltered originals.' },
-  'usage.us.notice.b1': { ko: 'AI·앱·필터로 편집한 사진은 반려됩니다 (미 국무부가 변조 사진을 검출).', en: 'Photos edited with AI, apps, or filters will be rejected (the U.S. State Department detects altered photos).' },
-  'usage.us.notice.b2': { ko: '순백·오프화이트 배경, 그림자 없이 균일하게 — 흰 벽 앞에서 촬영하세요.', en: 'Use a plain white or off-white background, evenly lit with no shadows — shoot against a white wall.' },
-  'usage.us.notice.b3': { ko: '안경 불가(의료 예외만), 정면·중립 표정, 최근 6개월 이내 촬영.', en: 'No glasses (medical exceptions only), face forward with a neutral expression, taken within the last 6 months.' },
-  'usage.us.notice.b4': { ko: '권장: 크롭·규격·용량 맞추기 + 피부톤을 왜곡하지 않는 가벼운 밝기·노출까지.', en: 'Recommended: crop, sizing, and file-size adjustment, plus light brightness and exposure tweaks that do not distort skin tone.' },
+  // 미국: 여권과 비자는 디지털 요건이 다르다(usage.ts 주석 참고). b3 만 규격별로 갈린다.
+  'usage.us_passport.label': { ko: '미국 여권', en: 'U.S. passport' },
+  'usage.us_passport.notice.title': { ko: '미국 여권 사진은 원본 그대로여야 합니다.', en: 'U.S. passport photos must be unaltered originals.' },
+  'usage.us_passport.notice.b1': { ko: 'AI·앱·필터로 편집한 사진은 반려됩니다 (미 국무부가 변조 사진을 검출).', en: 'Photos edited with AI, apps, or filters will be rejected (the U.S. State Department detects altered photos).' },
+  'usage.us_passport.notice.b2': { ko: '순백·오프화이트 배경, 그림자 없이 균일하게 — 흰 벽 앞에서 촬영하세요.', en: 'Use a plain white or off-white background, evenly lit with no shadows — shoot against a white wall.' },
+  'usage.us_passport.notice.b3': { ko: '안경 불가(의료 예외만), 정면·중립 표정, 최근 6개월 이내. 온라인 갱신은 용량 제한이 넉넉해(10MB) 화질을 낮출 필요가 없습니다.', en: 'No glasses (medical exceptions only), face forward with a neutral expression, taken within the last 6 months. Online renewal allows up to 10MB, so there is no need to reduce quality.' },
+  'usage.us_passport.notice.b4': { ko: '권장: 크롭·규격 맞추기 + 피부톤을 왜곡하지 않는 가벼운 밝기·노출까지.', en: 'Recommended: crop and sizing, plus light brightness and exposure tweaks that do not distort skin tone.' },
+
+  'usage.us_visa.label': { ko: '미국 비자', en: 'U.S. visa' },
+  'usage.us_visa.notice.title': { ko: '미국 비자 사진은 원본 그대로여야 합니다.', en: 'U.S. visa photos must be unaltered originals.' },
+  'usage.us_visa.notice.b1': { ko: 'AI·앱·필터로 편집한 사진은 반려됩니다 (미 국무부가 변조 사진을 검출).', en: 'Photos edited with AI, apps, or filters will be rejected (the U.S. State Department detects altered photos).' },
+  'usage.us_visa.notice.b2': { ko: '순백·오프화이트 배경, 그림자 없이 균일하게 — 흰 벽 앞에서 촬영하세요.', en: 'Use a plain white or off-white background, evenly lit with no shadows — shoot against a white wall.' },
+  'usage.us_visa.notice.b3': { ko: '안경 불가(의료 예외만), 정면·중립 표정, 최근 6개월 이내. DS-160 업로드는 JPEG·600×600px·240KB 이하로 자동 맞춤합니다.', en: 'No glasses (medical exceptions only), face forward with a neutral expression, taken within the last 6 months. DS-160 uploads are matched automatically to JPEG, 600×600px, 240KB or less.' },
+  'usage.us_visa.notice.b4': { ko: '권장: 크롭·규격·용량 맞추기 + 피부톤을 왜곡하지 않는 가벼운 밝기·노출까지.', en: 'Recommended: crop, sizing, and file-size adjustment, plus light brightness and exposure tweaks that do not distort skin tone.' },
 
   'usage.schengen.label': { ko: '셰겐', en: 'Schengen' },
   'usage.schengen.notice.title': { ko: '셰겐(유럽) 비자·여권 사진 규정입니다.', en: 'Requirements for Schengen (Europe) visa and passport photos.' },
@@ -127,7 +135,8 @@ const STRINGS = {
 
   'usage.passport.applyLabel': { ko: '여권 신청·안내 (외교부)', en: 'Passport application & info (MOFA)' },
   'usage.license.applyLabel': { ko: '운전면허 민원 (도로교통공단)', en: "Driver's license services (KoROAD)" },
-  'usage.us.applyLabel': { ko: '미국 여권·비자 사진 안내 (미 국무부)', en: 'U.S. passport & visa photo guide (U.S. State Dept.)' },
+  'usage.us_passport.applyLabel': { ko: '미국 여권 사진 안내 (미 국무부)', en: 'U.S. passport photo guide (U.S. State Dept.)' },
+  'usage.us_visa.applyLabel': { ko: '미국 비자 사진 안내 (미 국무부)', en: 'U.S. visa photo guide (U.S. State Dept.)' },
   'usage.qnet.applyLabel': { ko: '큐넷 원서접수·자격안내', en: '큐넷 원서접수·자격안내' },
   'usage.kpc.applyLabel': { ko: 'KPC 자격 접수·안내', en: 'KPC 자격 접수·안내' },
   'usage.gosi.applyLabel': { ko: '국가공무원채용시스템', en: '국가공무원채용시스템' },

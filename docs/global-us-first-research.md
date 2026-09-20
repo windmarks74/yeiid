@@ -28,7 +28,18 @@
 - **미국 비자(DS-160):** 51×51mm · 머리 **22–35mm(50–69%)** · **600×600~1200×1200 정사각 · JPEG 단독 · ≤240KB · sRGB 24bit · 압축 ≤20:1.**
 - 출처(공식): travel.state.gov — `passports/how-apply/photos.html` · `.../online-renewal-photo.html` · `us-visas/.../photos.html` · `.../photos/digital-image-requirements.html`.
 
-### usage.ts 수정 후보 (코드변경 → v13, 본인 확인 후)
+### usage.ts 수정 — ✅ 2026-09-20 반영 완료
+
+- [x] **`us_passport` / `us_visa` 분리.** 여권에 비자값(≤240KB)을 적용해 화질을 깎던 문제 해결.
+  - `us_passport`: 1200×1200 @600dpi, **maxKB 없음**(온라인 갱신 54KB~10MB), JPG/PNG.
+    해상도를 2배로 올린 것은 한국 여권(413→826)과 같은 논리 — 용량 여유가 있으니 인쇄 화질을 확보한다.
+    인화 시트는 셀이 물리 크기로 계산되어 **4매 그대로**(검산 완료).
+  - `us_visa`: 600×600 @300dpi, maxKB 240, **JPEG 단독**(공식: JPEG only).
+  - 머리 비율은 둘 다 50~69% 유지(여권 25~35mm/51mm = 49~69%, 비자 공식 표기 50~69%).
+  - 규격 사전 `/us-visa` 페이지에도 비교표를 넣어 "여권에 240KB를 쓰면 손해"를 명시.
+- 남은 것: 포맷에 HEIC/HEIF 허용은 **하지 않는다** — 앱이 JPEG/PNG로만 출력하므로 해당 없음.
+
+### (원문) 수정 후보
 - `us` 프리셋 주석 "머리 25~35mm" = 여권 기준임을 명확히(faceMin 50%는 비자 22mm 유래라 혼동).
 - `maxKB:240`은 비자값 → 여권 단독엔 완화/제거, 포맷에 PNG/HEIC 허용 검토.
 - **`us_passport` / `us_visa` 분리**(자동검증 반려 방지).

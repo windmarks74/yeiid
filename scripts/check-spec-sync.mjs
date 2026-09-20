@@ -45,10 +45,14 @@ const CHECKS = [
   ['passport', 'minW', 413, '413 × 531px 이상'],
   ['passport', 'maxKB', 200, '200KB 이하'],
   ['passport', 'faceMin', 70, '70~80%'],
-  ['us', 'targetW', 600, '600 × 600px'],
-  ['us', 'targetH', 600, null],
-  ['us', 'maxKB', 240, '240KB 이하'],
-  ['us', 'faceMax', 69, '50~69%'],
+  // 미국은 여권/비자가 분리됐다. 두 규격이 다르다는 것 자체가 페이지의 핵심이라 둘 다 검사한다.
+  ['us_passport', 'targetW', 1200, '1200 × 1200px'],
+  ['us_passport', 'targetH', 1200, null],
+  ['us_passport', 'minW', 600, null],
+  ['us_visa', 'targetW', 600, '600 × 600px'],
+  ['us_visa', 'targetH', 600, null],
+  ['us_visa', 'maxKB', 240, '240KB 이하'],
+  ['us_visa', 'faceMax', 69, '50~69%'],
   ['general', 'targetW', 354, '354 × 472px'],
   ['general', 'targetH', 472, null],
   ['license', 'targetW', 413, '413 × 531px'],
@@ -56,7 +60,7 @@ const CHECKS = [
 ]
 
 // usage.ts 의 용도 key ↔ 페이지 slug (다른 것만)
-const SLUG = { us: 'us-visa', general: 'resume' }
+const SLUG = { us_passport: 'us-visa', us_visa: 'us-visa', general: 'resume' }
 
 let fail = 0
 for (const [key, field, expected, mustAppear] of CHECKS) {

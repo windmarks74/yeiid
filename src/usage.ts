@@ -7,7 +7,8 @@ export type Usage =
   | 'passport'
   | 'license'
   | 'general'
-  | 'us'
+  | 'us_passport'
+  | 'us_visa'
   | 'schengen'
   | 'qnet'
   | 'kpc'
@@ -107,31 +108,84 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
     faceMax: 75,
     restricted: false,
   },
-  // 미국 여권·비자: 2×2인치(51×51mm) 정사각, 600×600@300DPI. AI 편집 금지 → 제한 규격.
-  // 머리 25~35mm(세로 50~69%), 눈높이 바닥에서 29~35mm(상단 기준 약 31~43%). 디지털 DV ≤240KB JPEG.
-  // 출처: travel.state.gov (2026년 기준, AI·필터 편집 사진 반려).
-  us: {
-    label: t('usage.us.label'),
+  // ── 미국: 여권과 비자를 분리한다 (2026-09-20) ──────────────────────────────
+  // 예전에는 `us` 하나로 묶여 있었는데, 두 규격은 디지털 요건이 다르다.
+  // 비자값(≤240KB)을 여권에도 적용해 불필요하게 화질을 깎고 있었다.
+  //   · 여권 온라인 갱신: 픽셀 규정 없음, 54KB~10MB, JPG/PNG/HEIC/HEIF
+  //   · 비자(DS-160): 600×600~1200×1200 정사각, JPEG 단독, ≤240KB, sRGB
+  // 공통: 51×51mm(2×2in), 흰/오프화이트, 안경 불가(의료 예외), 6개월 이내,
+  //       AI·필터 편집 금지(2025.10 강화, 국무부가 변조 검출) → restricted.
+  // 출처: travel.state.gov — passports/how-apply/photos.html ·
+  //       .../online-renewal-photo.html · us-visas/.../photos.html ·
+  //       .../photos/digital-image-requirements.html (docs/global-us-first-research.md §2)
+  us_passport: {
+    label: t('usage.us_passport.label'),
     widthMm: 51,
     heightMm: 51,
-    dpi: 300,
-    targetW: 600, // 2in @300dpi
-    targetH: 600,
-    faceMin: 50,
+    dpi: 600, // 300→600: 온라인이 10MB까지 받으므로 용량 여유가 있다. 인쇄 화질을 2배로.
+    targetW: 1200, // 2in @600dpi (600→1200). 인화 시트는 그대로 4매 — 셀은 물리 크기로 계산된다.
+    targetH: 1200,
+    minW: 600, // 저해상 경고 기준 = 2in @300dpi
+    minH: 600,
+    faceMin: 50, // 머리 25~35mm / 51mm = 49~69%
     faceMax: 69,
     eyeMin: 31, // 눈선 상단 기준 % (바닥 29~35mm → 상단 31~43%)
     eyeMax: 43,
-    maxKB: 240, // 비자(DS-160)·DV 디지털 업로드 상한
+    // maxKB 없음 — 온라인 갱신 상한이 10MB라 목표 용량을 걸 이유가 없다.
+    // (예전 240KB는 비자값이었다. 여권에 적용하면 화질만 깎인다.)
+    format: 'jpg',
+    allowedFormats: ['jpg', 'png'],
     displayInch: true, // 영어 로케일에서 "2 × 2 in" 표기
     restricted: true,
     premium: true,
+    source: {
+      url: 'https://travel.state.gov/content/travel/en/passports/how-apply/photos.html',
+      verified: true,
+      checked: '2026-06',
+      note: '공식 확정(travel.state.gov): 2×2in, 머리 25~35mm, 흰/오프화이트, 안경 불가(의료 예외), 6개월 이내. 온라인 갱신 디지털은 픽셀 규정이 없고 54KB~10MB. AI·필터 편집 금지(2025.10 강화) — 모든 사진을 검출한다.',
+    },
     notice: {
-      title: t('usage.us.notice.title'),
+      title: t('usage.us_passport.notice.title'),
       bullets: [
-        t('usage.us.notice.b1'),
-        t('usage.us.notice.b2'),
-        t('usage.us.notice.b3'),
-        t('usage.us.notice.b4'),
+        t('usage.us_passport.notice.b1'),
+        t('usage.us_passport.notice.b2'),
+        t('usage.us_passport.notice.b3'),
+        t('usage.us_passport.notice.b4'),
+      ],
+    },
+  },
+  us_visa: {
+    label: t('usage.us_visa.label'),
+    widthMm: 51,
+    heightMm: 51,
+    dpi: 300,
+    targetW: 600, // 2in @300dpi — 공식 범위(600~1200 정사각)의 하단. 240KB 안에 들어가는 크기.
+    targetH: 600,
+    minW: 600, // 공식 하한
+    minH: 600,
+    faceMin: 50, // 공식: 이미지 높이의 50~69%
+    faceMax: 69,
+    eyeMin: 31,
+    eyeMax: 43,
+    maxKB: 240, // DS-160·DV 디지털 업로드 상한 (하드 상한)
+    format: 'jpg',
+    allowedFormats: ['jpg'], // 공식: JPEG 단독
+    displayInch: true,
+    restricted: true,
+    premium: true,
+    source: {
+      url: 'https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/photos.html',
+      verified: true,
+      checked: '2026-06',
+      note: '공식 확정(travel.state.gov 디지털 이미지 요건): 600×600~1200×1200 정사각, JPEG 단독, ≤240KB, sRGB 24bit, 압축 ≤20:1, 머리 이미지 높이의 50~69%. AI·필터 편집 금지는 여권과 동일.',
+    },
+    notice: {
+      title: t('usage.us_visa.notice.title'),
+      bullets: [
+        t('usage.us_visa.notice.b1'),
+        t('usage.us_visa.notice.b2'),
+        t('usage.us_visa.notice.b3'),
+        t('usage.us_visa.notice.b4'),
       ],
     },
   },
@@ -300,7 +354,7 @@ export const USAGE_SPECS: Record<Usage, UsageSpec> = {
 // 화면 표시 순서: 국내(여권·면허·일반) → 시험·자격증(큐넷·KPC·공무원·토익, 무료) → 해외(잠금). 미검증 시험은 isSelectable이 숨김.
 // 랜딩 칩·에디터 탭 공통 — 순서는 여기 한 곳만 바꾸면 됨.
 const DISPLAY_ORDER: Usage[] = [
-  'passport', 'license', 'general', 'qnet', 'kpc', 'gosi', 'toeic', 'us', 'schengen',
+  'passport', 'license', 'general', 'qnet', 'kpc', 'gosi', 'toeic', 'us_passport', 'us_visa', 'schengen',
 ]
 export const USAGES: { id: Usage; label: string }[] = DISPLAY_ORDER.map((id) => ({
   id,
@@ -322,9 +376,13 @@ export const APPLY_SITE: Record<Usage, { label: string; url: string } | null> = 
   passport: { label: t('usage.passport.applyLabel'), url: 'https://www.passport.go.kr' },
   license: { label: t('usage.license.applyLabel'), url: 'https://www.safedriving.or.kr' },
   general: null, // 일반/이력서는 정부 신청 대상 아님
-  us: {
-    label: t('usage.us.applyLabel'),
+  us_passport: {
+    label: t('usage.us_passport.applyLabel'),
     url: 'https://travel.state.gov/content/travel/en/passports/how-apply/photos.html',
+  },
+  us_visa: {
+    label: t('usage.us_visa.applyLabel'),
+    url: 'https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/photos.html',
   },
   schengen: null, // 셰겐 비자는 목적지국 영사관/VFS에서 신청 — 단일 공식 사이트 없음
   qnet: { label: t('usage.qnet.applyLabel'), url: 'https://www.q-net.or.kr' },

@@ -44,23 +44,27 @@
       <dl>
         <div>
           <dt>크기</dt>
-          <dd>2 × 2인치<small>51 × 51mm 정사각</small></dd>
+          <dd>2 × 2인치<small>51 × 51mm 정사각 — 여권·비자 공통</small></dd>
         </div>
         <div>
-          <dt>픽셀</dt>
-          <dd>600 × 600px<small>300 DPI</small></dd>
+          <dt>비자 픽셀</dt>
+          <dd>600 × 600px<small>600~1200px 정사각 · JPEG 단독</small></dd>
         </div>
         <div>
-          <dt>용량</dt>
-          <dd>240KB 이하<small>DS-160 · DV 업로드</small></dd>
+          <dt>비자 용량</dt>
+          <dd>240KB 이하<small>DS-160 업로드 상한</small></dd>
+        </div>
+        <div>
+          <dt>여권 픽셀</dt>
+          <dd>규정 없음<small>Yei ID는 1200 × 1200px로 출력</small></dd>
+        </div>
+        <div>
+          <dt>여권 용량</dt>
+          <dd>54KB ~ 10MB<small>온라인 갱신 기준</small></dd>
         </div>
         <div>
           <dt>머리 크기</dt>
           <dd>25~35mm<small>세로의 50~69%</small></dd>
-        </div>
-        <div>
-          <dt>눈높이</dt>
-          <dd>사진 아래에서 29~35mm</dd>
         </div>
         <div>
           <dt>배경</dt>
@@ -85,11 +89,26 @@
         <h3>안경을 쓰고 찍으면 반려됩니다</h3>
         <p>한국 여권은 반사만 없으면 안경을 허용하지만, <span class="wrong">미국은 안경 착용 사진을 받지 않습니다</span> — 의료상 벗을 수 없는 경우만 예외입니다. <span class="right">안경을 벗고 찍으세요.</span> 한국 규격에 익숙한 분들이 가장 많이 놓치는 부분입니다.</p>
       </div>
-      <p class="sub" style="margin-top:16px">미 국무부(travel.state.gov) 사진 안내 기준입니다. 한국 여권과 달리 정사각형이고, 머리 비율과 눈높이를 함께 봅니다.</p>
+      <p class="sub" style="margin-top:16px">미 국무부(travel.state.gov) 사진 안내 기준입니다. 한국 여권과 달리 정사각형이고, 머리 비율과 눈높이를 함께 봅니다. 물리 크기는 같지만 디지털 요건은 여권과 비자가 다릅니다.</p>
     </div>
   </section>
 
 
+  <section>
+    <div class="wrap">
+      <h2>여권과 비자는 디지털 요건이 다릅니다</h2>
+      <p class="sub">물리 크기(2×2인치)는 같지만 업로드 조건이 갈립니다. 한쪽 기준을 다른 쪽에 쓰면 손해입니다.</p>
+      <div class="cmp-wrap">
+        <table class="cmp">
+          <thead><tr><th>용도</th><th>크기</th><th>디지털</th></tr></thead>
+          <tbody>
+            <tr><th>미국 여권 (온라인 갱신)</th><td class="size">규정 없음</td><td>54KB ~ 10MB · JPG/PNG</td></tr>
+            <tr><th>미국 비자 (DS-160)</th><td class="size">600~1200px 정사각</td><td>240KB 이하 · JPEG 단독</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
   <section>
     <div class="wrap">
@@ -97,6 +116,7 @@
       <p class="sub">온라인 접수는 값이 조금만 어긋나도 업로드 단계에서 걸립니다.</p>
       <ul class="plain warn">
         <li>AI·앱·필터로 편집한 사진 — 미 국무부가 변조를 검출해 반려합니다</li>
+        <li>비자 기준(240KB)을 여권 사진에 적용해 화질을 불필요하게 낮춤</li>
         <li>안경 착용 (의료 예외만 허용)</li>
         <li>한국 여권 규격(35×45mm 직사각)을 그대로 제출 — 미국은 정사각형입니다</li>
         <li>배경에 그림자가 생겨 순백으로 보이지 않음</li>
@@ -158,6 +178,10 @@
       <details>
         <summary>DS-160 업로드 용량은 얼마인가요?</summary>
         <p>240KB 이하입니다. 600×600px로 크기를 맞춰도 화질이 높으면 이 값을 넘기기 쉬워 업로드가 막히는 원인이 됩니다.</p>
+      </details>
+      <details>
+        <summary>여권 사진도 240KB 이하로 줄여야 하나요?</summary>
+        <p>아닙니다. 240KB는 비자(DS-160) 기준입니다. 여권 온라인 갱신은 54KB~10MB를 허용하므로 화질을 낮출 이유가 없습니다. 오히려 낮추면 저화질로 반려될 수 있습니다.</p>
       </details>
     </div>
   </section>
@@ -230,6 +254,14 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "240KB 이하입니다. 600×600px로 크기를 맞춰도 화질이 높으면 이 값을 넘기기 쉬워 업로드가 막히는 원인이 됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "여권 사진도 240KB 이하로 줄여야 하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아닙니다. 240KB는 비자(DS-160) 기준입니다. 여권 온라인 갱신은 54KB~10MB를 허용하므로 화질을 낮출 이유가 없습니다. 오히려 낮추면 저화질로 반려될 수 있습니다."
       }
     }
   ]
