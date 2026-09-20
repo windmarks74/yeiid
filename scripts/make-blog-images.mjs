@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 
 const W = 800
 const ink = '#17161C', ink2 = '#5b5751', yellow = '#FFD12E', pale = '#FFF6D6'
-const cream = '#FCFBF7', line = '#ECE7DB'
+const cream = '#FCFBF7', line = '#ECE7DB', deep = '#F2BE00'
 const green = '#1F9D55', greenSoft = '#E6F6EC'
 const red = '#C2412B', redSoft = '#FDEEEB'
 const FONT = 'Malgun Gothic, sans-serif'
@@ -308,7 +308,127 @@ const rmistake = `
   <text x="680" y="300" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${red}">잘립니다</text>
 </svg>`
 
+// ── 4편(토익) ───────────────────────────────────────────────────────
+// ① "115×150px" 오해 바로잡기 — 이 글의 핵심
+const TH1 = 430
+const t115 = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${TH1}" viewBox="0 0 ${W} ${TH1}">
+  ${dots}
+  <rect width="${W}" height="${TH1}" fill="${cream}"/>
+  <rect width="${W}" height="${TH1}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="74" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">토익 사진, 픽셀 규정이 없습니다</text>
+
+  <rect x="36" y="108" width="352" height="150" rx="16" fill="${redSoft}" stroke="#F0CFC7" stroke-width="2"/>
+  <text x="212" y="148" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${red}">검색에 도는 값</text>
+  <text x="212" y="192" text-anchor="middle" font-family="${FONT}" font-size="30" font-weight="800" fill="${red}">115 × 150px</text>
+  <line x1="86" y1="182" x2="338" y2="182" stroke="${red}" stroke-width="4" stroke-linecap="round"/>
+  <text x="212" y="228" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${red}">2016~2018년 블로그에서 퍼진 수치</text>
+
+  <text x="400" y="192" text-anchor="middle" font-family="${FONT}" font-size="34" font-weight="800" fill="${ink2}">→</text>
+
+  <rect x="412" y="108" width="352" height="150" rx="16" fill="${greenSoft}" stroke="#BFE8CC" stroke-width="2"/>
+  <text x="588" y="148" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${green}">공식 FAQ</text>
+  <text x="588" y="192" text-anchor="middle" font-family="${FONT}" font-size="28" font-weight="800" fill="${green}">픽셀 규정 없음</text>
+  <text x="588" y="228" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${green}">접수 화면이 3:4 로 알아서 자릅니다</text>
+
+  <rect x="36" y="286" width="${W - 72}" height="104" rx="14" fill="${pale}" stroke="#EAD58A" stroke-width="2"/>
+  <text x="62" y="326" font-family="${FONT}" font-size="18" font-weight="700" fill="${ink}">용량도 500KB 가 아니라 6MB 이하입니다 — 열두 배 차이입니다.</text>
+  <text x="62" y="358" font-family="${FONT}" font-size="18" font-weight="600" fill="${ink2}">화질을 낮출 이유가 없습니다.</text>
+</svg>`
+
+// ② 규격 요약표
+const TROWS = [
+  ['크기', '3 × 4cm', ''],
+  ['머리 비율', '정수리~턱 80~90%', '3.2 ~ 3.6cm'],
+  ['형식', 'JPG', ''],
+  ['용량', '6MB 이하', ''],
+  ['배경', '흰색', ''],
+  ['촬영 시점', '최근 6개월 이내', ''],
+]
+const TH2 = 150 + TROWS.length * 78 + 80
+const tspec = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${TH2}" viewBox="0 0 ${W} ${TH2}">
+  ${dots}
+  <rect width="${W}" height="${TH2}" fill="${cream}"/>
+  <rect width="${W}" height="${TH2}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="78" font-family="${FONT}" font-size="34" font-weight="800" fill="${ink}">토익 접수 사진 규격</text>
+  <text x="44" y="116" font-family="${FONT}" font-size="18" font-weight="600" fill="${ink2}">TOEIC · TOEIC Speaking 동일 · 2026년 9월 확인</text>
+
+  ${TROWS.map(([k, v, note], i) => {
+    const y = 150 + i * 78
+    return `
+  <rect x="36" y="${y}" width="${W - 72}" height="66" rx="12" fill="#fff" stroke="${line}" stroke-width="2"/>
+  <text x="62" y="${y + 41}" font-family="${FONT}" font-size="19" font-weight="650" fill="${ink2}">${esc(k)}</text>
+  <text x="${W - 62}" y="${y + (note ? 34 : 41)}" text-anchor="end" font-family="${FONT}" font-size="23" font-weight="800" fill="${ink}">${esc(v)}</text>
+  ${note ? `<text x="${W - 62}" y="${y + 54}" text-anchor="end" font-family="${FONT}" font-size="15" font-weight="600" fill="${ink2}">${esc(note)}</text>` : ''}`
+  }).join('')}
+</svg>`
+
+// ③ 머리 비율 비교 — 다른 글에 거의 없는 차별점
+// 같은 프레임(150×200)에 얼굴 크기만 달리 그린다. 정수리~턱 밴드를 표시해 비율을 눈으로 보인다.
+const face = (cx, topY, botY) => {
+  const ry = (botY - topY) / 2
+  const cy = topY + ry
+  const rx = ry * 0.80
+  return `
+    <path d="M${cx - rx * 1.14} ${cy} a${rx * 1.14} ${ry * 1.14} 0 0 1 ${rx * 2.28} 0 z" fill="#2A2320"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#E7B58E"/>`
+}
+const TH3 = 420
+const thead = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${TH3}" viewBox="0 0 ${W} ${TH3}">
+  ${dots}
+  <rect width="${W}" height="${TH3}" fill="${cream}"/>
+  <rect width="${W}" height="${TH3}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="70" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">토익은 얼굴이 훨씬 크게 들어갑니다</text>
+  <text x="44" y="104" font-family="${FONT}" font-size="17" font-weight="600" fill="${ink2}">평소 증명사진을 그대로 올리면 비율에서 걸립니다</text>
+
+  ${/* 정수리~턱 구간에 측정선을 그린다. 얼굴 크기만으로는 67% 와 85% 가 눈에 잘 안 띈다. */''}
+  ${((bracket) => `
+  <g transform="translate(180,146)">
+    <rect x="0" y="0" width="150" height="200" rx="8" fill="#fff" stroke="${line}" stroke-width="2"/>
+    <rect x="0" y="34" width="150" height="134" fill="#EFEAE0" opacity="0.5"/>
+    ${face(75, 34, 168)}
+    <path d="M28 200 q47 -40 94 0 z" fill="#2E3A4F"/>
+    ${bracket(-18, 34, 168, ink2)}
+    <text x="75" y="-16" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${ink2}">일반 증명사진</text>
+    <text x="75" y="226" text-anchor="middle" font-family="${FONT}" font-size="21" font-weight="800" fill="${ink2}">약 67%</text>
+  </g>
+
+  <g transform="translate(450,146)">
+    <rect x="0" y="0" width="150" height="200" rx="8" fill="#fff" stroke="${deep}" stroke-width="3"/>
+    <rect x="0" y="12" width="150" height="170" fill="${pale}" opacity="0.85"/>
+    ${face(75, 12, 182)}
+    <path d="M36 200 q39 -26 78 0 z" fill="#2E3A4F"/>
+    ${bracket(-18, 12, 182, '#8a6a00')}
+    <text x="75" y="-16" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="#8a6a00">토익</text>
+    <text x="75" y="226" text-anchor="middle" font-family="${FONT}" font-size="21" font-weight="800" fill="#8a6a00">80 ~ 90%</text>
+  </g>`)((x, y1, y2, c) => `
+    <g stroke="${c}" stroke-width="2.4" fill="none" stroke-linecap="round">
+      <line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/>
+      <line x1="${x - 6}" y1="${y1}" x2="${x + 6}" y2="${y1}"/>
+      <line x1="${x - 6}" y1="${y2}" x2="${x + 6}" y2="${y2}"/>
+    </g>
+    <line x1="${x + 6}" y1="${y1}" x2="150" y2="${y1}" stroke="${c}" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.6"/>
+    <line x1="${x + 6}" y1="${y2}" x2="150" y2="${y2}" stroke="${c}" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.6"/>`)}
+
+  <text x="660" y="196" font-family="${FONT}" font-size="17" font-weight="700" fill="${ink}">정수리~턱이</text>
+  <text x="660" y="224" font-family="${FONT}" font-size="17" font-weight="700" fill="${ink}">사진 높이의</text>
+  <text x="660" y="252" font-family="${FONT}" font-size="17" font-weight="700" fill="#8a6a00">80~90%</text>
+  <text x="660" y="284" font-family="${FONT}" font-size="15" font-weight="600" fill="${ink2}">카메라를 조금 더</text>
+  <text x="660" y="308" font-family="${FONT}" font-size="15" font-weight="600" fill="${ink2}">가까이 두세요</text>
+</svg>`
+
 const pages = [
+  ['toeic-115px.png', t115],
+  ['toeic-spec.png', tspec],
+  ['toeic-head.png', thead],
   ['gosi-spec.png', spec],
   ['gosi-100kb.png', myth],
   ['gosi-size.png', cmp],
