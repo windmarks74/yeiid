@@ -199,6 +199,115 @@ const qsize = `
   }).join('')}
 </svg>`
 
+// ── 3편(이력서·크기 비교) ────────────────────────────────────────────
+// ① "공식 규격 없음" — 이 글의 핵심
+const RH1 = 400
+const rnospec = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${RH1}" viewBox="0 0 ${W} ${RH1}">
+  ${dots}
+  <rect width="${W}" height="${RH1}" fill="${cream}"/>
+  <rect width="${W}" height="${RH1}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="74" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">이력서 사진엔 "공식 규격"이 없습니다</text>
+
+  <rect x="36" y="108" width="352" height="132" rx="16" fill="${greenSoft}" stroke="#BFE8CC" stroke-width="2"/>
+  <text x="212" y="146" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${green}">규격을 정한 기관이 있다</text>
+  <text x="212" y="186" text-anchor="middle" font-family="${FONT}" font-size="24" font-weight="800" fill="${green}">여권 · 운전면허</text>
+  <text x="212" y="218" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${green}">발급 기관이 크기를 정해둔다</text>
+
+  <rect x="412" y="108" width="352" height="132" rx="16" fill="${pale}" stroke="#EAD58A" stroke-width="2"/>
+  <text x="588" y="146" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="#8a6a00">정한 곳이 없다</text>
+  <text x="588" y="186" text-anchor="middle" font-family="${FONT}" font-size="24" font-weight="800" fill="#8a6a00">이력서 사진</text>
+  <text x="588" y="218" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="#8a6a00">3 × 4cm 는 관행이다</text>
+
+  <rect x="36" y="268" width="${W - 72}" height="98" rx="14" fill="#fff" stroke="${line}" stroke-width="2"/>
+  <text x="62" y="306" font-family="${FONT}" font-size="18" font-weight="700" fill="${ink}">정작 막히는 건 크기가 아니라 제출처의 픽셀·용량 조건입니다.</text>
+  <text x="62" y="338" font-family="${FONT}" font-size="18" font-weight="600" fill="${ink2}">채용 사이트 안내를 먼저 보는 게 순서입니다.</text>
+</svg>`
+
+// ② 용도별 비교표 — 이 글의 무기
+const RCMP = [
+  ['이력서 · 반명함 · 일반', '3 × 4cm', '354 × 472px', true],
+  ['큐넷 · 토익', '3 × 4cm', '300 × 400px', false],
+  ['여권', '3.5 × 4.5cm', '826 × 1062px', false],
+  ['운전면허', '3.5 × 4.5cm', '413 × 531px', false],
+  ['공무원 원서', '3.5 × 4.5cm', '137 × 177px', false],
+  ['미국 여권 · 비자', '2 × 2인치', '600~1200px 정사각', false],
+]
+const RH2 = 128 + RCMP.length * 66 + 56
+const rcompare = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${RH2}" viewBox="0 0 ${W} ${RH2}">
+  ${dots}
+  <rect width="${W}" height="${RH2}" fill="${cream}"/>
+  <rect width="${W}" height="${RH2}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="70" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">용도별 크기 한 장 정리</text>
+  <text x="44" y="104" font-family="${FONT}" font-size="17" font-weight="600" fill="${ink2}">같은 "증명사진"이어도 제출처에 따라 갈립니다</text>
+
+  ${RCMP.map(([use, size, px, here], i) => {
+    const y = 128 + i * 66
+    return `
+  <rect x="36" y="${y}" width="${W - 72}" height="56" rx="12" fill="${here ? pale : '#fff'}" stroke="${here ? '#EAD58A' : line}" stroke-width="2"/>
+  <text x="62" y="${y + 35}" font-family="${FONT}" font-size="19" font-weight="${here ? 800 : 650}" fill="${ink}">${esc(use)}</text>
+  <text x="472" y="${y + 35}" text-anchor="end" font-family="${FONT}" font-size="20" font-weight="800" fill="${here ? '#8a6a00' : ink}">${esc(size)}</text>
+  <text x="${W - 62}" y="${y + 35}" text-anchor="end" font-family="${FONT}" font-size="16" font-weight="600" fill="${ink2}">${esc(px)}</text>`
+  }).join('')}
+</svg>`
+
+// ③ 흔한 실수 — 3×4 를 3.5×4.5 에 쓰면
+const RH3 = 400
+const rmistake = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${RH3}" viewBox="0 0 ${W} ${RH3}">
+  ${dots}
+  <rect width="${W}" height="${RH3}" fill="${cream}"/>
+  <rect width="${W}" height="${RH3}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="74" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">가장 흔한 실수</text>
+  <text x="44" y="108" font-family="${FONT}" font-size="17" font-weight="600" fill="${ink2}">이력서용 3 × 4cm 를 공무원 원서·운전면허에 그대로 쓰는 것</text>
+
+  ${/* 머리카락은 "얼굴보다 조금 큰 위쪽 반타원"을 먼저 깔고 얼굴로 덮어 테두리만 남긴다.
+        곡선을 손으로 이어 붙이면 비율이 바뀔 때 모양이 깨진다. */''}
+  <defs>
+    <clipPath id="cutFrame"><rect x="0" y="0" width="150" height="200" rx="8"/></clipPath>
+  </defs>
+
+  <g transform="translate(120,146)">
+    <rect x="0" y="0" width="150" height="200" rx="8" fill="#fff" stroke="${line}" stroke-width="2"/>
+    <text x="75" y="-12" text-anchor="middle" font-family="${FONT}" font-size="16" font-weight="700" fill="${ink2}">3 × 4cm 원본</text>
+    <path d="M34 200 q41 -54 82 0 z" fill="#2E3A4F"/>
+    <path d="M36 92 a39 48 0 0 1 78 0 z" fill="#2A2320"/>
+    <ellipse cx="75" cy="92" rx="34" ry="42" fill="#E7B58E"/>
+  </g>
+
+  <text x="330" y="256" font-family="${FONT}" font-size="30" font-weight="800" fill="${red}">→</text>
+
+  ${/* 3.5×4.5 는 세로가 더 길다. 같은 폭을 채우려고 확대하면 정수리가 위로 밀려 잘린다.
+        clipPath 로 실제로 잘라 보여준다 — 라벨만 붙이면 설득이 안 된다. */''}
+  <g transform="translate(410,146)">
+    <g clip-path="url(#cutFrame)">
+      <rect x="0" y="0" width="150" height="200" fill="#fff"/>
+      <g transform="translate(75,118) scale(1.28) translate(-75,-118)">
+        <path d="M34 200 q41 -54 82 0 z" fill="#2E3A4F"/>
+        <path d="M36 92 a39 48 0 0 1 78 0 z" fill="#2A2320"/>
+        <ellipse cx="75" cy="92" rx="34" ry="42" fill="#E7B58E"/>
+      </g>
+    </g>
+    <rect x="0" y="0" width="150" height="200" rx="8" fill="none" stroke="${red}" stroke-width="2" stroke-dasharray="6 5"/>
+    <line x1="0" y1="0" x2="150" y2="0" stroke="${red}" stroke-width="4"/>
+    <text x="75" y="-12" text-anchor="middle" font-family="${FONT}" font-size="16" font-weight="700" fill="${red}">3.5 × 4.5cm 에 맞추면</text>
+    <text x="75" y="222" text-anchor="middle" font-family="${FONT}" font-size="14" font-weight="700" fill="${red}">정수리가 잘립니다</text>
+  </g>
+
+  <rect x="596" y="146" width="168" height="200" rx="14" fill="${redSoft}" stroke="#F0CFC7" stroke-width="2"/>
+  <text x="680" y="212" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${red}">비율이 다릅니다</text>
+  <text x="680" y="248" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${red}">늘리면 어색해지고</text>
+  <text x="680" y="274" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${red}">자르면 머리·턱이</text>
+  <text x="680" y="300" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${red}">잘립니다</text>
+</svg>`
+
 const pages = [
   ['gosi-spec.png', spec],
   ['gosi-100kb.png', myth],
@@ -206,6 +315,9 @@ const pages = [
   ['qnet-spec.png', qspec],
   ['qnet-digital.png', qdigital],
   ['qnet-size.png', qsize],
+  ['resume-nospec.png', rnospec],
+  ['resume-compare.png', rcompare],
+  ['resume-mistake.png', rmistake],
 ]
 for (const [name, svg] of pages) {
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(dir + name)
