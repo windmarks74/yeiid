@@ -1,4 +1,9 @@
 // 스토어 4번째 스크린샷 — 해외 규격(미국·셰겐) 강조. 720x1280, 브랜드 톤(노랑+잉크).
+//
+// ⚠️ 2026-09-20: us 프리셋을 us_passport / us_visa 로 분리하면서 이 화면의 수치가 낡았다.
+//    탭 "미국"→"미국 여권", 600×600px@300DPI → 1200×1200px@600DPI 로 갱신함.
+//    (비자는 600×600@300dpi·240KB 로 남는다 — 이 화면은 여권 기준.)
+//    규격이 또 바뀌면 여기도 같이 고칠 것. check-spec-sync 는 PNG 안 글자를 읽지 못한다.
 // 재실행: node scripts/make-store-overseas.mjs  → store_upload/screenshot-4.png
 import sharp from 'sharp'
 
@@ -70,17 +75,17 @@ const svg = `
     <text x="74" y="178" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#8b8678">여권</text>
     <text x="158" y="178" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#8b8678">일반</text>
     <rect x="218" y="153" width="92" height="38" rx="19" fill="#fff"/>
-    <text x="264" y="178" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="800" fill="${ink}">미국</text>
+    <text x="264" y="178" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="17" font-weight="800" fill="${ink}">미국 여권</text>
     <text x="356" y="178" text-anchor="middle" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#8b8678">셰겐</text>
 
     <!-- 규격 카드 -->
     <rect x="34" y="212" width="372" height="92" rx="16" fill="#FFF7DF" stroke="#EAD58A" stroke-width="2"/>
     ${globe(58, 252, 13, ink, 2.2)}
-    <text x="80" y="260" font-family="Malgun Gothic, sans-serif" font-size="26" font-weight="800" fill="${ink}">미국 2×2</text>
+    <text x="80" y="260" font-family="Malgun Gothic, sans-serif" font-size="26" font-weight="800" fill="${ink}">미국 여권 2×2</text>
     <rect x="288" y="232" width="100" height="30" rx="15" fill="${ink}"/>
     ${lock(300, 236, '#fff')}
     <text x="322" y="252" font-family="Malgun Gothic, sans-serif" font-size="15" font-weight="700" fill="#fff">프리미엄</text>
-    <text x="58" y="292" font-family="Malgun Gothic, sans-serif" font-size="16" font-weight="600" fill="${ink2}">51×51mm · 600×600px · 300DPI · 얼굴 50–69%</text>
+    <text x="58" y="292" font-family="Malgun Gothic, sans-serif" font-size="15" font-weight="600" fill="${ink2}">51×51mm · 1200×1200px · 600DPI · 얼굴 50–69%</text>
 
     <!-- 정사각 크롭 + 가이드 -->
     <g transform="translate(95,330)">
