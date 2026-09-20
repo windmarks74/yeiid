@@ -251,6 +251,30 @@ https://yeiid.itbrown.com/en/
 - [x] **미국 가격 확인: USD 2.99** (₩4,900 자동 환산, 173개국 이미 활성)
       → `iap.ts` PRICE_LABEL 과 영문 랜딩을 2.99 로 맞췄다. 콘솔에서 바꾸면 둘 다 고칠 것.
 
+## 릴리스 노트 — 1.2.5 (versionCode 18) · 2026-09-20 내부 테스트 출시
+
+> 1.2.4 이후 코드 변경: 미국 프리셋 분리(`9756217`) + 영어 라벨 중립화(`0c81719`) + 가격 폴백(`b55cdc7`).
+> **영어 등록정보를 추가하면서 릴리스 노트도 2개 언어가 필요해졌다.** 앞으로 모든 릴리스는 ko-KR/en-US 둘 다 써야 한다.
+
+```
+<ko-KR>
+· 미국 여권과 미국 비자 규격을 분리했습니다.
+  그동안 여권 사진에도 비자 기준(240KB 이하)을 적용해 화질을 불필요하게 낮추고 있었습니다.
+  미국 여권은 이제 1200×1200px(600DPI)로 더 선명하게 저장됩니다.
+· 미국 비자(DS-160)는 기존대로 600×600px · JPG · 240KB 이하로 맞춥니다.
+</ko-KR>
+<en-US>
+· U.S. passport and U.S. visa are now separate presets.
+  Passport photos were being squeezed to the visa limit (240 KB), which cost quality for no reason.
+  U.S. passport now saves at 1200 x 1200 px (600 DPI).
+· U.S. visa (DS-160) still saves at 600 x 600 px, JPEG, 240 KB or less.
+· Clearer labels for users outside Korea.
+</en-US>
+```
+
+빌드 경고 2건(난독화 매핑 파일 없음 · 네이티브 디버그 기호 없음)은 1.2.4 와 동일한
+기존 항목이며 출시를 막지 않는다 — BACKLOG 4-Z 참조. 지원 기기 손실 0.
+
 ### 검토 통과 후 확인할 것
 - [ ] 영어 등록정보가 실제로 en-US 로케일에 뜨는지 (Play 스토어를 영어로 열어 확인)
 - [ ] 미국에서 앱이 검색·설치되는지
