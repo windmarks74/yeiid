@@ -98,7 +98,11 @@ const svg = `
       <line x1="0" y1="36" x2="250" y2="36" stroke="#fff" stroke-width="2" stroke-dasharray="5 5"/>
       <rect x="0" y="92" width="250" height="32" fill="#3FC2D6" opacity="0.18"/>
       <rect x="0" y="148" width="250" height="46" fill="${deep}" opacity="0.18"/>
-      <text x="6" y="30" font-family="Malgun Gothic, sans-serif" font-size="13" font-weight="700" fill="#fff" stroke="${ink}" stroke-width="0.5">정수리</text>
+      <!-- 정수리 라벨: 흰 글자로 흰 배경 위에 있어 거의 안 보였고, x=6 이라 왼쪽 위
+           코너 마크(M2 18 V2 H18)와 겹쳐 잘려 보였다. 턱선과 같은 알약 배경으로
+           맞추고 코너 마크 사이(18~232)로 옮긴다. -->
+      <rect x="76" y="16" width="58" height="20" rx="10" fill="${deep}"/>
+      <text x="86" y="31" font-family="Malgun Gothic, sans-serif" font-size="12" font-weight="700" fill="${ink}">정수리</text>
       <rect x="6" y="98" width="58" height="20" rx="10" fill="#2bb6c8"/>
       <text x="14" y="113" font-family="Malgun Gothic, sans-serif" font-size="12" font-weight="700" fill="#fff">눈높이</text>
       <rect x="186" y="170" width="58" height="20" rx="10" fill="${deep}"/>
