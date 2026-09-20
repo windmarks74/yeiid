@@ -10,8 +10,10 @@ import { t, LANG } from './strings'
 export const PRODUCT_ID = 'yei_lifetime'
 /** RevenueCat 대시보드에서 만들 Entitlement 식별자 */
 export const ENTITLEMENT_ID = 'premium'
-/** 가격 표시 폴백(웹/조회 실패용). 실제 표시는 getPriceString의 스토어 현지화 가격을 우선 사용. */
-export const PRICE_LABEL = LANG === 'en' ? '$4.99' : '₩4,900'
+/** 가격 표시 폴백(웹/조회 실패용). 실제 표시는 getPriceString의 스토어 현지화 가격을 우선 사용.
+ *  ⚠️ Play Console 의 실제 가격과 맞출 것. 2026-09-20 확인: 미국 USD 2.99(₩4,900 자동 환산),
+ *  한국 ₩4,900. 콘솔에서 가격을 바꾸면 여기와 site/yeiid/en/index.html 도 같이 고친다. */
+export const PRICE_LABEL = LANG === 'en' ? '$2.99' : '₩4,900'
 
 // RevenueCat 공개 SDK 키 (Google). 대시보드 → Project settings → API keys → "goog_..." 키.
 // public 키라 앱에 포함돼도 안전. 비어있으면 결제 시 안내 에러.
@@ -79,7 +81,7 @@ export async function getEntitlementStatus(): Promise<EntitlementStatus> {
 }
 
 /**
- * 스토어 현지화 가격 문자열 (예 "$4.99"/"₩4,900" — 구글 플레이가 사용자 국가에 매긴 가격).
+ * 스토어 현지화 가격 문자열 (예 "$2.99"/"₩4,900" — 구글 플레이가 사용자 국가에 매긴 가격).
  * 표시값과 실제 청구가 항상 일치한다. 웹/키 미설정/오류면 null → 호출부에서 PRICE_LABEL 폴백.
  */
 export async function getPriceString(): Promise<string | null> {
