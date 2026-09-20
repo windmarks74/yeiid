@@ -150,3 +150,95 @@ Yei ID는 여권사진·비자사진·운전면허증 사진·이력서(반명�
 · 첫 저장 후 앱 평가 요청 (한 번만 표시)
 · 안정성 개선 — 뒤로가기, 오류 복구
 ```
+
+---
+
+# 영어(미국) 등록정보 — 2026-09-20 작성, 콘솔 적용 대기
+
+> ⚠️ **한글 등록정보의 번역이 아니다.** 영어 로케일에서는 앱이 다르게 동작한다:
+> - 시험 규격(큐넷·공무원·토익·KPC)은 `isSelectable()` 이 숨긴다 → **영어 문구에 쓰면 안 된다.**
+>   한글 등록정보의 주력 키워드가 통째로 빠지는 것이라, 번역으로는 절대 나올 수 없는 글이다.
+> - 운전면허는 `ID photo 35 × 45 mm` 로 중립화했다(한국 면허 규격이라) → "driver's license" 금지.
+> - 미국 규격은 inch 로 표기된다.
+>
+> 글자수: 앱 이름 29/30 · 짧은 설명 76/80 · 자세한 설명 3,005/4,000 (검증 완료)
+> "보장/100% 통과/공인" 금지 워딩 없음 · 무료 횟수 숫자 없음 (한글 규칙과 동일하게 적용)
+
+## 앱 이름 (≤30자)
+```
+Passport Photo Maker - Yei ID
+```
+
+## 짧은 설명 (≤80자)
+```
+U.S. passport & DS-160 visa photos at exact 2x2 in. Never leaves your phone.
+```
+
+## 자세한 설명 (≤4000자)
+```
+Yei ID makes U.S. passport photos, DS-160 visa photos, Schengen visa photos and everyday ID photos right on your phone. Pick what the photo is for and the app sets the size, the head proportion and the file-size limit for you. The result saves straight to your gallery. No studio, no photo editor, no sign-up.
+
+■ U.S. passport and visa are not the same photo
+Both are 2 x 2 inches, but the files are different — and mixing them up is the most common reason an upload gets rejected.
+· U.S. passport - 2 x 2 in (51 x 51 mm), 1200 x 1200 px at 600 DPI. Online renewal accepts roughly 54 KB to 10 MB, so there is no reason to cut quality.
+· U.S. visa (DS-160) - 2 x 2 in, 600 x 600 px, JPEG only, 240 KB or less. The uploader rejects anything over the limit.
+Yei ID keeps the two presets separate so you are not shrinking a passport photo to visa size and losing detail for nothing.
+
+■ The measurements are the hard part
+A passport photo is not just a square crop. Your head has to fill a set portion of the frame and your eyes have to sit inside a specific band. Line your face up with the crown and chin guides on screen and that part is handled.
+
+■ No "file too large" at the last step
+Online forms reject a photo that is a few kilobytes over, and they usually tell you only after you have filled everything else in. Yei ID brings the file under the limit before you get there.
+
+■ Editing is limited on purpose for passport and visa
+Submitted photos are screened for digital alteration, and edited images get rejected. On passport and visa presets, background replacement and skin smoothing switch off automatically so you do not trip that rule by accident. Cropping and brightness stay available.
+
+■ Print a sheet, not a single photo
+Lay several copies onto a 4 x 6 in sheet and print it at a drugstore kiosk or on a home printer, instead of paying per print.
+
+■ Your photo never leaves your phone
+Every step runs on the device. Nothing is uploaded to a server, nothing is stored by us, and there is no account or login. Face detection and background separation run locally too.
+
+■ Supported formats
+· U.S. passport - 2 x 2 in (51 x 51 mm)
+· U.S. visa, DS-160 - 2 x 2 in, 600 x 600 px, 240 KB or less
+· Schengen visa (Europe) - 35 x 45 mm
+· Standard ID photo - 35 x 45 mm
+· Small ID / resume photo - 30 x 40 mm
+
+■ Who it is for
+· Renewing a U.S. passport online and needing a photo that passes the upload check
+· Filling in a DS-160 and stuck on the photo step
+· Applying for a Schengen visa
+· Needing an ID photo today without booking a studio
+
+■ One purchase, not a subscription
+The first few photos are free. After that a single purchase unlocks unlimited use — no subscription, no per-photo fee, no ads. Spec changes arrive as app updates at no extra cost.
+
+Yei ID sizes your photo to published requirements, but the decision to accept it rests with the agency you submit to. Requirements change, so check the official guidance before you submit. This app is not a government or public-agency service.
+```
+
+## 노리는 검색어 (영어)
+passport photo · passport photo maker · visa photo · DS-160 photo · 2x2 photo ·
+ID photo · passport photo app · schengen visa photo · passport photo at home
+
+## 스크린샷 (`store_upload/en/` — 6장, 생성기 `scripts/make-store-en.mjs`)
+1. Skip the photo studio — 인트로
+2. U.S. passport & visa, exact — 2×2in, 여권/비자 차이
+3. Crown and chin lined up — 가이드선
+4. Shoot, then download — 저장 결과
+5. Your photo never leaves — 온디바이스
+6. One purchase, unlimited — 1회 결제
+
+> 한글 세트의 큐넷 화면(6번)에 해당하는 영어 화면은 **일부러 없다.** 시험 규격이
+> 영어판에 없으므로 올리면 못 쓰는 기능을 광고하게 된다.
+
+## 웹사이트 URL (영어 로케일)
+```
+https://yeiid.itbrown.com/en/
+```
+
+## 남은 것
+- [ ] 콘솔에 영어(미국) 등록정보 입력 + 스크린샷 6장 업로드
+- [ ] 미국 가격 확정 — 앱 폴백은 `$4.99`(`iap.ts` PRICE_LABEL). 콘솔 가격과 맞출 것.
+- [ ] 출시 국가에 미국 포함 확인
