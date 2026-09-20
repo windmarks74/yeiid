@@ -79,7 +79,10 @@ const STRINGS = {
   'usage.passport.notice.b2': { ko: '원래 피부톤을 그대로 표현해야 합니다.', en: 'Your natural skin tone must be preserved.' },
   'usage.passport.notice.b3': { ko: '권장: 크롭·규격·용량 맞추기 + 피부톤을 왜곡하지 않는 가벼운 밝기·노출·화이트밸런스까지.', en: 'Recommended: crop, sizing, and file-size adjustment, plus light brightness, exposure, and white-balance tweaks that do not distort skin tone.' },
 
-  'usage.license.label': { ko: '운전면허증', en: "Driver's license" },
+  // 영어 라벨에서 "Driver's license" 를 뺐다. 이 프리셋은 한국 운전면허(35×45mm)인데
+  // 미국은 주 DMV 현장 촬영이라 업로드용 규격이 없다 — 영어 사용자가 이걸 고르면
+  // 자기 주에 못 쓰는 사진을 만들게 된다. 국가색을 빼고 크기로만 부른다.
+  'usage.license.label': { ko: '운전면허증', en: 'ID photo 35 × 45 mm' },
 
   'usage.general.label': { ko: '일반', en: 'General' },
 
@@ -259,7 +262,10 @@ const STRINGS = {
   'app.headlineLine1': { ko: '집에서 가볍고 산뜻하게,', en: 'Crisp and easy, right at home —' },
   'app.headlineLine2': { ko: '규격에 딱 맞는', en: 'perfectly sized' },
   'app.headlineMark': { ko: '증명사진', en: 'ID photos' },
-  'app.landingSub': { ko: '여권 · 운전면허 · 자격증 · 일반 증명사진을 사진관 없이. 업로드한 사진은 서버로 전송되지 않습니다.', en: 'Passport, driver’s license, certification, and general ID photos — no studio needed. Your photos are never uploaded to a server.' },
+  // 영어 문구에서 "driver's license, certification" 을 뺐다. 자격증(시험) 프리셋은
+  // 영어 로케일에서 숨겨지고, 운전면허는 한국 규격이라 국가색을 뺀 상태다.
+  // 영어판에서 실제로 고를 수 있는 것만 적는다.
+  'app.landingSub': { ko: '여권 · 운전면허 · 자격증 · 일반 증명사진을 사진관 없이. 업로드한 사진은 서버로 전송되지 않습니다.', en: 'U.S. passport, visa, Schengen and everyday ID photos — no studio needed. Your photos are never uploaded to a server.' },
   'app.uploadPhoto': { ko: '사진 올리기', en: 'Upload photo' },
   'app.takePhoto': { ko: '카메라로 촬영', en: 'Take a photo' },
   'app.landingPrivacy': { ko: '프라이버시 보장 — 사진은 기기 밖으로 나가지 않아요', en: 'Privacy guaranteed — your photos never leave your device' },

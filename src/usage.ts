@@ -374,7 +374,9 @@ export function requiresPremium(usage: Usage): boolean {
 /** 용도별 정부 공식 신청/안내 사이트 (없으면 신청 버튼 미표시). 정부 제휴 아님 — 참고용. */
 export const APPLY_SITE: Record<Usage, { label: string; url: string } | null> = {
   passport: { label: t('usage.passport.applyLabel'), url: 'https://www.passport.go.kr' },
-  license: { label: t('usage.license.applyLabel'), url: 'https://www.safedriving.or.kr' },
+  // 도로교통공단은 한국 전용 민원 사이트다. 영어판에서는 라벨도 "ID photo 35 × 45 mm"
+  // 로 중립화했으므로 이 버튼을 띄우면 앞뒤가 안 맞는다 — 한국어에서만 보인다.
+  license: LANG === 'ko' ? { label: t('usage.license.applyLabel'), url: 'https://www.safedriving.or.kr' } : null,
   general: null, // 일반/이력서는 정부 신청 대상 아님
   us_passport: {
     label: t('usage.us_passport.applyLabel'),
