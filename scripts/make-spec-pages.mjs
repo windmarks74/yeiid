@@ -604,10 +604,14 @@ for (const s of SPECS) {
 
 // sitemap — 규격 페이지가 늘어나면 SPECS 에만 추가하면 여기도 따라온다
 const today = new Date().toISOString().slice(0, 10)
+// 규격 페이지는 전부 한국어다. 영어 랜딩(/en/)은 이 생성기가 만들지 않고
+// site/yeiid/en/index.html 에 직접 있지만, 사이트맵에는 여기서 같이 넣는다.
 const urls = [
   { loc: `${ORIGIN}/`, pri: '1.0' },
   ...SPECS.map((s) => ({ loc: `${ORIGIN}/${s.slug}`, pri: '0.8' })),
+  { loc: `${ORIGIN}/en/`, pri: '0.9' },
   { loc: `${ORIGIN}/privacy`, pri: '0.3' },
+  { loc: `${ORIGIN}/privacy.en`, pri: '0.3' },
 ]
 writeFileSync(
   out('sitemap.xml'),

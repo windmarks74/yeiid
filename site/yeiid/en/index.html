@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow" />
+
+<!--
+  Yei ID — English landing page.  https://yeiid.itbrown.com/en/
+
+  ⚠️ 한국어 index.html 의 번역본이 아니다. 내용을 일부러 다르게 썼다.
+
+  1) 대상이 다르다. 영어 로케일에서는 앱이 시험 규격(큐넷·공무원·토익·KPC)을
+     아예 숨긴다(usage.ts isSelectable: exam 그룹은 LANG === 'ko' 일 때만).
+     한국어 페이지의 주력인 "시험 접수 사진"을 영어로 옮기면 영어 사용자가
+     쓸 수 없는 기능을 광고하게 된다. 그래서 미국 여권·비자를 주력으로 세웠다.
+
+  2) 운전면허를 일부러 뺐다. 앱의 license 프리셋은 한국 운전면허(35×45mm)다.
+     미국은 주 DMV 현장 촬영이 일반적이라 영어권에 "driver's license"로 내세우면
+     오해를 부른다. (영어판 앱에는 아직 이 항목이 보인다 — 글로벌 출시 전 결정 필요.)
+
+  3) 자동 언어 리다이렉트는 쓰지 않는다. 구글 크롤러가 미국 IP·en-US 로 들어오므로
+     자동 전환을 걸면 한국어 URL이 영어 내용으로 색인돼, 현재 유일한 유입 경로인
+     한글 SEO를 스스로 망가뜨린다. hreflang + 상단 전환 링크가 표준 방식이다.
+
+  4) 네이버 소유확인 메타는 여기 넣지 않는다 — 네이버는 한국어 페이지에만 필요하다.
+
+  수치는 src/usage.ts 실제 출력값과 일치시킬 것(us_passport / us_visa).
+  가격은 src/iap.ts PRICE_LABEL 의 영어값($4.99)과 동기화.
+  "guarantee / 100% accepted / official" 워딩 금지 — 정책·신뢰 리스크.
+-->
+
+<title>U.S. Passport &amp; Visa Photo Maker — 2×2 in, on your phone | Yei ID</title>
+<meta name="description" content="Make a U.S. passport or DS-160 visa photo on your phone in about a minute. Exact 2 × 2 in sizing, head and eye-line guides, automatic file-size limits. Your photo never leaves your device." />
+<link rel="canonical" href="https://yeiid.itbrown.com/en/" />
+
+<link rel="alternate" hreflang="ko" href="https://yeiid.itbrown.com/" />
+<link rel="alternate" hreflang="en" href="https://yeiid.itbrown.com/en/" />
+<link rel="alternate" hreflang="x-default" href="https://yeiid.itbrown.com/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Yei ID" />
+<meta property="og:title" content="U.S. Passport &amp; Visa Photo Maker — 2×2 in, on your phone" />
+<meta property="og:description" content="Exact 2 × 2 in sizing for U.S. passport and DS-160 visa photos, with head and eye-line guides. Processed entirely on your device." />
+<meta property="og:url" content="https://yeiid.itbrown.com/en/" />
+<meta property="og:image" content="https://yeiid.itbrown.com/icon-512.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="/icon-512.png" />
+<link rel="apple-touch-icon" href="/icon-512.png" />
+
+<link rel="stylesheet" href="/landing.css" />
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand"><img src="/icon-512.png" alt="" width="26" height="26" /> Yei ID</div>
+      <a class="langswitch" href="/" hreflang="ko" lang="ko">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>
+        </svg>
+        한국어
+      </a>
+    </div>
+
+    <h1>Skip the photo studio.<br />Get it right in a minute.</h1>
+    <p class="lede">
+      U.S. passport, DS-160 visa and everyday ID photos. Pick what it's for and the app
+      handles the size, the head proportion and the file-size limit for you.
+    </p>
+
+    <a class="cta" href="https://play.google.com/store/apps/details?id=com.yei.idphoto">
+      <svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor">
+        <path d="M.7.6A1.7 1.7 0 0 0 .3 1.8v18.4c0 .5.2.9.4 1.2l.1.1L11 11.1v-.2L.8.6H.7Z"/>
+        <path d="m14.4 14.5-3.4-3.4v-.2l3.4-3.4.1.1 4 2.3c1.2.7 1.2 1.8 0 2.4l-4 2.2Z"/>
+        <path d="M14.5 14.4 11 11 .7 21.4c.4.4 1 .5 1.8.1l12-6.9Z"/>
+        <path d="M14.5 7.6 2.5.7C1.7.3 1.1.3.7.7L11 11l3.5-3.4Z"/>
+      </svg>
+      Get it on Google Play
+    </a>
+    <p class="cta-note"><b>5 free photos</b> · No ads · No sign-up</p>
+
+    <div class="badges">
+      <span class="badge">📵 Never uploaded</span>
+      <span class="badge">📐 Exact 2 × 2 in</span>
+      <span class="badge">💾 Under the size limit</span>
+      <span class="badge">🖨 4 × 6 print sheet</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="shots">
+  <div class="wrap">
+    <h2>What it looks like</h2>
+    <p class="sub">Have a look before you install.</p>
+
+    <div class="strip">
+      <figure class="shot">
+        <img src="/shots/en/us-formats.png" width="720" height="1280" loading="lazy"
+             alt="U.S. passport preset showing a 2 by 2 inch square crop with an automatic eye-line guide" />
+        <p>U.S. passport and DS-160 visa, sized exactly</p>
+      </figure>
+      <figure class="shot">
+        <img src="/shots/en/guides.png" width="720" height="1280" loading="lazy"
+             alt="Editing screen with crown and chin guide lines placed automatically over a portrait" />
+        <p>Crown and chin lines placed for you</p>
+      </figure>
+      <figure class="shot">
+        <img src="/shots/en/privacy.png" width="720" height="1280" loading="lazy"
+             alt="Settings screen stating photos are processed on the device with no upload and no account" />
+        <p>Nothing is uploaded, no account needed</p>
+      </figure>
+      <figure class="shot">
+        <img src="/shots/en/price.png" width="720" height="1280" loading="lazy"
+             alt="Purchase screen showing a one-time unlock with unlimited downloads and no subscription" />
+        <p>One purchase, then unlimited</p>
+      </figure>
+    </div>
+    <p class="hint">Swipe for more →</p>
+  </div>
+</section>
+
+<section id="specs">
+  <div class="wrap">
+    <h2>What do you need a photo for?</h2>
+    <p class="sub">Pick the use and the size, head proportion and eye line are set automatically.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>United States <span class="tag">Most used</span></h3>
+        <ul>
+          <li><div class="row"><b>U.S. passport</b><span>2 × 2 in (51 × 51 mm)<br />1200 × 1200 px · 600 DPI</span></div></li>
+          <li><div class="row"><b>U.S. visa (DS-160)</b><span>2 × 2 in (51 × 51 mm)<br />600 × 600 px · 240 KB or less</span></div></li>
+        </ul>
+        <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
+          These two are <b>not</b> the same file. The DS-160 upload rejects anything over
+          240 KB, while passport renewal accepts up to 10 MB — so squeezing a passport photo
+          down to visa size only costs you quality. Yei keeps them apart.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Everyday ID <span class="tag">Size handled</span></h3>
+        <ul>
+          <li><div class="row"><b>Standard ID photo</b><span>35 × 45 mm</span></div></li>
+          <li><div class="row"><b>Résumé / small ID</b><span>30 × 40 mm</span></div></li>
+          <li><div class="row"><b>Schengen visa (Europe)</b><span>35 × 45 mm</span></div></li>
+        </ul>
+        <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
+          For everyday ID photos you can also replace the background with plain white.
+          The subject is separated on your device — the image is never sent anywhere.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Why strict formats are treated differently</h3>
+        <ul>
+          <li><div class="row"><b>Background replacement</b><span>Off for passport &amp; visa</span></div></li>
+          <li><div class="row"><b>Smoothing / retouching</b><span>Off for passport &amp; visa</span></div></li>
+          <li><div class="row"><b>Brightness &amp; crop</b><span>Still available</span></div></li>
+        </ul>
+        <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
+          The State Department screens submitted photos for digital alteration, and edited
+          images get rejected. Yei turns those tools off automatically on passport and visa
+          presets so you don't trip that rule by accident.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Why Yei</h2>
+    <p class="sub">No studio, no guesswork about the numbers.</p>
+
+    <div class="why">
+      <div>
+        <div class="ico">🔒</div>
+        <h3>Your photo never leaves your phone</h3>
+        <p>Everything runs on the device. No server upload, no account, no login. Your face is not sent anywhere — not to us, not to anyone else.</p>
+      </div>
+      <div>
+        <div class="ico">📐</div>
+        <h3>The measurements are the hard part</h3>
+        <p>A U.S. passport photo isn't just square — the head has to fill roughly half the frame and the eyes have to sit in a specific band. Line your face up with the guides and that's handled.</p>
+      </div>
+      <div>
+        <div class="ico">💾</div>
+        <h3>No "file too large" at the last step</h3>
+        <p>The DS-160 uploader rejects a photo over 240 KB, and it only tells you after you've filled everything in. Yei brings the file under the limit before you get there.</p>
+      </div>
+      <div>
+        <div class="ico">🖨</div>
+        <h3>Print a sheet, not one photo</h3>
+        <p>Lay several copies onto a 4 × 6 in sheet and print it at a drugstore kiosk or at home, instead of paying studio prices per print.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Three steps</h2>
+    <p class="sub">One photo taken against a plain wall is enough.</p>
+    <ol class="steps">
+      <li><b>Pick the use</b>U.S. passport, DS-160 visa, Schengen, everyday ID — whichever you need.</li>
+      <li><b>Line up your face</b>Drop the photo in and nudge it until your crown and chin meet the guides.</li>
+      <li><b>Save or print</b>A correctly sized file lands in your gallery. Upload it as is, or print the 4 × 6 sheet.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="price">
+  <div class="wrap">
+    <h2>One purchase, unlimited</h2>
+    <p class="sub">Not per photo. Not a subscription.</p>
+    <div class="price">
+      <div class="amt">$4.99 <small>once</small></div>
+      <ul>
+        <li>Make and save as many photos as you want</li>
+        <li>No ads, no subscription</li>
+        <li>Spec changes arrive as app updates — no extra cost</li>
+        <li>U.S. passport &amp; visa presets, Schengen, and the print sheet included</li>
+      </ul>
+      <p style="margin:24px 0 0">
+        <a class="cta" href="https://play.google.com/store/apps/details?id=com.yei.idphoto">Get it on Google Play</a>
+      </p>
+      <p class="cta-note" style="color:var(--muted)">Try it with <b>5 free photos</b> first. Pay only if it works for you.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>Common questions</h2>
+    <p class="sub">The things that usually go wrong at submission.</p>
+
+    <details open>
+      <summary>What size is a U.S. passport photo?</summary>
+      <p>2 × 2 inches (51 × 51 mm), square, with your head taking up roughly 50–69% of the frame height. For a printed photo that means the head measures about 1 to 1&nbsp;3/8 inches from chin to crown. Yei outputs 1200 × 1200 px at 600 DPI so the print stays sharp.</p>
+    </details>
+
+    <details>
+      <summary>What are the DS-160 digital photo requirements?</summary>
+      <p>A square JPEG between 600 × 600 and 1200 × 1200 pixels, no larger than 240 KB. JPEG only — PNG is not accepted. Yei's "U.S. visa" preset writes a 600 × 600 JPEG and holds it under 240 KB.</p>
+    </details>
+
+    <details>
+      <summary>Do I have to shrink a passport photo to 240 KB too?</summary>
+      <p>No — 240 KB is the visa limit. Online passport renewal accepts roughly 54 KB to 10 MB, so there is no reason to cut the quality. Doing it anyway can get the photo rejected for being too low in detail. That's why Yei keeps the two presets separate.</p>
+    </details>
+
+    <details>
+      <summary>Can I use a selfie I took at home?</summary>
+      <p>Yes. Stand a step away from a plain, light wall, face a window so the light is on you rather than behind you, and look straight at the camera. That is usually enough. Don't stand right against the wall — you'll cast a shadow that reads as a grey background.</p>
+    </details>
+
+    <details>
+      <summary>Is my photo uploaded anywhere?</summary>
+      <p>No. Editing and saving happen entirely on your device, and the image is never transmitted or stored on a server. There is no account and no login. Details are in the <a href="/privacy.en">privacy policy</a>.</p>
+    </details>
+
+    <details>
+      <summary>Why can't I change the background on a passport photo?</summary>
+      <p>Because edited photos get rejected. Submitted photos are screened for digital alteration, so Yei turns background replacement and retouching off on the passport and visa presets. Cropping and brightness stay available.</p>
+    </details>
+
+    <div class="note">
+      Yei ID sizes your photo to published requirements, but <b>the decision to accept it rests with the agency you submit to.</b>
+      Requirements change, so check the official guidance before you submit. This app is not a government or public-agency service.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="https://play.google.com/store/apps/details?id=com.yei.idphoto">Google Play</a>
+      <a href="/privacy.en">Privacy policy</a>
+      <a href="/">한국어</a>
+      <a href="mailto:shhwang0424@gmail.com">Contact shhwang0424@gmail.com</a>
+    </div>
+    <div>© 2026 Yei ID · Passport &amp; ID photo app</div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Yei ID — U.S. Passport & Visa Photo Maker",
+  "operatingSystem": "Android",
+  "applicationCategory": "PhotographyApplication",
+  "url": "https://yeiid.itbrown.com/en/",
+  "installUrl": "https://play.google.com/store/apps/details?id=com.yei.idphoto",
+  "description": "Make U.S. passport and DS-160 visa photos at the exact 2 x 2 inch size on your phone, with head and eye-line guides and automatic file-size limits. Photos are processed on the device and never uploaded.",
+  "offers": {
+    "@type": "Offer",
+    "price": "4.99",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What size is a U.S. passport photo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "2 x 2 inches (51 x 51 mm), square, with the head taking up roughly 50-69% of the frame height. On a print that is about 1 to 1 3/8 inches from chin to crown. Yei ID outputs 1200 x 1200 px at 600 DPI."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the DS-160 digital photo requirements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A square JPEG between 600 x 600 and 1200 x 1200 pixels, no larger than 240 KB. JPEG only; PNG is not accepted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I have to shrink a passport photo to 240 KB too?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. 240 KB is the visa limit. Online passport renewal accepts roughly 54 KB to 10 MB, so reducing quality is unnecessary and can cause rejection for insufficient detail."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my photo uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Editing and saving happen entirely on the device. The image is never transmitted or stored on a server, and there is no account or login."
+      }
+    }
+  ]
+}
+</script>
+
+</body>
+</html>

@@ -45,251 +45,28 @@
 <link rel="icon" href="/icon-512.png" />
 <link rel="apple-touch-icon" href="/icon-512.png" />
 
-<style>
-  :root {
-    --yellow: #ffd12e;
-    --yellow-bright: #ffda4d;
-    --yellow-deep: #f2be00;
-    --yellow-pale: #fff6d6;
-    --ink: #17161c;
-    --muted: #615f6b;
-    --line: #ece9e1;
-    --bg: #f8f6ef;
-    --surface: #ffffff;
-    --green: #15a66e;
-    --green-pale: #e8f7f0;
-    --r-md: 16px;
-    --r-lg: 22px;
-    --r-pill: 999px;
-    --shadow-sm: 0 1px 2px rgba(23,22,28,.05), 0 1px 3px rgba(23,22,28,.04);
-    --shadow-md: 0 2px 6px rgba(23,22,28,.06), 0 8px 20px rgba(23,22,28,.07);
-    --maxw: 960px;
-  }
+<!-- 언어별 페이지 상호 링크. 자동 리다이렉트는 하지 않는다 — 구글 크롤러가 미국 IP·en-US
+     로 들어오므로 자동 전환을 걸면 이 한국어 URL이 영어 내용으로 색인돼 한글 SEO를
+     스스로 망가뜨린다. 사용자에겐 헤더의 전환 링크로 안내한다. -->
+<link rel="alternate" hreflang="ko" href="https://yeiid.itbrown.com/" />
+<link rel="alternate" hreflang="en" href="https://yeiid.itbrown.com/en/" />
+<link rel="alternate" hreflang="x-default" href="https://yeiid.itbrown.com/" />
 
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
-                 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
-    font-size: 17px;
-    line-height: 1.7;
-    word-break: keep-all;
-  }
-  img { max-width: 100%; display: block; }
-  a { color: inherit; }
-
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
-
-  /* ---------- Hero ---------- */
-  .hero {
-    background: radial-gradient(120% 90% at 50% 0%, var(--yellow-bright) 0%, var(--yellow) 55%, var(--yellow-deep) 100%);
-    padding: 56px 0 64px;
-    text-align: center;
-  }
-  .brand {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--ink); color: #fff;
-    padding: 8px 16px 8px 10px; border-radius: var(--r-pill);
-    font-weight: 700; font-size: 15px; letter-spacing: -.01em;
-  }
-  .brand img { width: 26px; height: 26px; border-radius: 7px; }
-  h1 {
-    font-size: clamp(30px, 6.4vw, 50px);
-    line-height: 1.22; letter-spacing: -.03em;
-    margin: 22px 0 14px; font-weight: 800;
-  }
-  .lede {
-    font-size: clamp(16px, 2.4vw, 19px);
-    color: #4a4632; max-width: 620px; margin: 0 auto 28px; font-weight: 500;
-  }
-  .cta {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--ink); color: #fff; text-decoration: none;
-    padding: 16px 30px; border-radius: var(--r-pill);
-    font-weight: 700; font-size: 17px;
-    box-shadow: 0 6px 18px rgba(23,22,28,.22);
-    transition: transform .12s ease, box-shadow .12s ease;
-  }
-  .cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(23,22,28,.28); }
-  .cta svg { width: 20px; height: 22px; flex: none; }
-  .cta-note { margin-top: 14px; font-size: 14.5px; color: #5c573f; font-weight: 600; }
-  .cta-note b { font-weight: 800; color: var(--ink); }
-
-  .badges {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
-    margin-top: 26px;
-  }
-  .badge {
-    background: rgba(255,255,255,.72); border: 1px solid rgba(23,22,28,.09);
-    padding: 7px 14px; border-radius: var(--r-pill);
-    font-size: 14px; font-weight: 650;
-  }
-
-  /* ---------- Sections ---------- */
-  section { padding: 60px 0; }
-  section + section { border-top: 1px solid var(--line); }
-  h2 {
-    font-size: clamp(23px, 4vw, 31px); letter-spacing: -.025em;
-    margin: 0 0 10px; font-weight: 800;
-  }
-  .sub { color: var(--muted); margin: 0 0 30px; font-size: 16px; }
-
-  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(272px, 1fr)); }
-
-  .card {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r-lg); padding: 24px;
-    box-shadow: var(--shadow-sm);
-  }
-  .card h3 {
-    margin: 0 0 4px; font-size: 18px; font-weight: 750; letter-spacing: -.02em;
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  }
-  .tag {
-    font-size: 12px; font-weight: 700; color: #8a6a00;
-    background: var(--yellow-pale); border: 1px solid #f3e4ad;
-    padding: 3px 9px; border-radius: var(--r-pill);
-  }
-  .card ul { list-style: none; margin: 14px 0 0; padding: 0; }
-  .card li { padding: 0; border-top: 1px solid var(--line); font-size: 15.5px; }
-  .card li:first-child { border-top: 0; }
-  .card .row {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 14px; padding: 11px 0;
-  }
-  .card li b { font-weight: 650; }
-  .card li span { color: var(--muted); font-size: 14px; text-align: right; flex: none; }
-
-  /* 링크 행은 줄 전체가 눌린다 — 밑줄만으로는 누를 수 있는지 모르고 지나친다 */
-  .card a.row {
-    text-decoration: none; color: inherit; position: relative;
-    margin: 0 -12px; padding: 11px 34px 11px 12px; border-radius: 10px;
-    transition: background .12s ease;
-  }
-  .card a.row::after {
-    content: '›'; position: absolute; right: 13px; top: 50%;
-    transform: translateY(-54%);
-    color: var(--yellow-deep); font-size: 22px; font-weight: 800; line-height: 1;
-  }
-  .card a.row:hover { background: var(--yellow-pale); }
-  .card a.row:hover b { text-decoration: underline; text-decoration-color: var(--yellow-deep); text-underline-offset: 3px; }
-
-  /* 규격 사전 바로가기 — 섹션 위에 메뉴처럼 */
-  .dict {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-    margin: 0 0 26px;
-  }
-  .dict > b { font-size: 14px; font-weight: 750; margin-right: 2px; }
-  .dict a {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: var(--surface); border: 1px solid var(--line);
-    padding: 7px 13px; border-radius: var(--r-pill);
-    font-size: 14.5px; font-weight: 650; text-decoration: none; color: var(--ink);
-  }
-  .dict a::after { content: '›'; color: var(--yellow-deep); font-weight: 800; }
-  .dict a:hover { border-color: var(--yellow-deep); background: var(--yellow-pale); }
-
-  /* ---------- Screenshots ---------- */
-  .strip {
-    display: flex; gap: 16px; overflow-x: auto;
-    padding: 4px 0 20px; margin: 0 -20px; padding-inline: 20px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-  }
-  .shot { flex: 0 0 228px; scroll-snap-align: center; }
-  .shot img {
-    width: 100%; height: auto; background: #fff;
-    border: 1px solid var(--line); border-radius: 18px;
-    box-shadow: var(--shadow-md);
-  }
-  .shot p {
-    margin: 13px 4px 0; font-size: 14.5px; font-weight: 650;
-    color: var(--muted); line-height: 1.5;
-  }
-  .hint { font-size: 14px; color: var(--muted); margin: 0; }
-
-  /* ---------- Why ---------- */
-  .why { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-  .why div h3 { margin: 0 0 6px; font-size: 17.5px; font-weight: 750; letter-spacing: -.02em; }
-  .why div p { margin: 0; color: var(--muted); font-size: 15.5px; }
-  .why .ico {
-    width: 38px; height: 38px; border-radius: 11px;
-    background: var(--yellow-pale); border: 1px solid #f3e4ad;
-    display: grid; place-items: center; font-size: 19px; margin-bottom: 12px;
-  }
-
-  /* ---------- Steps ---------- */
-  .steps { counter-reset: s; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .steps li {
-    counter-increment: s; list-style: none;
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r-md); padding: 22px 22px 22px 62px; position: relative;
-    font-size: 15.5px; color: var(--muted);
-  }
-  .steps li::before {
-    content: counter(s);
-    position: absolute; left: 20px; top: 21px;
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--yellow); color: var(--ink);
-    display: grid; place-items: center; font-weight: 800; font-size: 14px;
-  }
-  .steps li b { display: block; color: var(--ink); font-weight: 750; font-size: 16.5px; margin-bottom: 3px; }
-
-  /* ---------- Price ---------- */
-  .price {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r-lg); padding: 34px; text-align: center;
-    box-shadow: var(--shadow-md);
-  }
-  .price .amt { font-size: 42px; font-weight: 800; letter-spacing: -.03em; }
-  .price .amt small { font-size: 17px; font-weight: 650; color: var(--muted); letter-spacing: 0; }
-  .price ul { list-style: none; padding: 0; margin: 20px auto 0; max-width: 420px; text-align: left; }
-  .price li { padding: 8px 0; font-size: 15.5px; display: flex; gap: 10px; }
-  .price li::before {
-    content: '✓'; color: var(--green); font-weight: 800; flex: none;
-  }
-
-  /* ---------- FAQ ---------- */
-  details {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r-md); padding: 0 20px; margin-bottom: 10px;
-  }
-  summary {
-    cursor: pointer; padding: 17px 0; font-weight: 700; font-size: 16.5px;
-    letter-spacing: -.02em; list-style: none;
-  }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '＋'; float: right; color: var(--muted); font-weight: 600; }
-  details[open] summary::after { content: '－'; }
-  details p { margin: 0 0 18px; color: var(--muted); font-size: 15.5px; }
-
-  /* ---------- Footer ---------- */
-  .note {
-    background: #fffdf5; border: 1px solid #f0e7c9; border-radius: var(--r-md);
-    padding: 18px 20px; font-size: 14.5px; color: #6b6450; margin-top: 30px;
-  }
-  footer {
-    border-top: 1px solid var(--line); padding: 34px 0 48px;
-    font-size: 14.5px; color: var(--muted);
-  }
-  footer a { color: var(--ink); font-weight: 650; }
-  .flinks { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 14px; }
-
-  @media (max-width: 600px) {
-    body { font-size: 16px; }
-    section { padding: 46px 0; }
-    .hero { padding: 42px 0 50px; }
-  }
-</style>
+<link rel="stylesheet" href="/landing.css" />
 </head>
 <body>
 
 <header class="hero">
   <div class="wrap">
-    <div class="brand"><img src="/icon-512.png" alt="" width="26" height="26" /> Yei ID</div>
+    <div class="topbar">
+      <div class="brand"><img src="/icon-512.png" alt="" width="26" height="26" /> Yei ID</div>
+      <a class="langswitch" href="/en/" hreflang="en" lang="en">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>
+        </svg>
+        English
+      </a>
+    </div>
     <h1>사진관 갈 시간에,<br />폰에서 1분.</h1>
     <p class="lede">
       여권·운전면허·증명사진부터 큐넷·공무원·토익·KPC 접수 사진까지.
@@ -368,7 +145,7 @@
       <a href="/gosi">공무원</a>
       <a href="/toeic">토익</a>
       <a href="/kpc">KPC</a>
-      <a href="/us-visa">미국 비자</a>
+      <a href="/us-visa">미국 여권·비자</a>
     </nav>
 
     <div class="grid">
@@ -398,7 +175,8 @@
       <div class="card">
         <h3>해외 비자 · 여권</h3>
         <ul>
-          <li><a class="row" href="/us-visa"><b>미국 비자 · 여권</b><span>2 × 2인치<br />600 × 600px · 300DPI</span></a></li>
+          <li><a class="row" href="/us-visa"><b>미국 여권</b><span>2 × 2인치<br />1200 × 1200px · 600DPI</span></a></li>
+          <li><a class="row" href="/us-visa"><b>미국 비자(DS-160)</b><span>2 × 2인치<br />600 × 600px · 240KB 이하</span></a></li>
           <li><div class="row"><b>셰겐(유럽) 비자</b><span>35 × 45mm</span></div></li>
         </ul>
         <p style="margin:14px 0 0;font-size:14.5px;color:var(--muted)">
