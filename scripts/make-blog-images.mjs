@@ -116,10 +116,96 @@ const cmp = `
   }).join('')}
 </svg>`
 
+// ── 2편(큐넷) ───────────────────────────────────────────────────────
+// ① 규격 요약표
+const QROWS = [
+  ['크기', '300 × 400px 이상', '3 × 4cm 기준'],
+  ['파일 형식', 'JPG (JPEG)', ''],
+  ['용량', '200KB 이하', '접수 가이드 기준'],
+  ['배경', '흰색', ''],
+  ['촬영 시점', '최근 6개월 이내', ''],
+]
+const QH1 = 150 + QROWS.length * 78 + 80
+const qspec = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${QH1}" viewBox="0 0 ${W} ${QH1}">
+  ${dots}
+  <rect width="${W}" height="${QH1}" fill="${cream}"/>
+  <rect width="${W}" height="${QH1}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="78" font-family="${FONT}" font-size="34" font-weight="800" fill="${ink}">큐넷 원서접수 사진 규격</text>
+  <text x="44" y="116" font-family="${FONT}" font-size="18" font-weight="600" fill="${ink2}">국가기술자격 · 이용방법 안내 2025.12.17 갱신 기준</text>
+
+  ${QROWS.map(([k, v, note], i) => {
+    const y = 150 + i * 78
+    return `
+  <rect x="36" y="${y}" width="${W - 72}" height="66" rx="12" fill="#fff" stroke="${line}" stroke-width="2"/>
+  <text x="62" y="${y + 41}" font-family="${FONT}" font-size="19" font-weight="650" fill="${ink2}">${esc(k)}</text>
+  <text x="${W - 62}" y="${y + (note ? 34 : 41)}" text-anchor="end" font-family="${FONT}" font-size="23" font-weight="800" fill="${ink}">${esc(v)}</text>
+  ${note ? `<text x="${W - 62}" y="${y + 54}" text-anchor="end" font-family="${FONT}" font-size="15" font-weight="600" fill="${ink2}">${esc(note)}</text>` : ''}`
+  }).join('')}
+</svg>`
+
+// ② "디지털은 안 된다"는 오해 — 이 글의 핵심
+const QH2 = 430
+const qdigital = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${QH2}" viewBox="0 0 ${W} ${QH2}">
+  ${dots}
+  <rect width="${W}" height="${QH2}" fill="${cream}"/>
+  <rect width="${W}" height="${QH2}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="74" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">디지털 사진이 안 되는 게 아닙니다</text>
+
+  <rect x="36" y="108" width="352" height="150" rx="16" fill="${redSoft}" stroke="#F0CFC7" stroke-width="2"/>
+  <text x="212" y="150" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${red}">부적합</text>
+  <text x="212" y="192" text-anchor="middle" font-family="${FONT}" font-size="27" font-weight="800" fill="${red}">인쇄물을 다시 촬영</text>
+  <text x="212" y="228" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${red}">화질이 두 번 깎이고 종이 결·반사가 남는다</text>
+
+  <rect x="412" y="108" width="352" height="150" rx="16" fill="${greenSoft}" stroke="#BFE8CC" stroke-width="2"/>
+  <text x="588" y="150" text-anchor="middle" font-family="${FONT}" font-size="17" font-weight="700" fill="${green}">문제 없음</text>
+  <text x="588" y="192" text-anchor="middle" font-family="${FONT}" font-size="27" font-weight="800" fill="${green}">디지털 파일 그대로</text>
+  <text x="588" y="228" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="600" fill="${green}">규격에 맞으면 흰 배경 처리도 괜찮다</text>
+
+  <rect x="36" y="286" width="${W - 72}" height="104" rx="14" fill="${pale}" stroke="#EAD58A" stroke-width="2"/>
+  <text x="62" y="326" font-family="${FONT}" font-size="18" font-weight="700" fill="${ink}">사진관에서 인화본만 받으셨다면 폰으로 찍지 마세요.</text>
+  <text x="62" y="358" font-family="${FONT}" font-size="18" font-weight="600" fill="${ink2}">요즘은 대부분 파일도 같이 줍니다.</text>
+</svg>`
+
+// ③ 용량이 걸릴 때의 순서
+const QSTEP = [
+  ['1', '크기를 300 × 400px로 맞춘다', true],
+  ['2', '그러면 200KB는 대체로 여유가 생긴다', true],
+  ['✗', '화질부터 낮추면 얼굴이 뭉개져 다른 이유로 걸린다', false],
+]
+const QH3 = 140 + QSTEP.length * 86 + 50
+const qsize = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${QH3}" viewBox="0 0 ${W} ${QH3}">
+  ${dots}
+  <rect width="${W}" height="${QH3}" fill="${cream}"/>
+  <rect width="${W}" height="${QH3}" fill="url(#d)"/>
+  <rect x="0" y="0" width="${W}" height="8" fill="${yellow}"/>
+
+  <text x="44" y="72" font-family="${FONT}" font-size="32" font-weight="800" fill="${ink}">200KB가 넘을 때, 순서가 중요합니다</text>
+  <text x="44" y="108" font-family="${FONT}" font-size="17" font-weight="600" fill="${ink2}">화질을 낮추는 건 마지막 수단입니다</text>
+
+  ${QSTEP.map(([n, txt, ok], i) => {
+    const y = 140 + i * 86
+    return `
+  <rect x="36" y="${y}" width="${W - 72}" height="72" rx="14" fill="${ok ? greenSoft : redSoft}" stroke="${ok ? '#BFE8CC' : '#F0CFC7'}" stroke-width="2"/>
+  <circle cx="84" cy="${y + 36}" r="22" fill="${ok ? green : red}"/>
+  <text x="84" y="${y + 45}" text-anchor="middle" font-family="${FONT}" font-size="22" font-weight="800" fill="#fff">${esc(n)}</text>
+  <text x="126" y="${y + 45}" font-family="${FONT}" font-size="21" font-weight="${ok ? 700 : 650}" fill="${ok ? ink : red}">${esc(txt)}</text>`
+  }).join('')}
+</svg>`
+
 const pages = [
   ['gosi-spec.png', spec],
   ['gosi-100kb.png', myth],
   ['gosi-size.png', cmp],
+  ['qnet-spec.png', qspec],
+  ['qnet-digital.png', qdigital],
+  ['qnet-size.png', qsize],
 ]
 for (const [name, svg] of pages) {
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(dir + name)
