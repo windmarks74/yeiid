@@ -29,8 +29,7 @@ const PRIVACY_KO: LegalDoc = {
         '앱은 회원가입·로그인이 없으며 이름·이메일 등 개인정보를 직접 수집하지 않습니다. 다만 아래 정보가 처리될 수 있습니다.\n\n' +
         '가. 기기 내 저장\n무료 다운로드 횟수, 구매(라이선스) 상태 — 이용자 기기에 로컬로 저장됩니다. 앱이 이를 별도 서버로 전송하지 않으나, 기기 설정에 따라 Android 자동 백업(이용자 본인의 Google 계정)에 포함될 수 있습니다.\n\n' +
         '나. 결제·구매 관리 (제3자 처리)\n유료 기능 결제는 Google Play 인앱결제가 처리하며, 구매 상태 확인·복원을 위해 RevenueCat을 이용합니다. 구매 여부와 관계없이 앱 실행 시 구매 상태 확인을 위해 익명 식별자, 기기 식별자, IP 주소, 국가, OS·앱 버전 등이 RevenueCat에 전송·처리될 수 있습니다. 앱은 카드번호 등 금융정보를 직접 수집·보관하지 않습니다.\n\n' +
-        '다. 온디바이스 얼굴인식·인물분리 (Google ML Kit)\n얼굴 검출과 인물 분리(배경 제거)는 Google ML Kit 온디바이스 API로 기기 안에서 처리되며, 사진은 전송되지 않습니다. 다만 ML Kit SDK가 기기 메타데이터, 앱 식별자, 성능 진단 데이터를 Google에 전송할 수 있습니다.\n\n' +
-        '라. 무료 제공 범위 검토용 익명 집계\n무료 제공 횟수가 적절한지 판단하기 위해, 위 나항의 RevenueCat 전송에 다음 두 값을 함께 담습니다. ① 무료 다운로드를 몇 번 썼는지(숫자) ② 결제 안내 화면을 본 적이 있는지(예/아니요). 사진·얼굴·파일명·선택한 용도는 포함되지 않으며, 별도의 수집처를 추가하지 않습니다. 이 항목은 무료 제공 범위 결정이 끝나면 앱 업데이트로 제거할 예정입니다.',
+        '다. 온디바이스 얼굴인식·인물분리 (Google ML Kit)\n얼굴 검출과 인물 분리(배경 제거)는 Google ML Kit 온디바이스 API로 기기 안에서 처리되며, 사진은 전송되지 않습니다. 다만 ML Kit SDK가 기기 메타데이터, 앱 식별자, 성능 진단 데이터를 Google에 전송할 수 있습니다.',
     },
     {
       h: '3. 제3자 제공 및 처리위탁',
@@ -182,8 +181,7 @@ const PRIVACY_EN: LegalDoc = {
         'The App has no account or login and does not directly collect personal information such as your name or email. However, the following may be processed:\n\n' +
         'a. Stored on your device\nYour number of free downloads and your purchase (license) status are stored locally on your device. The App does not send these to a separate server, although depending on your device settings they may be included in Android automatic backup (your own Google account).\n\n' +
         'b. Payments and purchase management (third parties)\nPurchases are handled by Google Play in-app billing, and purchase-status checks and restores use RevenueCat. To verify purchase status when the App runs, an anonymous identifier, device identifier, IP address, country, and OS/app version may be sent to and processed by RevenueCat. The App does not directly collect or store financial information such as card numbers.\n\n' +
-        'c. On-device face detection and person segmentation (Google ML Kit)\nFace detection and person segmentation (background removal) run on your device through Google ML Kit on-device APIs, and your photos are not transmitted. However, the ML Kit SDK may send device metadata, app identifiers, and performance diagnostics to Google.\n\n' +
-        'd. Anonymous counts used to review the free allowance\nTo judge whether the free allowance is set correctly, two values are included in the RevenueCat transmission described in (b): (1) how many free downloads you have used (a number), and (2) whether you have ever seen the purchase screen (yes/no). No photo, face, file name, or choice of photo type is included, and no additional recipient is involved. This item will be removed in a future update once the free allowance has been decided.',
+        'c. On-device face detection and person segmentation (Google ML Kit)\nFace detection and person segmentation (background removal) run on your device through Google ML Kit on-device APIs, and your photos are not transmitted. However, the ML Kit SDK may send device metadata, app identifiers, and performance diagnostics to Google.',
     },
     {
       h: '3. Third-party services',

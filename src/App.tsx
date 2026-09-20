@@ -8,13 +8,7 @@ import { Capacitor, type PluginListenerHandle } from '@capacitor/core'
 import { removeBg, type BgModel } from './bg'
 import { detectFace, assessCapture } from './face'
 import { saveJpeg } from './save'
-import {
-  getEntitlementStatus,
-  restorePurchases,
-  getPriceString,
-  reportAnonymousUsage,
-  PRICE_LABEL,
-} from './iap'
+import { getEntitlementStatus, restorePurchases, getPriceString, PRICE_LABEL } from './iap'
 import { PRIVACY, TERMS, FAQ, type LegalDoc } from './legal'
 import Paywall from './Paywall'
 import { t, type StringKey } from './strings'
@@ -27,7 +21,6 @@ import {
   revokePremium,
   loadBilling,
   recordDownload,
-  markPaywallSeen,
   type BillingState,
 } from './billing'
 import {
@@ -381,24 +374,10 @@ export default function App() {
     })()
   }, [])
 
-  // 스토어 현지화 가격 표시 (예 "$2.99"/"₩4,900"). 실패/웹이면 PRICE_LABEL 폴백 유지.
+  // 스토어 현지화 가격 표시 (예 "$4.99"/"₩4,900"). 실패/웹이면 PRICE_LABEL 폴백 유지.
   useEffect(() => {
     getPriceString().then((p) => p && setPrice(p))
   }, [])
-
-  // 페이월을 본 사실을 로컬에 한 번 남긴다.
-  // setShowPaywall(true) 호출부가 7곳이라 각각에 넣으면 빠뜨리기 쉽다 — 여기 한 곳에서 잡는다.
-  useEffect(() => {
-    if (!showPaywall || !billing || billing.paywallSeen) return
-    markPaywallSeen(billing).then(setBilling)
-  }, [showPaywall, billing])
-
-  // 익명 집계 (무료 횟수 정책 판단용). 사진과 무관한 정수 2개만 나간다 — iap.ts 주석 참고.
-  // billing 이 바뀔 때마다 현재 상태를 덮어쓴다(이벤트가 아니라 상태라 중복 전송이 무해하다).
-  useEffect(() => {
-    if (!billing) return
-    reportAnonymousUsage(billing.used, !!billing.paywallSeen)
-  }, [billing])
 
   // 앱 실제 버전 읽기 (네이티브). 설정 푸터에 "버전 1.1.2 (4)" 형태로 표시 → 빌드마다 자동 갱신
   useEffect(() => {
