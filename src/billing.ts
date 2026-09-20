@@ -12,9 +12,19 @@ export type BillingState = {
   premium: boolean
   /** 무료 다운로드 사용 횟수 */
   used: number
+  /**
+   * 페이월을 한 번이라도 본 적이 있는지.
+   *
+   * 무료 횟수(FREE_LIMIT)를 조정할 근거를 만들려고 넣었다. `used` 분포만으로는
+   * "무료를 다 써서 페이월을 봤다"와 "미국·셰겐 같은 프리미엄 규격을 눌러서 봤다"가
+   * 구분되지 않는데, 후자는 `used` 가 0이어도 발생한다.
+   *
+   * 로컬 저장값이며 iap.ts reportAnonymousUsage() 가 익명 집계로만 내보낸다.
+   */
+  paywallSeen?: boolean
 }
 
-const DEFAULT: BillingState = { premium: false, used: 0 }
+const DEFAULT: BillingState = { premium: false, used: 0, paywallSeen: false }
 
 export async function loadBilling(): Promise<BillingState> {
   const { value } = await Preferences.get({ key: KEY })
@@ -57,6 +67,17 @@ export async function grantPremium(s: BillingState): Promise<BillingState> {
 export async function revokePremium(s: BillingState): Promise<BillingState> {
   if (!s.premium) return s
   const next = { ...s, premium: false }
+  await save(next)
+  return next
+}
+
+/**
+ * 페이월을 봤다고 기록한다. 이미 기록돼 있으면 저장하지 않는다(쓰기 낭비 방지).
+ * 구매 여부와 무관하게 "닿았다"는 사실만 남긴다.
+ */
+export async function markPaywallSeen(s: BillingState): Promise<BillingState> {
+  if (s.paywallSeen) return s
+  const next = { ...s, paywallSeen: true }
   await save(next)
   return next
 }

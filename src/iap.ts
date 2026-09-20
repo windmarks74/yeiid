@@ -81,6 +81,40 @@ export async function getEntitlementStatus(): Promise<EntitlementStatus> {
 }
 
 /**
+ * 무료 횟수 정책을 숫자로 판단하기 위한 **익명 집계**. 절대 throw 하지 않는다.
+ *
+ * 왜 필요한가 (docs/funnel-2026-09-20.md): 설치는 느는데 결제가 0이다. 원인이
+ * "페이월에 닿지 못한다"인지 "닿았는데 안 산다"인지 구분이 안 되면 FREE_LIMIT 을
+ * 손댈 근거가 없다. 줄이는 건 되돌리기 어려운 변경이라 추측으로 하면 안 된다.
+ *
+ * 왜 RevenueCat 인가: 이 앱은 실행할 때마다 entitlement 조회로 이미 RevenueCat 과
+ * 통신한다(익명 App User ID + IP). 구독자 속성에 정수 두 개를 얹는 것이라
+ * **새 업체도, 새 서버도, 새 데이터 흐름도 생기지 않는다.** 자체 엔드포인트를 세우면
+ * 수집처가 하나 더 느는 셈이라 오히려 공개할 게 많아진다.
+ *
+ * 보내는 것은 이 둘뿐이다:
+ *   - free_used    무료 다운로드 사용 횟수 (0~)
+ *   - paywall_seen 페이월을 본 적 있는지 ("1"/"0")
+ * 사진·얼굴·파일명·용도 선택 이력은 **보내지 않는다.**
+ *
+ * ⚠️ 이건 한시적 계측이다. 무료 횟수 결정이 끝나면 제거한다 — 남겨두면
+ *    "왜 수집하는지" 설명할 수 없는 항목이 된다. BACKLOG 에 제거 항목을 걸어뒀다.
+ */
+export async function reportAnonymousUsage(used: number, paywallSeen: boolean): Promise<void> {
+  if (!Capacitor.isNativePlatform() || !RC_API_KEY) return
+  try {
+    const { Purchases } = await import('@revenuecat/purchases-capacitor')
+    await ensureConfigured()
+    await Purchases.setAttributes({
+      free_used: String(used),
+      paywall_seen: paywallSeen ? '1' : '0',
+    })
+  } catch {
+    // 집계 실패는 앱 동작에 영향을 주지 않는다 — 조용히 넘어간다.
+  }
+}
+
+/**
  * 스토어 현지화 가격 문자열 (예 "$2.99"/"₩4,900" — 구글 플레이가 사용자 국가에 매긴 가격).
  * 표시값과 실제 청구가 항상 일치한다. 웹/키 미설정/오류면 null → 호출부에서 PRICE_LABEL 폴백.
  */
