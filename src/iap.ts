@@ -35,9 +35,19 @@ function isActive(customerInfo: any): boolean {
   return !!customerInfo?.entitlements?.active?.[ENTITLEMENT_ID]
 }
 
-/** 구매 시도. 성공(해제) 시 true. (웹 스텁: 항상 성공으로 플로우 검증) */
+/**
+ * 구매 시도. 성공(해제) 시 true.
+ *
+ * ⚠️ 웹에서는 **개발 빌드에서만** 스텁으로 성공 처리한다(플로우 검증용).
+ * 예전에는 웹이면 무조건 true 였는데, 그 상태로 웹 빌드를 공개하면
+ * **누구나 결제 없이 프리미엄이 열린다.** 실제 손해보다 "깨진 게이트를 공개"하는 쪽이 문제다.
+ * 웹 지원을 실제로 열 때는 이 분기를 먼저 설계할 것 (BACKLOG 4-S).
+ */
 export async function purchaseLifetime(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) return true
+  if (!Capacitor.isNativePlatform()) {
+    if (import.meta.env.DEV) return true
+    throw new Error(t('iap.webUnsupported'))
+  }
   const { Purchases } = await import('@revenuecat/purchases-capacitor')
   await ensureConfigured()
   const offerings = await Purchases.getOfferings()

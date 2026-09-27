@@ -82,6 +82,7 @@ const STRINGS = {
   'cropper.eye': { ko: '눈높이', en: 'Eye level' },
 
   'iap.noKey': { ko: 'RevenueCat API 키가 설정되지 않았습니다. (src/iap.ts의 RC_API_KEY)', en: 'RevenueCat API key is not set. (RC_API_KEY in src/iap.ts)' },
+  'iap.webUnsupported': { ko: '결제는 앱에서만 가능합니다. Google Play 에서 앱을 설치해 주세요.', en: 'Purchases are only available in the app. Please install it from Google Play.' },
   'iap.noProduct': { ko: '판매 상품을 불러오지 못했습니다. (RevenueCat 오퍼링/상품 설정 확인)', en: 'Could not load the product for sale. (Check RevenueCat offerings/product setup)' },
 
   // 규격 (usage.ts) — label · notice · applyLabel
