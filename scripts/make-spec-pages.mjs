@@ -23,6 +23,13 @@ const out = (name) => fileURLToPath(new URL(`../site/yeiid/${name}`, import.meta
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const attr = (s) => esc(s).replace(/"/g, '&quot;')
 
+// 모든 규격 페이지에 공통으로 붙는 팁. 8곳에 같은 문장을 복사하면 어긋난다.
+// HEIC: imageUtils.ts loadSourcePhoto 가 heic2any 로 자동 변환한다(확장자·MIME 둘 다 검사).
+//   아이폰만의 얘기가 아니다 — 갤럭시도 카메라 설정에 "고효율 사진(HEIF)"이 있다.
+const COMMON_TIPS = [
+  '아이폰·갤럭시의 고효율 사진(HEIC·HEIF)도 그대로 올리면 됩니다. 따로 변환하지 않아도 앱이 알아서 JPG로 바꿉니다.',
+]
+
 const SPECS = [
   {
     slug: 'qnet',
@@ -528,7 +535,7 @@ ${s.rejects.map((r) => `        <li>${esc(r)}</li>`).join('\n')}
       <h2>잘 나오게 찍는 법</h2>
       <p class="sub">규격은 앱이 맞춰줍니다. 사진 자체는 찍을 때 결정됩니다.</p>
       <ul class="plain">
-${(s.tips || []).map((t) => `        <li>${esc(t)}</li>`).join('\n')}
+${[...(s.tips || []), ...COMMON_TIPS].map((t) => `        <li>${esc(t)}</li>`).join('\n')}
       </ul>
     </div>
   </section>

@@ -218,6 +218,32 @@ The first few photos are free. After that a single purchase unlocks unlimited us
 Yei ID sizes your photo to published requirements, but the decision to accept it rests with the agency you submit to. Requirements change, so check the official guidance before you submit. This app is not a government or public-agency service.
 ```
 
+## 🔜 HEIC 문구 — 2026-09-27 준비, **콘솔 적용 대기**
+
+경쟁사 조사 중 발견: **우리는 HEIC 를 이미 지원하는데 스토어·사이트 어디에도 안 썼다**
+(`imageUtils.ts` `loadSourcePhoto` → `heic2any`. 확장자·MIME 둘 다 검사).
+아이폰만의 얘기가 아니다 — **갤럭시도 카메라 설정에 "고효율 사진(HEIF)"이 있다.**
+사용자 대부분이 삼성이라 직접 해당된다.
+
+사이트(랜딩 배지 + 규격 페이지 8곳 공통 팁)에는 **2026-09-27 반영 완료.**
+스토어는 심사가 걸리므로 아래 문구를 **다음 등록정보 수정 때 같이** 넣는다.
+
+### 한글 — "이런 분께" 앞에 한 줄 추가
+```
+■ 아이폰·갤럭시 고효율 사진(HEIC)도 그대로
+따로 변환할 필요 없습니다. HEIC·HEIF 파일을 올리면 앱이 알아서 JPG로 바꿔 규격에 맞춥니다.
+```
+
+### 영어 — "Who it is for" 앞에 한 줄 추가
+```
+■ HEIC photos work as they are
+No converting first. Drop in an iPhone or Samsung high-efficiency photo (HEIC/HEIF) and the app turns it into a JPEG at the right size.
+```
+
+### 짧은 설명에는 넣지 않는다
+한글 64/80, 영어 76/80 이라 자리가 없고, HEIC 는 **검색해서 오는 사람이 확인하는 값**이지
+첫 줄에서 설득하는 값이 아니다.
+
 ## 노리는 검색어 (영어)
 passport photo · passport photo maker · visa photo · DS-160 photo · 2x2 photo ·
 ID photo · passport photo app · schengen visa photo · passport photo at home
