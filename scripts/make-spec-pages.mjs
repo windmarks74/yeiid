@@ -19,6 +19,15 @@ import { fileURLToPath } from 'node:url'
 
 const ORIGIN = 'https://yeiid.itbrown.com'
 const PLAY = 'https://play.google.com/store/apps/details?id=com.yei.idphoto'
+
+// Play 설치의 유입원을 구분하려면 referrer 가 필요하다. 이게 없으면 콘솔 획득 보고서에서
+// 사이트·블로그·스토어 검색이 전부 한 덩어리로 잡힌다 — 2026-09-28 까지 그랬고, 그래서
+// "노출이 왜 늘었나"에 세 달째 답을 못 했다(docs/funnel-2026-09-27.md 5절).
+// ⚠️ JSON-LD 의 installUrl 에는 붙이지 않는다. 구조화 데이터는 정규 주소여야 한다.
+const playUrl = (campaign) =>
+  PLAY +
+  '&referrer=' +
+  encodeURIComponent(`utm_source=yeiid_site&utm_medium=web&utm_campaign=${campaign}`)
 const out = (name) => fileURLToPath(new URL(`../site/yeiid/${name}`, import.meta.url))
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const attr = (s) => esc(s).replace(/"/g, '&quot;')
@@ -551,7 +560,7 @@ ${[...(s.tips || []), ...COMMON_TIPS].map((t) => `        <li>${esc(t)}</li>`).j
       </ol>
 
       <div class="cta-box">
-        <a class="cta" href="${PLAY}">${playSvg} Google Play에서 받기</a>
+        <a class="cta" href="${playUrl(s.slug)}">${playSvg} Google Play에서 받기</a>
         <p class="cta-note">${s.ctaNote || '<b>5장 무료</b> · 광고 없음'} · 사진은 기기 밖으로 나가지 않아요</p>
       </div>
     </div>
@@ -590,7 +599,7 @@ ${navLinks(s.slug)}
   <div class="wrap">
     <div class="flinks">
       <a href="/">Yei ID</a>
-      <a href="${PLAY}">Google Play</a>
+      <a href="${playUrl(s.slug)}">Google Play</a>
       <a href="/privacy">개인정보처리방침</a>
       <a href="mailto:shhwang0424@gmail.com">문의</a>
     </div>
