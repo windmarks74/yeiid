@@ -24,8 +24,12 @@ const PLAY = 'https://play.google.com/store/apps/details?id=com.yei.idphoto'
 // 사이트·블로그·스토어 검색이 전부 한 덩어리로 잡힌다 — 2026-09-28 까지 그랬고, 그래서
 // "노출이 왜 늘었나"에 세 달째 답을 못 했다(docs/funnel-2026-09-27.md 5절).
 // ⚠️ JSON-LD 의 installUrl 에는 붙이지 않는다. 구조화 데이터는 정규 주소여야 한다.
+// ⚠️ hl 을 빼면 Play 가 "요청한 쪽의 로케일"로 응답한다. 사람이 클릭하면 문제없지만
+// 크롤러(네이버 임베드 카드 등)는 영어로 요청해서 영문 스토어 카드가 박힌다.
+// 실제로 여권 블로그 글의 카드가 3개월간 영문이었다. gl=KR 은 가격을 ₩ 로 고정한다.
 const playUrl = (campaign) =>
   PLAY +
+  '&hl=ko&gl=KR' +
   '&referrer=' +
   encodeURIComponent(`utm_source=yeiid_site&utm_medium=web&utm_campaign=${campaign}`)
 const out = (name) => fileURLToPath(new URL(`../site/yeiid/${name}`, import.meta.url))

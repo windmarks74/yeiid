@@ -38,12 +38,16 @@ https://play.google.com/store/apps/details?id=com.yei.idphoto
 이걸로 바꾼다 (한 줄, 띄어쓰기 없이):
 
 ```
-https://play.google.com/store/apps/details?id=com.yei.idphoto&referrer=utm_source%3Dnaver_blog%26utm_medium%3Dpost%26utm_campaign%3Dpassport_20260628
+https://play.google.com/store/apps/details?id=com.yei.idphoto&hl=ko&gl=KR&referrer=utm_source%3Dnaver_blog%26utm_medium%3Dpost%26utm_campaign%3Dpassport_20260628
 ```
 
 - Play 콘솔 ▸ 사용자 늘리기 ▸ **획득 보고서**에서 이 캠페인이 따로 잡힌다.
 - 사이트 쪽도 같이 태깅했다(`utm_source=yeiid_site`, 페이지별 campaign) — 이제
   **블로그 / 사이트 / 스토어 검색**이 구분된다.
+- ⚠️ **`hl=ko&gl=KR` 가 반드시 붙어야 한다.** 이게 없으면 Play 가 *요청한 쪽의 로케일* 로
+  응답한다. 사람이 클릭할 땐 문제없지만 **네이버 임베드 카드는 크롤러가 영어로 요청**해서
+  영문 카드가 박힌다. 실제로 이 글의 카드가 **3개월간 영문**이었다(2026-09-28 확인).
+  한국어 독자에게 영문 카드를 보여주고 있었던 셈이다. `gl=KR` 은 가격을 ₩4,900 으로 고정한다.
 - ⚠️ 주소를 바꾸면 **네이버 임베드 카드가 다시 생성**돼야 할 수 있다. 카드가 깨지면
   지우고 주소를 다시 붙여 넣으면 된다.
 - ⚠️ 콘솔에 캠페인이 실제로 잡히는지는 **10/20 에 확인한다**(설치가 있어야 보인다).
