@@ -15,8 +15,9 @@ import { t, type StringKey } from './strings'
 import { noteSaveAndMaybeReview } from './review'
 import {
   canDownload,
-  FREE_LIMIT,
+  FREE_LIMIT_NEW,
   freeLeft,
+  limitOf,
   grantPremium,
   revokePremium,
   loadBilling,
@@ -580,6 +581,7 @@ export default function App() {
           usage={usage}
           onSelectUsage={selectUsage}
           premium={!!billing?.premium}
+          freeLimit={billing ? limitOf(billing) : FREE_LIMIT_NEW}
           onStart={() => fileRef.current?.click()}
           onCamera={() => setShowCamTips(true)}
           onSettings={openSettings}
@@ -818,7 +820,7 @@ export default function App() {
             </>
           ) : billing && !canDownload(billing) ? (
             <>
-              <div className="upsell">{t('app.upsellFreeUsedUp', { n: FREE_LIMIT })}</div>
+              <div className="upsell">{t('app.upsellFreeUsedUp', { n: limitOf(billing) })}</div>
               <div className="actions">
                 <button onClick={() => setShowPaywall(true)}>{t('app.lifetimeUnlimited')} · {price}</button>
               </div>
@@ -838,7 +840,7 @@ export default function App() {
                 </button>
               </div>
               {billing && !billing.premium && (
-                <p className="billing-caption">{t('app.billingCaption', { n: FREE_LIMIT, price })}</p>
+                <p className="billing-caption">{t('app.billingCaption', { n: limitOf(billing), price })}</p>
               )}
             </>
           )}
@@ -1504,6 +1506,7 @@ function Landing({
   usage,
   onSelectUsage,
   premium,
+  freeLimit,
   onStart,
   onCamera,
   onSettings,
@@ -1511,6 +1514,8 @@ function Landing({
   usage: Usage
   onSelectUsage: (u: Usage) => void
   premium: boolean
+  /** 이 기기의 무료 한도. 상수가 아니라 코호트 값이다 — billing.ts limitOf 참고. */
+  freeLimit: number
   onStart: () => void
   onCamera: () => void
   onSettings: () => void
@@ -1561,7 +1566,7 @@ function Landing({
       <p className="landing-privacy">
         <IconLock /> {t('app.landingPrivacy')}
       </p>
-      <p className="landing-cap">{t('app.landingCap', { n: FREE_LIMIT })}</p>
+      <p className="landing-cap">{t('app.landingCap', { n: freeLimit })}</p>
     </div>
   )
 }

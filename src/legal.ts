@@ -1,6 +1,6 @@
 // 개인정보처리방침 · 이용약관 본문 (Yei). 온디바이스 처리·무수집 기준.
 // 연락처·시행일 실제 정보 반영됨. 공개 호스팅본은 프로젝트 루트 privacy.html (동일 내용 유지).
-import { FREE_LIMIT } from './billing'
+import { FREE_LIMIT_NEW } from './billing'
 
 import { LANG } from './strings'
 
@@ -68,7 +68,10 @@ const PRIVACY_KO: LegalDoc = {
 }
 
 // 자주 묻는 질문 — LegalDoc 형식 재사용 (h=질문, body=답변).
-// 가격·무료횟수는 앱 실제 값(FREE_LIMIT · ₩4,900) 반영. 지원 규격은 현재 구현 기준.
+// 가격·무료횟수는 앱 실제 값(FREE_LIMIT_NEW · ₩4,900) 반영. 지원 규격은 현재 구현 기준.
+// ⚠️ 이 문서들은 모듈 로드 시 한 번 만들어져 사용자별 한도를 못 쓴다. 그래서 숫자는
+//    **신규 한도**로 쓰고, "남은 횟수는 앱 화면에 표시된다"로 받아 둘 다 맞게 한다
+//    (2026-10-31 코호트 분리 — billing.ts limitOf 참고).
 const FAQ_KO: LegalDoc = {
   title: '자주 묻는 질문',
   updated: '',
@@ -91,7 +94,7 @@ const FAQ_KO: LegalDoc = {
     },
     {
       h: '무료로 몇 번 쓸 수 있나요? 요금은요?',
-      body: `무료로 ${FREE_LIMIT}회까지 저장할 수 있고, 이후엔 ₩4,900을 한 번만 결제하면 평생 무제한입니다. 구독이 아니라 1회 결제예요.`,
+      body: `신규 설치는 무료로 ${FREE_LIMIT_NEW}회까지 저장할 수 있어요. 남은 횟수는 앱 화면에 표시되고, 예전에 설치하신 분은 그때 받은 횟수가 그대로 유지됩니다. 소진 후엔 ₩4,900을 한 번만 결제하면 평생 무제한이에요. 구독이 아니라 1회 결제입니다.`,
     },
     {
       h: '기기를 바꾸거나 재설치하면 다시 결제해야 하나요?',
@@ -245,7 +248,7 @@ const FAQ_EN: LegalDoc = {
     },
     {
       h: 'How many times can I use it for free? What does it cost?',
-      body: `You can save up to ${FREE_LIMIT} photos for free. After that, a one-time purchase unlocks unlimited use for life — it’s a single purchase, not a subscription. See the in-app price for your region.`,
+      body: `New installs can save up to ${FREE_LIMIT_NEW} photos for free. Your remaining count is shown in the app, and if you installed earlier you keep the allowance you were given. After that, a one-time purchase unlocks unlimited use for life — it’s a single purchase, not a subscription. See the in-app price for your region.`,
     },
     {
       h: 'Do I have to pay again if I change devices or reinstall?',

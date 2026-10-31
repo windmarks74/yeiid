@@ -79,20 +79,22 @@ for (const [key, field, expected, mustAppear] of CHECKS) {
   }
 }
 
-// 무료 횟수 — src/billing.ts FREE_LIMIT 과 페이지 문구가 갈라지면 안 된다.
-// "5장 무료"는 설치를 결정짓는 문구라 숫자가 틀리면 바로 신뢰 문제가 된다.
+// 무료 횟수 — src/billing.ts FREE_LIMIT_NEW 와 페이지 문구가 갈라지면 안 된다.
+// "N장 무료"는 설치를 결정짓는 문구라 숫자가 틀리면 바로 신뢰 문제가 된다.
+// ⚠️ 보는 값은 FREE_LIMIT(기존 사용자 보존값 5)이 아니라 **FREE_LIMIT_NEW** 다.
+//    홈페이지를 보는 사람은 아직 안 깐 사람이므로 신규 한도가 각자 보는 숫자와 맞는다.
 {
   const billing = read('../src/billing.ts')
-  const m = billing.match(/FREE_LIMIT\s*=\s*(\d+)/)
+  const m = billing.match(/FREE_LIMIT_NEW\s*=\s*(\d+)/)
   const limit = m ? +m[1] : null
   if (!limit) {
-    console.error('✗ billing.ts 에서 FREE_LIMIT 을 못 찾음')
+    console.error('✗ billing.ts 에서 FREE_LIMIT_NEW 를 못 찾음')
     fail++
   } else {
     for (const slug of ['index', 'qnet', 'gosi', 'toeic', 'kpc', 'passport', 'us-visa', 'license', 'resume']) {
       const html = read(`../site/yeiid/${slug}.html`)
       if (!html.includes(`${limit}장 무료`)) {
-        console.error(`✗ ${slug}.html 에 "${limit}장 무료" 없음 (FREE_LIMIT=${limit})`)
+        console.error(`✗ ${slug}.html 에 "${limit}장 무료" 없음 (FREE_LIMIT_NEW=${limit})`)
         fail++
       }
       const wrong = html.match(/(\d+)장 무료/g)?.filter((x) => x !== `${limit}장 무료`)
